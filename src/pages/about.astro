@@ -1,0 +1,223 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SkillBadge from '../components/SkillBadge.astro';
+import Button from '../components/Button.astro';
+import personal from '../data/personal.json';
+
+const skillVariants = ['primary', 'secondary', 'accent', 'default'] as const;
+---
+
+<BaseLayout title="About" description="Learn more about me, my background, and what drives my passion for web development.">
+  <section class="section about-page">
+    <div class="container">
+      <!-- Header -->
+      <div class="about-header">
+        <div class="about-image">
+          <div class="about-image-placeholder">
+            <span class="initials">{personal.name.split(' ').map((n: string) => n[0]).join('')}</span>
+          </div>
+        </div>
+
+        <div class="about-intro">
+          <h1 class="about-title">
+            Hi, I'm <span class="gradient-text">{personal.name}</span>
+          </h1>
+          <p class="about-subtitle">{personal.title}</p>
+          <p class="about-location">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            {personal.location}
+          </p>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="about-content">
+        <div class="about-text">
+          <h2>About Me</h2>
+          <p>{personal.about.intro}</p>
+          <p>{personal.about.background}</p>
+
+          <h2>My Approach</h2>
+          <p>{personal.about.approach}</p>
+
+          <h2>Beyond Code</h2>
+          <p>{personal.about.interests}</p>
+        </div>
+
+        <aside class="about-sidebar">
+          <div class="sidebar-section">
+            <h3>Skills & Technologies</h3>
+            <div class="skills-list">
+              {personal.skills.map((skill: string, index: number) => (
+                <SkillBadge
+                  skill={skill}
+                  variant={skillVariants[index % skillVariants.length]}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div class="sidebar-section">
+            <h3>Get in Touch</h3>
+            <p class="sidebar-text">
+              Interested in working together? I'd love to hear from you.
+            </p>
+            <Button href="/contact" variant="primary" fullWidth>
+              Contact Me
+            </Button>
+          </div>
+
+        </aside>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-page {
+    min-height: calc(100vh - var(--header-height));
+  }
+
+  .about-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-6);
+    margin-bottom: var(--space-12);
+  }
+
+  @media (min-width: 768px) {
+    .about-header {
+      flex-direction: row;
+      text-align: left;
+      gap: var(--space-10);
+    }
+  }
+
+  .about-image {
+    flex-shrink: 0;
+  }
+
+  .about-image-placeholder {
+    width: 180px;
+    height: 180px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-2xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+  }
+
+  .about-image-placeholder::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    background: var(--gradient-primary);
+    border-radius: var(--radius-2xl);
+    z-index: -1;
+  }
+
+  .initials {
+    font-size: var(--text-5xl);
+    font-weight: var(--font-bold);
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .about-intro {
+    flex: 1;
+  }
+
+  .about-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin-bottom: var(--space-2);
+  }
+
+  .about-subtitle {
+    font-size: var(--text-xl);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-2);
+  }
+
+  .about-location {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--text-tertiary);
+  }
+
+  .about-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-12);
+  }
+
+  @media (min-width: 1024px) {
+    .about-content {
+      grid-template-columns: 2fr 1fr;
+    }
+  }
+
+  .about-text h2 {
+    font-size: var(--text-2xl);
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-4);
+    color: var(--text-primary);
+  }
+
+  .about-text h2:first-child {
+    margin-top: 0;
+  }
+
+  .about-text p {
+    font-size: var(--text-lg);
+    color: var(--text-secondary);
+    line-height: var(--leading-relaxed);
+    margin-bottom: var(--space-4);
+  }
+
+  .about-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  .sidebar-section {
+    background: var(--bg-secondary);
+    padding: var(--space-6);
+    border-radius: var(--radius-xl);
+  }
+
+  .sidebar-section h3 {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-4);
+  }
+
+  .sidebar-text {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-4);
+  }
+
+  .skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .sidebar-section :global(.button) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+  }
+</style>

@@ -1,0 +1,201 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactForm from '../components/ContactForm.astro';
+import SocialLinks from '../components/SocialLinks.astro';
+import personal from '../data/personal.json';
+---
+
+<BaseLayout title="Contact" description="Get in touch with me for project inquiries, collaborations, or just to say hello.">
+  <section class="section contact-page">
+    <div class="container">
+      <div class="contact-grid">
+        <!-- Contact Info -->
+        <div class="contact-info">
+          <h1 class="contact-title">
+            Let's <span class="gradient-text">Connect</span>
+          </h1>
+          <p class="contact-description">
+            Have a project in mind or just want to say hello? I'd love to hear from you.
+            Fill out the form and I'll get back to you as soon as possible.
+          </p>
+
+          <div class="contact-details">
+            <div class="contact-item">
+              <div class="contact-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+              </div>
+              <div class="contact-text">
+                <span class="contact-label">Email</span>
+                <a href={`mailto:${personal.email}`} class="contact-value">{personal.email}</a>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </div>
+              <div class="contact-text">
+                <span class="contact-label">Location</span>
+                <span class="contact-value">{personal.location}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="contact-social">
+            <span class="social-label">Find me on</span>
+            <SocialLinks size="md" />
+          </div>
+
+          <!-- Decorative element -->
+          <div class="contact-decoration" aria-hidden="true">
+            <div class="decoration-shape"></div>
+          </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="contact-form-wrapper">
+          <ContactForm />
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-page {
+    min-height: calc(100vh - var(--header-height));
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-12);
+    align-items: start;
+  }
+
+  @media (min-width: 1024px) {
+    .contact-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-16);
+    }
+  }
+
+  .contact-info {
+    position: relative;
+  }
+
+  .contact-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin-bottom: var(--space-4);
+  }
+
+  .contact-description {
+    font-size: var(--text-lg);
+    color: var(--text-secondary);
+    line-height: var(--leading-relaxed);
+    margin-bottom: var(--space-8);
+  }
+
+  .contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .contact-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 107, 107, 0.1);
+    color: var(--color-primary);
+    border-radius: var(--radius-lg);
+    flex-shrink: 0;
+  }
+
+  .contact-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .contact-label {
+    font-size: var(--text-sm);
+    color: var(--text-tertiary);
+    margin-bottom: var(--space-1);
+  }
+
+  .contact-value {
+    font-size: var(--text-base);
+    font-weight: var(--font-medium);
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  a.contact-value:hover {
+    color: var(--color-primary);
+  }
+
+  .contact-social {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .social-label {
+    font-size: var(--text-sm);
+    color: var(--text-tertiary);
+  }
+
+  /* Decorative element */
+  .contact-decoration {
+    display: none;
+    position: absolute;
+    bottom: -20%;
+    left: -10%;
+    width: 300px;
+    height: 300px;
+    pointer-events: none;
+  }
+
+  @media (min-width: 1024px) {
+    .contact-decoration {
+      display: block;
+    }
+  }
+
+  .decoration-shape {
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(78, 205, 196, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(40px);
+  }
+
+  /* Form wrapper */
+  .contact-form-wrapper {
+    background: var(--bg-secondary);
+    padding: var(--space-8);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-lg);
+  }
+
+  @media (min-width: 768px) {
+    .contact-form-wrapper {
+      padding: var(--space-10);
+    }
+  }
+</style>

@@ -1,0 +1,61 @@
+---
+interface Props {
+  skill: string;
+  variant?: 'default' | 'primary' | 'secondary' | 'accent';
+}
+
+const { skill, variant = 'default' } = Astro.props;
+---
+
+<span class:list={['skill-badge', `skill-badge--${variant}`]}>
+  {skill}
+</span>
+
+<style>
+  .skill-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-1) var(--space-3);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    border-radius: var(--radius-full);
+    transition: all var(--transition-fast);
+  }
+
+  .skill-badge--default {
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+  }
+
+  .skill-badge--default:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+  }
+
+  .skill-badge--primary {
+    background: rgba(255, 107, 107, 0.15);
+    color: var(--color-primary);
+  }
+
+  .skill-badge--primary:hover {
+    background: rgba(255, 107, 107, 0.25);
+  }
+
+  .skill-badge--secondary {
+    background: rgba(78, 205, 196, 0.15);
+    color: var(--color-secondary-dark);
+  }
+
+  .skill-badge--secondary:hover {
+    background: rgba(78, 205, 196, 0.25);
+  }
+
+  .skill-badge--accent {
+    background: rgba(255, 230, 109, 0.25);
+    color: var(--bg-dark);
+  }
+
+  .skill-badge--accent:hover {
+    background: rgba(255, 230, 109, 0.4);
+  }
+</style>

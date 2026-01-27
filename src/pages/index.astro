@@ -1,0 +1,202 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ProjectGrid from '../components/ProjectGrid.astro';
+import SkillBadge from '../components/SkillBadge.astro';
+import Button from '../components/Button.astro';
+import { getCollection } from 'astro:content';
+import personal from '../data/personal.json';
+
+const featuredProjects = await getCollection('projects', ({ data }) => data.featured === true);
+const sortedProjects = featuredProjects.sort((a, b) =>
+  b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+).slice(0, 3);
+
+const skillVariants = ['primary', 'secondary', 'accent', 'default'] as const;
+---
+
+<BaseLayout title="Home" description="Personal portfolio showcasing creative web development projects">
+  <Hero />
+
+  <!-- Featured Projects Section -->
+  <section class="section featured-projects">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">
+          Featured <span class="gradient-text">Projects</span>
+        </h2>
+        <p class="section-description">
+          A selection of my recent work. Each project represents a unique challenge and creative solution.
+        </p>
+      </div>
+
+      <ProjectGrid projects={sortedProjects} />
+
+      <div class="section-cta">
+        <Button href="/projects" variant="outline">
+          View All Projects
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Section -->
+  <section class="section skills-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">
+          Skills & <span class="gradient-text-secondary">Technologies</span>
+        </h2>
+        <p class="section-description">
+          The tools and technologies I use to bring ideas to life.
+        </p>
+      </div>
+
+      <div class="skills-grid">
+        {personal.skills.map((skill: string, index: number) => (
+          <SkillBadge
+            skill={skill}
+            variant={skillVariants[index % skillVariants.length]}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <h2 class="cta-title">Let's Work Together</h2>
+        <p class="cta-description">
+          Have a project in mind? I'd love to hear about it. Let's create something amazing together.
+        </p>
+        <div class="cta-actions">
+          <Button href="/contact" variant="primary" size="lg">
+            Get in Touch
+          </Button>
+          <Button href="/about" variant="ghost" size="lg">
+            Learn More About Me
+          </Button>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .section-header {
+    text-align: center;
+    margin-bottom: var(--space-12);
+  }
+
+  .section-title {
+    font-size: var(--text-4xl);
+    margin-bottom: var(--space-4);
+  }
+
+  .section-description {
+    font-size: var(--text-lg);
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .section-cta {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-12);
+  }
+
+  /* Featured Projects */
+  .featured-projects {
+    background: var(--bg-secondary);
+  }
+
+  /* Skills Section */
+  .skills-section {
+    background: var(--bg-primary);
+  }
+
+  .skills-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-3);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .skills-grid :global(.skill-badge) {
+    font-size: var(--text-base);
+    padding: var(--space-2) var(--space-4);
+  }
+
+  /* CTA Section */
+  .cta-section {
+    background: var(--bg-dark);
+    color: var(--text-light);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255, 107, 107, 0.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-section::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(78, 205, 196, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .cta-title {
+    font-size: var(--text-4xl);
+    margin-bottom: var(--space-4);
+    color: var(--text-light);
+  }
+
+  .cta-description {
+    font-size: var(--text-lg);
+    color: var(--text-tertiary);
+    margin-bottom: var(--space-8);
+  }
+
+  .cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-4);
+  }
+
+  .cta-actions :global(.button--ghost) {
+    color: var(--text-light);
+  }
+
+  .cta-actions :global(.button--ghost:hover) {
+    background: rgba(255, 255, 255, 0.1);
+  }
+</style>

@@ -1,0 +1,27 @@
+{
+  "name": "Jethro",
+  "title": "Creative Web Developer",
+  "bio": "I craft beautiful, performant web experiences with modern technologies. Passionate about clean code, thoughtful design, and pushing the boundaries of what's possible on the web.",
+  "email": "jethrotan.ps@gmail.com",
+  "location": "Singapore, Singapore",
+  "social": {
+    "github": "https://github.com/Jettan17",
+    "linkedin": "https://linkedin.com",
+    "twitter": "https://twitter.com"
+  },
+  "skills": [
+    "JavaScript",
+    "TypeScript",
+    "React",
+    "Node.js",
+    "CSS/HTML",
+    "Git",
+    "Python"
+  ],
+  "about": {
+    "intro": "I'm a web developer who loves building things that live on the internet.",
+    "background": "With a background in both design and development, I bring a unique perspective to every project. I believe that great software should not only function flawlessly but also delight users with its design and attention to detail.",
+    "approach": "I focus on writing clean, maintainable code while creating intuitive user experiences. Whether it's a simple landing page or a complex web application, I approach each project with the same level of care and attention.",
+    "interests": "When I'm not coding, you can find me exploring new technologies, contributing to open source projects, or enjoying a good cup of coffee while reading about the latest web development trends."
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "Bash(ls:*)",
+      "Bash(xcopy:*)",
+      "Bash(\"/c/Program Files/nodejs/npm.cmd\" run test:coverage)"
+    ]
+  }
+}
