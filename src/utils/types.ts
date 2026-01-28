@@ -11,6 +11,12 @@ export interface ProjectData {
   repoUrl?: string;
   featured: boolean;
   publishDate: Date;
+  /** Source of project data: markdown file or GitHub API */
+  source?: 'markdown' | 'github';
+  /** GitHub stars count (only for GitHub projects) */
+  stars?: number;
+  /** Primary programming language (only for GitHub projects) */
+  language?: string | null;
 }
 
 export interface ProjectEntry {

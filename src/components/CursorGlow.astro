@@ -1,0 +1,263 @@
+---
+/**
+ * Cursor Particle Effect
+ * Connected nodes that form constellation patterns around the cursor
+ */
+---
+
+<canvas class="particle-canvas" aria-hidden="true"></canvas>
+
+<script>
+  const canvas = document.querySelector('.particle-canvas') as HTMLCanvasElement;
+
+  if (canvas && window.matchMedia('(pointer: fine)').matches) {
+    const ctx = canvas.getContext('2d')!;
+
+    // Resize canvas to window
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // Mouse position
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let isVisible = false;
+
+    // Check if dark mode is active
+    function isDarkMode(): boolean {
+      return document.documentElement.getAttribute('data-theme') === 'dark';
+    }
+
+    // Particle class
+    interface Particle {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      radius: number;
+      colorIndex: number;
+      alpha: number;
+      twinkleSpeed: number;
+      twinklePhase: number;
+    }
+
+    const particles: Particle[] = [];
+    const particleCount = 80;
+    const connectionDistance = 100;
+    const mouseOuterRadius = 150; // Attraction zone
+    const mouseInnerRadius = 50;  // Repulsion zone (creates orbit)
+
+    // Light theme colors (colorful)
+    const lightColors = [
+      'rgba(255, 107, 107, ',  // coral
+      'rgba(78, 205, 196, ',   // teal
+      'rgba(255, 255, 255, ',  // white
+    ];
+
+    // Dark theme colors (stars/night sky)
+    const darkColors = [
+      'rgba(255, 255, 255, ',  // white stars
+      'rgba(255, 223, 186, ',  // warm gold stars
+      'rgba(173, 216, 255, ',  // cool blue stars
+      'rgba(255, 215, 0, ',    // bright gold
+    ];
+
+    // Get colors based on current theme
+    function getColors(): string[] {
+      return isDarkMode() ? darkColors : lightColors;
+    }
+
+    // Create a particle at random position
+    function createParticle(): Particle {
+      const colors = getColors();
+      return {
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.8,
+        vy: (Math.random() - 0.5) * 0.8,
+        radius: Math.random() * 2 + 1,
+        colorIndex: Math.floor(Math.random() * colors.length),
+        alpha: Math.random() * 0.5 + 0.3,
+        twinkleSpeed: Math.random() * 0.03 + 0.01,
+        twinklePhase: Math.random() * Math.PI * 2,
+      };
+    }
+
+    // Initialize particles
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(createParticle());
+    }
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (!isVisible) {
+        canvas.style.opacity = '1';
+        isVisible = true;
+      }
+    });
+
+    document.addEventListener('mouseleave', () => {
+      canvas.style.opacity = '0';
+      isVisible = false;
+    });
+
+    // Time for twinkle animation
+    let time = 0;
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      time += 0.016; // ~60fps time step
+
+      const dark = isDarkMode();
+      const colors = getColors();
+
+      // Update and draw particles
+      particles.forEach((p, i) => {
+        const dx = mouseX - p.x;
+        const dy = mouseY - p.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < mouseInnerRadius && dist > 0) {
+          // Repulsion when too close - pushes particles outward
+          const force = (mouseInnerRadius - dist) / mouseInnerRadius * 0.003;
+          p.vx -= (dx / dist) * force;
+          p.vy -= (dy / dist) * force;
+        } else if (dist < mouseOuterRadius) {
+          // Gentle attraction in outer ring
+          p.vx += dx * 0.00008;
+          p.vy += dy * 0.00008;
+        }
+
+        // Random drift
+        p.vx += (Math.random() - 0.5) * 0.03;
+        p.vy += (Math.random() - 0.5) * 0.03;
+
+        // Damping
+        p.vx *= 0.98;
+        p.vy *= 0.98;
+
+        // Update position
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Wrap around edges
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+
+        // Calculate alpha with twinkle effect in dark mode
+        let drawAlpha = p.alpha;
+        if (dark) {
+          const twinkle = Math.sin(time * p.twinkleSpeed * 60 + p.twinklePhase);
+          drawAlpha = p.alpha * (0.7 + 0.3 * twinkle);
+        }
+
+        // Get color for current theme
+        const color = colors[p.colorIndex % colors.length];
+
+        // Draw particle (slightly larger radius in dark mode for star effect)
+        const drawRadius = dark ? p.radius * 1.2 : p.radius;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, drawRadius, 0, Math.PI * 2);
+        ctx.fillStyle = color + drawAlpha + ')';
+        ctx.fill();
+
+        // Add glow effect in dark mode
+        if (dark && p.radius > 1.5) {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, drawRadius * 2, 0, Math.PI * 2);
+          ctx.fillStyle = color + (drawAlpha * 0.2) + ')';
+          ctx.fill();
+        }
+
+        // Draw connections to nearby particles
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dx2 = p.x - p2.x;
+          const dy2 = p.y - p2.y;
+          const dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+
+          if (dist2 < connectionDistance) {
+            const alpha = (1 - dist2 / connectionDistance) * 0.25;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            // Different connection colors for themes
+            ctx.strokeStyle = dark
+              ? `rgba(135, 206, 235, ${alpha})`  // Sky blue for dark
+              : `rgba(78, 205, 196, ${alpha})`;   // Teal for light
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+
+        // Draw connection to mouse if in range
+        if (dist < mouseOuterRadius) {
+          const alpha = (1 - dist / mouseOuterRadius) * 0.35;
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(mouseX, mouseY);
+          // Different mouse connection colors for themes
+          ctx.strokeStyle = dark
+            ? `rgba(255, 215, 0, ${alpha})`       // Gold for dark
+            : `rgba(255, 107, 107, ${alpha})`;    // Coral for light
+          ctx.lineWidth = 0.7;
+          ctx.stroke();
+        }
+      });
+
+      // Draw mouse point
+      ctx.beginPath();
+      ctx.arc(mouseX, mouseY, 3, 0, Math.PI * 2);
+      ctx.fillStyle = dark
+        ? 'rgba(255, 215, 0, 0.9)'    // Gold cursor in dark mode
+        : 'rgba(255, 255, 255, 0.8)'; // White cursor in light mode
+      ctx.fill();
+
+      // Add glow around cursor in dark mode
+      if (dark) {
+        ctx.beginPath();
+        ctx.arc(mouseX, mouseY, 6, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 215, 0, 0.2)';
+        ctx.fill();
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  }
+</script>
+
+<style>
+  .particle-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5; /* Above blobs (0), below content (10) and header (100) */
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  /* Hide on touch devices */
+  @media (pointer: coarse) {
+    .particle-canvas {
+      display: none;
+    }
+  }
+
+  /* Reduce motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .particle-canvas {
+      display: none;
+    }
+  }
+</style>

@@ -1,25 +1,48 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import type { ProjectEntry } from '../utils/types';
 import SkillBadge from './SkillBadge.astro';
+import GeneratedImage from './GeneratedImage.astro';
 
 interface Props {
-  project: CollectionEntry<'projects'>;
+  project: CollectionEntry<'projects'> | ProjectEntry;
 }
 
 const { project } = Astro.props;
-const { title, description, image, tags, liveUrl, repoUrl } = project.data;
+const { title, description, image, tags, liveUrl, repoUrl, source, stars, language } = project.data;
+const isGitHub = source === 'github';
+const repoName = isGitHub ? project.slug.replace('github-', '') : '';
 ---
 
 <article class="project-card">
+  {isGitHub && (
+    <div class="github-badge" title="Synced from GitHub">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+      </svg>
+      {stars !== undefined && stars > 0 && (
+        <span class="star-count">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="12" height="12">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+          </svg>
+          {stars}
+        </span>
+      )}
+    </div>
+  )}
   <a href={`/projects/${project.slug}`} class="project-image-link">
     <div class="project-image">
-      <div class="project-image-placeholder">
-        <span class="project-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="48" height="48">
-            <path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-          </svg>
-        </span>
-      </div>
+      {isGitHub ? (
+        <GeneratedImage title={title} language={language} repoName={repoName} />
+      ) : (
+        <div class="project-image-placeholder">
+          <span class="project-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="48" height="48">
+              <path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+            </svg>
+          </span>
+        </div>
+      )}
       <div class="project-overlay">
         <span class="view-project">View Project</span>
       </div>
@@ -63,6 +86,7 @@ const { title, description, image, tags, liveUrl, repoUrl } = project.data;
 
 <style>
   .project-card {
+    position: relative;
     background: var(--bg-primary);
     border-radius: var(--radius-xl);
     overflow: hidden;
@@ -75,14 +99,17 @@ const { title, description, image, tags, liveUrl, repoUrl } = project.data;
     box-shadow: var(--shadow-xl);
   }
 
-  .project-image-link {
-    display: block;
-  }
-
   .project-image {
     position: relative;
     aspect-ratio: 16 / 10;
+    overflow: visible;
+  }
+
+  /* Clip the glow at the image link level */
+  .project-image-link {
+    display: block;
     overflow: hidden;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
   }
 
   .project-image-placeholder {
@@ -102,6 +129,7 @@ const { title, description, image, tags, liveUrl, repoUrl } = project.data;
   .project-overlay {
     position: absolute;
     inset: 0;
+    z-index: 2;
     background: rgba(44, 62, 80, 0.9);
     display: flex;
     align-items: center;
@@ -183,5 +211,28 @@ const { title, description, image, tags, liveUrl, repoUrl } = project.data;
 
   .project-link:hover {
     color: var(--color-primary);
+  }
+
+  .github-badge {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-md);
+    font-size: var(--text-xs);
+    backdrop-filter: blur(4px);
+  }
+
+  .star-count {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    color: var(--color-accent);
   }
 </style>

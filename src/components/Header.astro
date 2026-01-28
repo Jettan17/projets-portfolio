@@ -1,4 +1,6 @@
 ---
+import ThemeToggle from './ThemeToggle.astro';
+
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/projects', label: 'Projects' },
@@ -35,6 +37,9 @@ const currentPath = Astro.url.pathname;
           </a>
         </li>
       ))}
+      <li class="theme-toggle-item">
+        <ThemeToggle />
+      </li>
     </ul>
   </nav>
 </header>
@@ -49,6 +54,12 @@ const currentPath = Astro.url.pathname;
     height: var(--header-height);
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--bg-tertiary);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+
+  :global([data-theme="dark"]) .header {
+    background: rgba(13, 17, 23, 0.9);
     border-bottom: 1px solid var(--bg-tertiary);
   }
 
@@ -102,6 +113,16 @@ const currentPath = Astro.url.pathname;
   .nav-link.active {
     color: var(--color-primary);
     background: rgba(255, 107, 107, 0.1);
+  }
+
+  :global([data-theme="dark"]) .nav-link.active {
+    background: rgba(123, 104, 238, 0.15);
+  }
+
+  .theme-toggle-item {
+    display: flex;
+    align-items: center;
+    margin-left: var(--space-2);
   }
 
   /* Mobile menu button */

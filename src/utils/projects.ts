@@ -4,6 +4,9 @@
  */
 
 import type { ProjectEntry } from './types';
+import { fetchRepo, fetchReadme } from '../lib/github/client';
+import { transformGitHubToProject, extractDescriptionFromReadme } from '../lib/github/transformer';
+import { githubProjects, githubUsername } from '../config/github-projects';
 
 /**
  * Sort projects by publish date (newest first)
@@ -68,4 +71,81 @@ export function searchProjects(projects: ProjectEntry[], query: string): Project
     const description = project.data.description.toLowerCase();
     return title.includes(trimmedQuery) || description.includes(trimmedQuery);
   });
+}
+
+/**
+ * Fetch GitHub projects from the configured list
+ * @returns Array of project entries from GitHub
+ */
+export async function getGitHubProjects(): Promise<ProjectEntry[]> {
+  // Return empty if no projects configured
+  if (!githubProjects || githubProjects.length === 0) {
+    return [];
+  }
+
+  const projects = await Promise.all(
+    githubProjects.map(async (config) => {
+      try {
+        // Fetch repo data and README in parallel
+        const [repo, readme] = await Promise.all([
+          fetchRepo(githubUsername, config.repo),
+          fetchReadme(githubUsername, config.repo),
+        ]);
+
+        if (!repo) {
+          console.warn(`Repository not found: ${githubUsername}/${config.repo}`);
+          return null;
+        }
+
+        const projectData = transformGitHubToProject(repo, config);
+
+        // Use README description if available and no config override
+        const readmeDescription = readme ? extractDescriptionFromReadme(readme) : null;
+        const description =
+          config.description ?? readmeDescription ?? projectData.description;
+
+        return {
+          slug: projectData.slug,
+          data: {
+            title: projectData.title,
+            description,
+            image: projectData.image,
+            tags: projectData.tags,
+            liveUrl: projectData.liveUrl,
+            repoUrl: projectData.repoUrl,
+            featured: projectData.featured,
+            publishDate: projectData.publishDate,
+            source: 'github' as const,
+            stars: projectData.stars,
+            language: projectData.language,
+          },
+        } satisfies ProjectEntry;
+      } catch (error) {
+        console.error(`Failed to fetch ${config.repo}:`, error);
+        return null;
+      }
+    })
+  );
+
+  return projects.filter((p): p is ProjectEntry => p !== null);
+}
+
+/**
+ * Merge markdown and GitHub projects into a single sorted list
+ * @param markdownProjects - Projects from Content Collections
+ * @param githubProjectsList - Projects from GitHub API
+ * @returns Merged and sorted array of projects
+ */
+export function mergeProjects(
+  markdownProjects: ProjectEntry[],
+  githubProjectsList: ProjectEntry[]
+): ProjectEntry[] {
+  // Add source to markdown projects
+  const enrichedMarkdown = markdownProjects.map((p) => ({
+    ...p,
+    data: { ...p.data, source: 'markdown' as const },
+  }));
+
+  // Combine and sort by date
+  return sortByDate([...enrichedMarkdown, ...githubProjectsList]);
 }
