@@ -8,8 +8,214 @@ import { generatePlaceholderDataUrl, getGitHubOgImageUrl } from './image-generat
 import { githubUsername } from '../../config/github-projects';
 
 /**
+ * Extract live demo URL from README markdown content
+ * Looks for common patterns like "Live Demo", "Demo", deployment badges, Vercel/Netlify links
+ * @param readme - Raw README markdown content
+ * @returns Live URL or null if not found
+ */
+export function extractLiveUrlFromReadme(readme: string): string | null {
+  if (!readme || !readme.trim()) {
+    return null;
+  }
+
+  // Patterns to find live URLs (in priority order)
+  const patterns = [
+    // Markdown links with common labels
+    /\[(?:live\s*demo|demo|try\s*it|live|visit|website|app)\]\((https?:\/\/[^\s)]+)\)/gi,
+    // "Live Demo:" or "Demo:" followed by URL
+    /(?:live\s*demo|demo|website|app)\s*[:\-]\s*(https?:\/\/[^\s<>)]+)/gi,
+    // Vercel deployment URLs
+    /(https?:\/\/[a-z0-9-]+\.vercel\.app)\b/gi,
+    // Netlify deployment URLs
+    /(https?:\/\/[a-z0-9-]+\.netlify\.app)\b/gi,
+    // Railway deployment URLs
+    /(https?:\/\/[a-z0-9-]+\.up\.railway\.app)\b/gi,
+    // Heroku deployment URLs
+    /(https?:\/\/[a-z0-9-]+\.herokuapp\.com)\b/gi,
+    // GitHub Pages
+    /(https?:\/\/[a-z0-9-]+\.github\.io\/[a-z0-9-]+)\b/gi,
+    // Generic "Frontend:" pattern
+    /frontend\s*[:\-]\s*(https?:\/\/[^\s<>)]+)/gi,
+  ];
+
+  for (const pattern of patterns) {
+    const match = pattern.exec(readme);
+    if (match && match[1]) {
+      // Clean the URL (remove trailing punctuation)
+      return match[1].replace(/[.,;:!?]+$/, '');
+    }
+    // Reset regex lastIndex for next iteration
+    pattern.lastIndex = 0;
+  }
+
+  return null;
+}
+
+/**
+ * Known technologies to detect in READMEs
+ * Maps various spellings/formats to canonical names that match techColors
+ */
+const techPatterns: Array<{ pattern: RegExp; name: string }> = [
+  // Frameworks
+  { pattern: /\bnext\.?js\b/i, name: 'Next.js' },
+  { pattern: /\breact\b/i, name: 'React' },
+  { pattern: /\bvue\.?js?\b/i, name: 'Vue' },
+  { pattern: /\bangular\b/i, name: 'Angular' },
+  { pattern: /\bsvelte\b/i, name: 'Svelte' },
+  { pattern: /\bastro\b/i, name: 'Astro' },
+  { pattern: /\bnuxt\b/i, name: 'Nuxt' },
+  { pattern: /\bexpress\.?js?\b/i, name: 'Express' },
+  { pattern: /\bfastapi\b/i, name: 'FastAPI' },
+  { pattern: /\bdjango\b/i, name: 'Django' },
+  { pattern: /\bflask\b/i, name: 'Flask' },
+  { pattern: /\bnest\.?js\b/i, name: 'NestJS' },
+  { pattern: /\bnode\.?js\b/i, name: 'Node.js' },
+
+  // Languages
+  { pattern: /\btypescript\b/i, name: 'TypeScript' },
+  { pattern: /\bjavascript\b/i, name: 'JavaScript' },
+  { pattern: /\bpython\b/i, name: 'Python' },
+  { pattern: /\brust\b/i, name: 'Rust' },
+  { pattern: /\bgolang\b|\bgo\s+lang/i, name: 'Go' },
+
+  // Databases
+  { pattern: /\bpostgres(?:ql)?\b/i, name: 'PostgreSQL' },
+  { pattern: /\bmongodb\b/i, name: 'MongoDB' },
+  { pattern: /\bredis\b/i, name: 'Redis' },
+  { pattern: /\bsupabase\b/i, name: 'Supabase' },
+  { pattern: /\bfirebase\b/i, name: 'Firebase' },
+  { pattern: /\bprisma\b/i, name: 'Prisma' },
+
+  // CSS/Styling
+  { pattern: /\btailwind(?:\s*css)?\b/i, name: 'Tailwind' },
+  { pattern: /\bsass\b|\bscss\b/i, name: 'Sass' },
+
+  // Tools
+  { pattern: /\bdocker\b/i, name: 'Docker' },
+  { pattern: /\bkubernetes\b|\bk8s\b/i, name: 'Kubernetes' },
+  { pattern: /\bgraphql\b/i, name: 'GraphQL' },
+  { pattern: /\bvite\b/i, name: 'Vite' },
+
+  // AI/ML
+  { pattern: /\bopenai\b/i, name: 'OpenAI' },
+  { pattern: /\blangchain\b/i, name: 'LangChain' },
+  { pattern: /\btensorflow\b/i, name: 'TensorFlow' },
+  { pattern: /\bpytorch\b/i, name: 'PyTorch' },
+
+  // Mobile
+  { pattern: /\bflutter\b/i, name: 'Flutter' },
+  { pattern: /\breact\s*native\b/i, name: 'React Native' },
+];
+
+/**
+ * Extract tech stack from README content
+ * Looks for technology mentions in Tech Stack sections or general content
+ */
+export function extractTechStackFromReadme(readme: string): string[] {
+  if (!readme || !readme.trim()) {
+    return [];
+  }
+
+  const found = new Set<string>();
+
+  // Look in "Tech Stack", "Built With", "Technologies" sections first
+  const techSectionContent = extractFromSection(readme, [
+    'tech stack',
+    'built with',
+    'technologies',
+    'stack',
+    'tools',
+  ]);
+
+  const contentToSearch = techSectionContent || readme;
+
+  for (const { pattern, name } of techPatterns) {
+    if (pattern.test(contentToSearch)) {
+      found.add(name);
+    }
+  }
+
+  // Limit to 6 technologies
+  return Array.from(found).slice(0, 6);
+}
+
+/**
+ * Check if a line is "skippable" content (badges, links, images, etc.)
+ */
+function isSkippableLine(line: string): boolean {
+  const trimmed = line.trim();
+  if (!trimmed) return true;
+
+  // Skip headings
+  if (trimmed.startsWith('#')) return true;
+
+  // Skip images and badges
+  if (trimmed.startsWith('![')) return true;
+  if (trimmed.startsWith('[!')) return true;
+
+  // Skip HTML comments and tags
+  if (trimmed.startsWith('<!--')) return true;
+  if (trimmed.startsWith('<')) return true;
+
+  // Skip tables
+  if (trimmed.startsWith('|')) return true;
+
+  // Skip standalone links (line is just a markdown link)
+  if (/^\[.+\]\(.+\)$/.test(trimmed)) return true;
+
+  // Skip lines that are just URLs
+  if (/^https?:\/\/\S+$/.test(trimmed)) return true;
+
+  // Skip deployment status badges
+  if (trimmed.includes('shields.io') || trimmed.includes('badge')) return true;
+
+  // Skip lines that start with common non-description patterns
+  if (/^(deploy|build|status|license|version):/i.test(trimmed)) return true;
+
+  return false;
+}
+
+/**
+ * Extract content from a specific section in README
+ */
+function extractFromSection(readme: string, sectionNames: string[]): string | null {
+  const lines = readme.split('\n');
+  let inTargetSection = false;
+  let content = '';
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+
+    // Check if this is a heading
+    const headingMatch = trimmed.match(/^#{1,3}\s+(.+)$/);
+    if (headingMatch) {
+      const headingText = headingMatch[1].toLowerCase();
+
+      // Check if we're entering a target section
+      if (sectionNames.some(name => headingText.includes(name.toLowerCase()))) {
+        inTargetSection = true;
+        continue;
+      }
+
+      // If we were in a target section and hit a new heading, stop
+      if (inTargetSection) {
+        break;
+      }
+      continue;
+    }
+
+    // Collect content if we're in the target section
+    if (inTargetSection && !isSkippableLine(line)) {
+      content += trimmed + ' ';
+    }
+  }
+
+  return content.trim() || null;
+}
+
+/**
  * Extract a meaningful description from README markdown content
- * Skips title, badges, and empty lines to find the first paragraph
+ * Looks for About/Overview sections first, then falls back to first paragraph
  * @param readme - Raw README markdown content
  * @returns Extracted description (max 200 chars) or null if no content found
  */
@@ -18,24 +224,38 @@ export function extractDescriptionFromReadme(readme: string): string | null {
     return null;
   }
 
+  // Priority 1: Look for dedicated description sections
+  const sectionContent = extractFromSection(readme, [
+    'about',
+    'overview',
+    'description',
+    'what is',
+    'introduction',
+    'summary',
+  ]);
+
+  if (sectionContent && sectionContent.length > 30) {
+    return truncateDescription(sectionContent);
+  }
+
+  // Priority 2: Look for first meaningful paragraph after title
   const lines = readme.split('\n');
   let description = '';
   let foundContent = false;
+  let skippedTitle = false;
 
   for (const line of lines) {
     const trimmed = line.trim();
 
-    // Skip empty lines, titles, badges, links, and HTML comments
-    if (
-      !trimmed ||
-      trimmed.startsWith('#') ||
-      trimmed.startsWith('![') ||
-      trimmed.startsWith('[!') ||
-      trimmed.startsWith('<!--') ||
-      trimmed.startsWith('<') ||
-      trimmed.startsWith('|') // Skip tables
-    ) {
-      if (foundContent) break; // End of first paragraph
+    // Skip the first heading (title)
+    if (!skippedTitle && trimmed.startsWith('#')) {
+      skippedTitle = true;
+      continue;
+    }
+
+    // Skip other non-content lines
+    if (isSkippableLine(line)) {
+      if (foundContent) break; // End of paragraph
       continue;
     }
 
@@ -47,8 +267,14 @@ export function extractDescriptionFromReadme(readme: string): string | null {
     return null;
   }
 
-  // Clean up and limit to ~200 chars
-  const cleaned = description.trim();
+  return truncateDescription(description);
+}
+
+/**
+ * Truncate description to ~200 chars at word boundary
+ */
+function truncateDescription(text: string): string {
+  const cleaned = text.trim();
   if (cleaned.length <= 200) {
     return cleaned;
   }

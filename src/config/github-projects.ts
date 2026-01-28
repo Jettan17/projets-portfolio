@@ -48,6 +48,16 @@ export const githubUsername = 'Jettan17';
 export const githubProjects: GitHubProjectConfig[] = [
   // Add your repositories here
   // Example: { repo: 'your-repo-name' },
-  { repo: 'learnex-course-tutor', title: 'Learnex', featured: true },
-  { repo: 'stratos-investment-assistant', title: 'Stratos', featured: true },
+  {
+    repo: 'learnex-course-tutor',
+    title: 'Learnex',
+    featured: true,
+    tags: ['TypeScript', 'Next.js', 'React', 'Tailwind'],
+  },
+  {
+    repo: 'stratos-investment-assistant',
+    title: 'Stratos',
+    featured: true,
+    tags: ['TypeScript', 'React', 'FastAPI', 'Python', 'Supabase'],
+  },
 ];

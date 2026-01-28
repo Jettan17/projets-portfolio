@@ -33,7 +33,7 @@ const repoName = isGitHub ? project.slug.replace('github-', '') : '';
   <a href={`/projects/${project.slug}`} class="project-image-link">
     <div class="project-image">
       {isGitHub ? (
-        <GeneratedImage title={title} language={language} repoName={repoName} />
+        <GeneratedImage title={title} language={language} repoName={repoName} tags={tags} />
       ) : (
         <div class="project-image-placeholder">
           <span class="project-icon">
@@ -128,11 +128,14 @@ const repoName = isGitHub ? project.slug.replace('github-', '') : '';
 
   .project-overlay {
     position: absolute;
-    inset: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     z-index: 2;
-    background: rgba(44, 62, 80, 0.9);
+    padding: var(--space-8) var(--space-4) var(--space-4);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%);
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
     opacity: 0;
     transition: opacity var(--transition-base);

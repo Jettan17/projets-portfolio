@@ -80,7 +80,7 @@
         vy: (Math.random() - 0.5) * 0.8,
         radius: Math.random() * 2 + 1,
         colorIndex: Math.floor(Math.random() * colors.length),
-        alpha: Math.random() * 0.5 + 0.3,
+        alpha: Math.random() * 0.4 + 0.2,
         twinkleSpeed: Math.random() * 0.03 + 0.01,
         twinklePhase: Math.random() * Math.PI * 2,
       };
@@ -171,7 +171,7 @@
         if (dark && p.radius > 1.5) {
           ctx.beginPath();
           ctx.arc(p.x, p.y, drawRadius * 2, 0, Math.PI * 2);
-          ctx.fillStyle = color + (drawAlpha * 0.2) + ')';
+          ctx.fillStyle = color + (drawAlpha * 0.15) + ')';
           ctx.fill();
         }
 
@@ -183,7 +183,7 @@
           const dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
 
           if (dist2 < connectionDistance) {
-            const alpha = (1 - dist2 / connectionDistance) * 0.25;
+            const alpha = (1 - dist2 / connectionDistance) * 0.18;
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
@@ -198,7 +198,7 @@
 
         // Draw connection to mouse if in range
         if (dist < mouseOuterRadius) {
-          const alpha = (1 - dist / mouseOuterRadius) * 0.35;
+          const alpha = (1 - dist / mouseOuterRadius) * 0.25;
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(mouseX, mouseY);
@@ -215,15 +215,15 @@
       ctx.beginPath();
       ctx.arc(mouseX, mouseY, 3, 0, Math.PI * 2);
       ctx.fillStyle = dark
-        ? 'rgba(255, 215, 0, 0.9)'    // Gold cursor in dark mode
-        : 'rgba(255, 255, 255, 0.8)'; // White cursor in light mode
+        ? 'rgba(255, 215, 0, 0.7)'    // Gold cursor in dark mode
+        : 'rgba(255, 255, 255, 0.6)'; // White cursor in light mode
       ctx.fill();
 
       // Add glow around cursor in dark mode
       if (dark) {
         ctx.beginPath();
         ctx.arc(mouseX, mouseY, 6, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255, 215, 0, 0.2)';
+        ctx.fillStyle = 'rgba(255, 215, 0, 0.15)';
         ctx.fill();
       }
 

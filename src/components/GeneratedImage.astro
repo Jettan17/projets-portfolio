@@ -1,34 +1,36 @@
 ---
 /**
  * Generated image placeholder for GitHub projects
- * Displays a gradient background with project title overlay
+ * Displays a dark background with glowing language-colored blob
  */
 
 import {
-  getLanguageGradient,
+  getStackGradient,
+  getStackColors,
   getFontForRepo,
-  displayFonts,
 } from '../lib/github/image-generator';
 
 interface Props {
   title: string;
   language?: string | null;
   repoName?: string;
+  tags?: string[];
 }
 
-const { title, language = null, repoName = title } = Astro.props;
+const { title, language = null, repoName = title, tags = [] } = Astro.props;
 
-const colors = getLanguageGradient(language);
+const stackGradient = getStackGradient(tags, language);
+const stackColors = getStackColors(tags, language);
+const primaryColor = stackColors[0] || '#6e7681';
 const fontFamily = getFontForRepo(repoName);
 ---
 
 <div
   class="generated-image-wrapper"
-  style={`--gradient-start: ${colors.start}; --gradient-end: ${colors.end}; --display-font: '${fontFamily}', system-ui, sans-serif;`}
+  style={`--stack-gradient: ${stackGradient}; --primary-color: ${primaryColor}; --display-font: '${fontFamily}', system-ui, sans-serif;`}
 >
-  <div class="glow-layer"></div>
   <div class="generated-image">
-    <div class="dark-overlay"></div>
+    <div class="glow-blob"></div>
     <span class="generated-title">{title}</span>
   </div>
 </div>
@@ -40,64 +42,51 @@ const fontFamily = getFontForRepo(repoName);
     height: 100%;
   }
 
-  /* Glow layer - blurred copy of gradient behind main image */
-  .glow-layer {
-    position: absolute;
-    inset: -20px;
-    background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
-    filter: blur(40px);
-    opacity: 0.5;
-    z-index: 0;
-    transition: opacity 0.3s ease, filter 0.3s ease;
-  }
-
-  /* Muted glow in dark mode */
-  :global([data-theme="dark"]) .glow-layer {
-    opacity: 0.3;
-  }
-
-  /* Intensify glow on hover */
-  :global(.project-card:hover) .glow-layer {
-    opacity: 0.7;
-    filter: blur(50px);
-  }
-
-  :global([data-theme="dark"] .project-card:hover) .glow-layer {
-    opacity: 0.45;
-  }
-
   .generated-image {
     position: relative;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+    background: #0d1117;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    z-index: 1;
   }
 
-  .generated-image::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-      circle at 30% 30%,
-      rgba(255, 255, 255, 0.15) 0%,
-      transparent 50%
-    );
+  /* Light mode: slightly lighter dark background */
+  :global(:not([data-theme="dark"])) .generated-image {
+    background: #1a1f26;
   }
 
-  .generated-image::after {
-    content: '';
+  /* Centered glowing blob with multi-color gradient */
+  .glow-blob {
     position: absolute;
-    inset: 0;
-    background: radial-gradient(
-      circle at 70% 70%,
-      rgba(0, 0, 0, 0.1) 0%,
-      transparent 50%
-    );
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120%;
+    height: 120%;
+    background: var(--stack-gradient);
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.7;
+    transition: opacity 0.3s ease, filter 0.3s ease, transform 0.3s ease;
+  }
+
+  /* Light mode: more visible glow */
+  :global(:not([data-theme="dark"])) .glow-blob {
+    opacity: 0.8;
+  }
+
+  /* Intensify glow on hover */
+  :global(.project-card:hover) .glow-blob {
+    opacity: 0.9;
+    filter: blur(35px);
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+
+  :global([data-theme="dark"] .project-card:hover) .glow-blob {
+    opacity: 0.8;
   }
 
   .generated-title {
@@ -108,23 +97,9 @@ const fontFamily = getFontForRepo(repoName);
     font-weight: 600;
     color: white;
     text-align: center;
-    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     padding: var(--space-4);
     max-width: 90%;
     line-height: 1.2;
-  }
-
-  /* Dark theme overlay to mute vibrant gradients */
-  .dark-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(13, 17, 23, 0.4);
-    z-index: 1;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  :global([data-theme="dark"]) .dark-overlay {
-    opacity: 1;
   }
 </style>

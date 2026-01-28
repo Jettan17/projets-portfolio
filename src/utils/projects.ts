@@ -5,7 +5,7 @@
 
 import type { ProjectEntry } from './types';
 import { fetchRepo, fetchReadme } from '../lib/github/client';
-import { transformGitHubToProject, extractDescriptionFromReadme } from '../lib/github/transformer';
+import { transformGitHubToProject, extractDescriptionFromReadme, extractLiveUrlFromReadme, extractTechStackFromReadme } from '../lib/github/transformer';
 import { githubProjects, githubUsername } from '../config/github-projects';
 
 /**
@@ -104,14 +104,29 @@ export async function getGitHubProjects(): Promise<ProjectEntry[]> {
         const description =
           config.description ?? readmeDescription ?? projectData.description;
 
+        // Use README live URL if no config override and no GitHub homepage
+        const readmeLiveUrl = readme ? extractLiveUrlFromReadme(readme) : null;
+        const liveUrl = config.liveUrl ?? projectData.liveUrl ?? readmeLiveUrl ?? undefined;
+
+        // Enhance tags with README tech stack extraction if we only have language
+        let tags = projectData.tags;
+        if (tags.length <= 1 && readme) {
+          const readmeTech = extractTechStackFromReadme(readme);
+          if (readmeTech.length > 0) {
+            // Merge: keep language first, add detected tech
+            const merged = new Set([...tags, ...readmeTech]);
+            tags = Array.from(merged).slice(0, 6);
+          }
+        }
+
         return {
           slug: projectData.slug,
           data: {
             title: projectData.title,
             description,
             image: projectData.image,
-            tags: projectData.tags,
-            liveUrl: projectData.liveUrl,
+            tags,
+            liveUrl,
             repoUrl: projectData.repoUrl,
             featured: projectData.featured,
             publishDate: projectData.publishDate,
