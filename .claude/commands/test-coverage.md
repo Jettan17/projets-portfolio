@@ -1,10 +1,3 @@
----
-description: Analyze test coverage and generate missing tests
-ecc_base_version: "5230892"
-last_synced: "2026-01-26"
-customizations: "Agent escalation section added"
----
-
 # Test Coverage
 
 Analyze test coverage and generate missing tests:
@@ -32,18 +25,3 @@ Focus on:
 - Error handling
 - Edge cases (null, undefined, empty)
 - Boundary conditions
-
-## Agent Escalation
-
-This command automatically escalates to specialized agents when:
-
-| Condition | Agent | Purpose |
-|-----------|-------|---------|
-| Coverage gaps identified | **tdd-guide** | Generate missing tests using TDD |
-| Integration test gaps | **testing-specialist** | Real infrastructure test generation |
-| Complex test scenarios | **intermediate-reviewer** | Review test coverage strategy |
-
-### Escalation Triggers
-- **tdd-guide**: Use to generate tests for uncovered code paths
-- **testing-specialist**: Use for integration test coverage
-- **intermediate-reviewer**: Use to review overall testing strategy

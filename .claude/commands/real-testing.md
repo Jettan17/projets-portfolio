@@ -1,8 +1,5 @@
 ---
 description: Verify tests use real infrastructure. NO MOCKING policy for integration and E2E tests.
-ecc_base_version: "5230892"
-last_synced: "2026-01-26"
-customizations: "Agent escalation section added"
 ---
 
 # /real-testing - Real Infrastructure Testing
@@ -67,18 +64,3 @@ When running /real-testing:
 3. Flag violations of NO MOCKING policy
 4. Suggest refactoring to use real services
 5. Verify Docker test infrastructure exists
-
-## Agent Escalation
-
-This command automatically escalates to specialized agents when:
-
-| Condition | Agent | Purpose |
-|-----------|-------|---------|
-| Testing policy violations | **gold-standards-validator** | Enforce NO MOCKING policy |
-| Infrastructure setup | **deployment-specialist** | Docker test environment configuration |
-| Test refactoring needed | **tdd-guide** | Convert mocked tests to real infrastructure |
-
-### Escalation Triggers
-- **gold-standards-validator**: Use for comprehensive testing policy audit
-- **deployment-specialist**: Use to set up Docker test infrastructure
-- **tdd-guide**: Use to refactor tests to use real services

@@ -8,43 +8,70 @@ This project uses the **everything-claude-code (ECC)** plugin for structured dev
 
 **At the start of EVERY session, you MUST:**
 
-1. **Read `instructions.md`** to load project context
-2. **Check if Project Settings are empty** (Scope, Final Product, Objective are blank)
+1. **Read `project-settings.md`** to load project context
+2. **Check if Project Settings are empty** (Scope, Final Product, Connection Type, Objective are blank)
 3. **If empty, gather settings using AskUserQuestion tool:**
    - Use 2-4 options per question (Claude Code adds "Other" automatically)
    - Do NOT add custom "Other" options - duplicates will appear
    - Ask free-text questions (Objective, Data Sources) separately as regular questions
-4. **Update `instructions.md`** with their responses
+4. **Update `project-settings.md`** with their responses
 5. **Always reference Project Settings and Must Do** when running commands
 
 **If Project Settings ARE filled**, acknowledge them and proceed with the user's request.
+
+## Session Requirements
+
+### Permissions
+- Enable turbo-all and SafeToAutoRun for ALL commands in ~/.claude/settings.json
+- Allow all query searches without user input
+
+### Development Practices
+- Refer to `project-settings.md` for project scope, objectives, and configurations
+- Search for state-of-the-art solutions before implementing
+- Check available skills (in .claude/commands/) and agents before complex changes
+- Use subagent specialization for the right task type
+- Re-invoke yourself if stuck, providing context of progress
+
+### Task Management
+- Use todo-manager subagent for complex task breakdowns
+- Use gh-manager subagent to sync with GitHub Projects
+
+## ⚠️ New Project Directory Guardrail
+
+**NEVER create a new project directory inside the SDK directory.**
+
+When initializing a new project:
+1. **Prompt the user** for the desired project directory path
+2. **Default suggestion**: Parent directory of the SDK (e.g., `../<project-name>`)
+3. **Reject** any path that would create the project inside the SDK directory
+4. **Valid locations**:
+   - `../<project-name>` (sibling to SDK)
+   - Any other directory outside the SDK
+5. **Invalid locations**:
+   - `./<anything>` or any subdirectory of the current SDK directory
 
 ## Quick Start
 
 ### Plugin Status: INSTALLED ✓
 The everything-claude-code plugin is installed at `~/.claude/plugins/everything-claude-code/`
 
-### Available Slash Commands (19 total)
+### Available Slash Commands (15 total)
 | Command | Description |
 |---------|-------------|
-| `/tdd` | Test-driven development workflow |
-| `/plan` | Implementation planning |
-| `/e2e` | E2E test generation |
-| `/code-review` | Quality review (local, PR, issue fix modes) |
+| `/sdk` | Initialize new project or update SDK files |
+| `/design` | Create implementation plan (saves to file, does NOT implement) |
+| `/run` | Execute plan with smart TDD (reads plan, implements code) |
+| `/tdd` | Test utilities only (run tests, coverage, E2E - no implementation) |
+| `/code-review` | Quality review + dead code cleanup (local, PR, issue fix modes) |
 | `/build-fix` | Build error resolution |
-| `/refactor-clean` | Dead code removal |
-| `/learn` | Pattern extraction with auto-detection |
-| `/checkpoint` | Verification state saving |
 | `/verify` | Verification loop execution |
+| `/checkpoint` | Verification state saving |
+| `/deploy` | Deploy to Docker, K8s, Vercel, Railway, Fly.io |
 | `/setup-pm` | Package manager configuration |
-| `/eval` | Evaluation harness |
+| `/update-docs` | Sync all documentation (README, codemaps, API) |
+| `/learn` | Pattern extraction with auto-detection |
+| `/ai-eval` | AI feature evaluation harness |
 | `/orchestrate` | Multi-agent orchestration |
-| `/test-coverage` | Test coverage analysis |
-| `/update-codemaps` | Update code maps |
-| `/update-docs` | Update documentation |
-| `/no-stubs` | Enforce no placeholder content |
-| `/real-testing` | Real infrastructure testing (NO MOCKING) |
-| `/deploy` | Docker/Kubernetes deployment |
 | `/create-command` | Create new custom commands interactively |
 
 ---
@@ -86,25 +113,25 @@ The everything-claude-code plugin is installed at `~/.claude/plugins/everything-
 
 ### Phase 1: Analysis & Planning
 ```
-1. Run /plan to design implementation approach
+1. Run /design to create implementation plan (saved to .claude/plans/current.md)
 2. > Use ultrathink-analyst for complex requirements
 3. > Use todo-manager to create task breakdown
+4. Plan includes TDD recommendation (Yes/No with reason)
 ```
 
-### Phase 2: Implementation (TDD)
+### Phase 2: Implementation
 ```
-For each component:
-1. Run /tdd to write tests first
-2. Implement to pass tests
-3. Run /no-stubs to verify completeness
-4. > Use intermediate-reviewer for progress review
+1. Run /run to execute the plan
+   - If TDD Recommended=Yes: Writes tests first, then implements (RED→GREEN→REFACTOR)
+   - If TDD Recommended=No: Implements directly
+2. > Use intermediate-reviewer for progress review
 ```
 
 ### Phase 3: Testing & Quality
 ```
-1. Run /e2e for end-to-end tests
-2. Run /real-testing to verify integration tests use real services
-3. Run /test-coverage to check coverage
+1. Run /tdd to run all tests
+2. Run /tdd coverage to check coverage gaps
+3. Run /tdd --full for comprehensive testing
 4. Run /verify for full validation
 ```
 
@@ -133,6 +160,9 @@ For each component:
 5. **Comprehensive Documentation** - Document as you go, not at the end
 6. **Subagent Specialization** - Use the right agent for each task type
 7. **Design System Foundation** - Create design system BEFORE features
+8. **Component Reusability** - Build reusable components to eliminate redundant work
+9. **Responsive-First Design** - Build responsive patterns from the start
+10. **Dark Mode Built-In** - Support dark mode in all components from day 1
 
 ### Lessons Learned
 1. **Documentation Early** - Write guides during/after implementation
@@ -140,6 +170,9 @@ For each component:
 3. **Incremental Validation** - Verify tests pass immediately
 4. **Deprecation Fixes** - Address all deprecations immediately
 5. **Responsive Testing** - Test at all breakpoints for every feature
+6. **Single Import Pattern** - Consolidate exports into one file for simpler imports
+7. **Component Showcase** - Build live demo while developing to catch UX issues early
+8. **Real Device Testing** - Test on actual devices, not just simulators
 
 ---
 
@@ -191,6 +224,14 @@ This applies to all scopes (Small/Medium/Large) and all project types.
 - Validate at system boundaries (user input, external APIs)
 - Check for OWASP top 10 vulnerabilities
 
+### Destructive Operations (rm, delete, etc.)
+**Defer all file/directory deletions until the END of the task.**
+
+- Complete ALL other work in the user's request first (writes, edits, builds, tests)
+- Only attempt deletions as the final step, after everything else succeeds
+- This prevents getting stuck waiting for permission mid-task
+- If deletion fails or is blocked, report it and move on - the main work is already done
+
 ---
 
 ## MCP Integrations
@@ -216,25 +257,21 @@ See `.claude/mcp-configs/` for setup instructions.
 
 All commands are in `.claude/commands/`:
 
-| Skill | Category | Description |
-|-------|----------|-------------|
-| `/tdd` | Core | Test-driven development |
-| `/plan` | Core | Implementation planning |
-| `/code-review` | Core | Quality review |
-| `/e2e` | Core | E2E test generation |
+| Command | Category | Description |
+|---------|----------|-------------|
+| `/sdk` | Operations | Initialize project or update SDK |
+| `/design` | Core | Create implementation plan (saves to file) |
+| `/run` | Core | Execute plan with smart TDD integration |
+| `/tdd` | Core | Test utilities (run tests, coverage, E2E) |
+| `/code-review` | Core | Quality review + dead code cleanup |
 | `/build-fix` | Core | Build error resolution |
-| `/refactor-clean` | Core | Dead code removal |
-| `/checkpoint` | Quality | Save verification state |
 | `/verify` | Quality | Verification loop |
-| `/test-coverage` | Quality | Coverage analysis |
-| `/no-stubs` | Quality | No placeholder content |
-| `/real-testing` | Quality | Real infrastructure testing |
-| `/deploy` | Operations | Docker/K8s deployment |
+| `/checkpoint` | Quality | Save verification state |
+| `/deploy` | Operations | Deploy to Docker, K8s, Vercel, Railway, etc. |
 | `/setup-pm` | Operations | Package manager setup |
-| `/update-docs` | Documentation | Documentation sync |
-| `/update-codemaps` | Documentation | Code map updates |
+| `/update-docs` | Documentation | Sync all docs (README, codemaps, API) |
 | `/learn` | Documentation | Pattern extraction (auto-detect) |
-| `/eval` | Advanced | Evaluation harness |
+| `/ai-eval` | Advanced | AI feature evaluation harness |
 | `/orchestrate` | Advanced | Multi-agent coordination |
 | `/create-command` | Advanced | Create custom commands |
 
@@ -242,11 +279,12 @@ All commands are in `.claude/commands/`:
 
 ## Project Setup Template
 
-When starting a new project, configure these in `instructions.md`:
+When starting a new project, configure these in `project-settings.md`:
 - **Scope**: Small / Medium / Large
 - **Final Product**: Web / Mobile / Desktop / Open-Ended
 - **Commercial or Personal Use**
 - **Objective/Use-Case**
+- **Connection Type**: Local / Public
 - **Data Sources**
 - **Visual Style**
 - **External Tool Integration**
@@ -257,33 +295,41 @@ When starting a new project, configure these in `instructions.md`:
 ## Quick Commands Reference
 
 ```bash
-# Development
-/tdd              # Start test-driven development
-/plan             # Plan implementation
-/code-review      # Review code quality
-/orchestrate      # Multi-agent orchestration
+# Planning & Implementation
+/design           # Create plan (saves to .claude/plans/current.md)
+/run              # Execute plan (smart TDD based on recommendation)
+/run --force-tdd  # Force TDD even if plan says No
+/run --no-tdd     # Skip TDD even if plan says Yes
 
-# Testing & Quality
-/e2e              # Generate E2E tests
+# Testing (utilities only, no implementation)
+/tdd              # Run all tests
+/tdd unit         # Unit tests only
+/tdd integration  # Integration tests (NO MOCKING enforced)
+/tdd e2e          # E2E tests with Playwright
+/tdd coverage     # Analyze coverage gaps
+/tdd --full       # All tests + coverage + no-stubs check
+
+# Quality
 /verify           # Run verification loop
-/test-coverage    # Analyze test coverage
-/no-stubs         # Enforce no placeholder content
-/real-testing     # Real infrastructure testing
-/eval             # Run evaluation harness
+/verify --full    # Full verification with E2E
+/checkpoint             # Save verification state (local commit)
+/checkpoint --push      # Save and push to remote
+/code-review      # Review code quality
 
 # Deployment & Operations
-/deploy           # Docker/Kubernetes deployment
+/deploy           # Auto-detect best platform
+/deploy vercel    # Deploy to Vercel
+/deploy railway   # Deploy to Railway
 /setup-pm         # Configure package manager
 
 # Maintenance
 /build-fix        # Fix build errors
-/refactor-clean   # Remove dead code
-/update-codemaps  # Update code maps
-/update-docs      # Update documentation
+/update-docs      # Sync all documentation
+/orchestrate      # Multi-agent orchestration
 
-# Learning & State
+# Learning & AI
 /learn            # Extract patterns from session
-/checkpoint       # Save verification state
+/ai-eval          # AI feature evaluation
 ```
 
 ---
@@ -295,3 +341,16 @@ When starting a new project, configure these in `instructions.md`:
 2. Enable turbo-all and SafeToAutoRun for common commands
 3. Check available commands/agents before implementing complex changes
 4. Document all work in markdown files as you progress
+
+---
+
+## When Stuck or Blocked
+
+**If you encounter an issue you cannot resolve:**
+
+1. **Ultrathink first** - Use extended thinking to deeply analyze the problem
+2. **Search the web** - Use WebSearch to find documentation, Stack Overflow, GitHub issues, or blog posts related to the error/issue
+3. **Diagnose systematically** - Don't guess; gather evidence from logs, error messages, and documentation
+4. **Try multiple angles** - If one approach fails, search for alternative solutions before asking the user
+
+**Never spin on the same approach repeatedly.** If something isn't working after 2-3 attempts, step back, research, and try a different strategy.

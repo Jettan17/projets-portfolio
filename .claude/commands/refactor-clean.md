@@ -1,10 +1,3 @@
----
-description: Safely identify and remove dead code with test verification
-ecc_base_version: "5230892"
-last_synced: "2026-01-26"
-customizations: "Agent escalation section added"
----
-
 # Refactor Clean
 
 Safely identify and remove dead code with test verification:
@@ -33,18 +26,3 @@ Safely identify and remove dead code with test verification:
 6. Show summary of cleaned items
 
 Never delete code without running tests first!
-
-## Agent Escalation
-
-This command automatically escalates to specialized agents when:
-
-| Condition | Agent | Purpose |
-|-----------|-------|---------|
-| Large-scale refactoring | **architect** | Architectural impact analysis |
-| Quality verification | **code-reviewer** | Review refactored code quality |
-| Pattern compliance | **gold-standards-validator** | Ensure refactored code follows standards |
-
-### Escalation Triggers
-- **architect**: Use for significant structural changes
-- **code-reviewer**: Use to verify refactoring maintains quality
-- **gold-standards-validator**: Use to validate pattern compliance after refactoring

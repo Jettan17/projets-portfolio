@@ -1,10 +1,3 @@
----
-description: Manage eval-driven development workflow
-ecc_base_version: "5230892"
-last_synced: "2026-01-26"
-customizations: "Agent escalation section added"
----
-
 # Eval Command
 
 Manage eval-driven development workflow.
@@ -125,18 +118,3 @@ $ARGUMENTS:
 - `report <name>` - Generate full report
 - `list` - Show all evals
 - `clean` - Remove old eval logs (keeps last 10 runs)
-
-## Agent Escalation
-
-This command automatically escalates to specialized agents when:
-
-| Condition | Agent | Purpose |
-|-----------|-------|---------|
-| Complex evaluation design | **ultrathink-analyst** | Deep analysis of evaluation criteria |
-| Requirements validation | **requirements-analyst** | Ensure evals match requirements |
-| Progress review | **intermediate-reviewer** | Review eval results and progress |
-
-### Escalation Triggers
-- **ultrathink-analyst**: Use for complex AI/ML evaluation design
-- **requirements-analyst**: Use to ensure evaluations match original requirements
-- **intermediate-reviewer**: Use to review evaluation results and make recommendations

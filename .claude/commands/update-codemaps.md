@@ -1,10 +1,3 @@
----
-description: Update code architecture documentation
-ecc_base_version: "5230892"
-last_synced: "2026-01-26"
-customizations: "Agent escalation section added"
----
-
 # Update Codemaps
 
 Analyze the codebase structure and update architecture documentation:
@@ -22,16 +15,3 @@ Analyze the codebase structure and update architecture documentation:
 6. Save reports to .reports/codemap-diff.txt
 
 Use TypeScript/Node.js for analysis. Focus on high-level structure, not implementation details.
-
-## Agent Escalation
-
-This command automatically escalates to specialized agents when:
-
-| Condition | Agent | Purpose |
-|-----------|-------|---------|
-| Architecture analysis | **architect** | Deep architectural understanding |
-| Documentation sync | **documentation-validator** | Validate codemap accuracy |
-
-### Escalation Triggers
-- **architect**: Use for complex architectural analysis
-- **documentation-validator**: Use to ensure codemaps match implementation

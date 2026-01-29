@@ -60,4 +60,11 @@ export const githubProjects: GitHubProjectConfig[] = [
     featured: true,
     tags: ['TypeScript', 'React', 'FastAPI', 'Python', 'Supabase'],
   },
+  {
+    repo: 'prizm-photo-album',
+    title: 'Prizm',
+    featured: true,
+    tags: ['TypeScript', 'Next.js', 'React', 'Tailwind CSS'],
+    liveUrl: 'https://prizm-photo-album.vercel.app',
+  },
 ];

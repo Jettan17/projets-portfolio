@@ -1,8 +1,5 @@
 ---
 description: Restate requirements, assess risks, and create step-by-step implementation plan. WAIT for user CONFIRM before touching any code.
-ecc_base_version: "5230892"
-last_synced: "2026-01-26"
-customizations: "Agent escalation section added"
 ---
 
 # Plan Command
@@ -110,17 +107,7 @@ After planning:
 - Use `/build-and-fix` if build errors occur
 - Use `/code-review` to review completed implementation
 
-## Agent Escalation
+## Related Agents
 
-This command automatically escalates to specialized agents when:
-
-| Condition | Agent | Purpose |
-|-----------|-------|---------|
-| Complex requirements, systemic issues | **ultrathink-analyst** | Deep failure analysis, comprehensive requirement breakdown |
-| Architecture decisions needed | **requirements-analyst** | ADR creation, systematic requirements breakdown |
-| Technology selection required | **framework-advisor** | Tech stack decisions, framework recommendations |
-
-### Escalation Triggers
-- **ultrathink-analyst**: Use when task touches 3+ components, has unclear failure modes, or needs risk analysis
-- **requirements-analyst**: Use when creating new architecture, making significant design decisions, or need formal ADRs
-- **framework-advisor**: Use when choosing between frameworks, libraries, or implementation approaches
+This command invokes the `planner` agent located at:
+`~/.claude/agents/planner.md`

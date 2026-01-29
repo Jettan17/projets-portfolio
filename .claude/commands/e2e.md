@@ -1,8 +1,5 @@
 ---
 description: Generate and run end-to-end tests with Playwright. Creates test journeys, runs tests, captures screenshots/videos/traces, and uploads artifacts.
-ecc_base_version: "5230892"
-last_synced: "2026-01-26"
-customizations: "Agent escalation section added"
 ---
 
 # E2E Command
@@ -338,20 +335,10 @@ For PMX, prioritize these E2E tests:
 - Use `/e2e` for integration and user journey tests
 - Use `/code-review` to verify test quality
 
-## Agent Escalation
+## Related Agents
 
-This command automatically escalates to specialized agents when:
-
-| Condition | Agent | Purpose |
-|-----------|-------|---------|
-| Real infrastructure needed | **testing-specialist** | NO MOCKING policy enforcement |
-| React E2E testing | **ui-engineer** | Next.js App Router E2E patterns |
-| Flutter E2E testing | **flutter-specialist** | Flutter integration testing |
-
-### Escalation Triggers
-- **testing-specialist**: Use for complex E2E infrastructure setup
-- **ui-engineer**: Use for React/Next.js specific E2E patterns
-- **flutter-specialist**: Use for Flutter E2E and integration tests
+This command invokes the `e2e-runner` agent located at:
+`~/.claude/agents/e2e-runner.md`
 
 ## Quick Commands
 
