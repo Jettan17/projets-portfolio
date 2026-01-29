@@ -325,14 +325,26 @@ export function getGitHubOgImageUrl(username: string, repoName: string): string 
 /**
  * Image style variants for project cards
  */
-export const imageStyles = ['orb', 'waves', 'corners', 'grain', 'diagonal', 'duotone'] as const;
+export const imageStyles = ['orb', 'waves', 'corners', 'grain', 'diagonal', 'duotone-grain'] as const;
 export type ImageStyle = (typeof imageStyles)[number];
+
+/**
+ * Custom color overrides for specific projects
+ * Hue values: 0=red, 30=orange, 60=yellow, 120=green, 180=cyan, 240=blue, 300=magenta
+ */
+const customProjectHues: Record<string, number> = {
+  'jetflux-cc-sdk': 30, // Warm orange/amber instead of purple
+};
 
 /**
  * Get unique hue for a project using golden angle distribution
  * This ensures well-separated colors even for projects with similar names
  */
 export function getUniqueProjectHue(repoName: string): number {
+  // Check for custom override first
+  if (customProjectHues[repoName] !== undefined) {
+    return customProjectHues[repoName];
+  }
   const hash = hashString(repoName);
   // Golden angle (137.508°) creates visually pleasing, well-distributed hues
   return Math.round((hash * 137.508) % 360);

@@ -1,7 +1,7 @@
 # Checkpoint: jetflux-sdk-added
 
 Created: 2026-01-29
-Git SHA: (pending commit)
+Git SHA: 80febe8
 Branch: main
 
 ## Summary

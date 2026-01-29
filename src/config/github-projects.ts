@@ -57,7 +57,7 @@ export const githubProjects: GitHubProjectConfig[] = [
   {
     repo: 'stratos-investment-assistant',
     title: 'Stratos',
-    featured: true,
+    featured: false,
     tags: ['TypeScript', 'React', 'FastAPI', 'Python', 'Supabase'],
   },
   {
@@ -69,7 +69,7 @@ export const githubProjects: GitHubProjectConfig[] = [
   },
   {
     repo: 'jetflux-cc-sdk',
-    title: 'JetFlux CC SDK',
+    title: 'JetFlux',
     description:
       'A comprehensive Claude Code SDK with specialized agents, slash commands, and MCP integrations for structured AI-assisted development workflows.',
     featured: true,

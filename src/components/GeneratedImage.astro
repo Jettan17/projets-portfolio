@@ -75,9 +75,12 @@ const cssVars = `
       <div class="diagonal-line"></div>
     )}
 
-    <!-- Style 6: Duotone - two-tone vertical split -->
-    {style === 'duotone' && (
-      <div class="duotone-bg"></div>
+    <!-- Style 6: Duotone + Grain - two-tone split with noise texture -->
+    {style === 'duotone-grain' && (
+      <>
+        <div class="duotone-bg"></div>
+        <div class="duotone-grain-overlay"></div>
+      </>
     )}
 
     <span class="generated-title">{title}</span>
@@ -307,9 +310,9 @@ const cssVars = `
   }
 
   /* ==========================================================================
-     STYLE 6: DUOTONE - Two-tone vertical split with smooth blend
+     STYLE 6: DUOTONE + GRAIN - Two-tone split with noise texture overlay
      ========================================================================== */
-  .style-duotone .duotone-bg {
+  .style-duotone-grain .duotone-bg {
     position: absolute;
     inset: 0;
     background: linear-gradient(90deg,
@@ -322,7 +325,15 @@ const cssVars = `
     transition: opacity 0.3s ease;
   }
 
-  .style-duotone::before {
+  .style-duotone-grain .duotone-grain-overlay {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.35;
+    mix-blend-mode: overlay;
+  }
+
+  .style-duotone-grain::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -330,7 +341,7 @@ const cssVars = `
     z-index: 1;
   }
 
-  :global(.project-card:hover) .style-duotone .duotone-bg {
+  :global(.project-card:hover) .style-duotone-grain .duotone-bg {
     opacity: 0.5;
   }
 </style>
