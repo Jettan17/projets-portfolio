@@ -4,7 +4,7 @@ import type { ProjectEntry } from '../utils/types';
 import ProjectCard from './ProjectCard.astro';
 
 interface Props {
-  projects: (CollectionEntry<'projects'> | ProjectEntry)[];
+  projects: (CollectionEntry<'projets'> | ProjectEntry)[];
 }
 
 const { projects } = Astro.props;
@@ -17,8 +17,8 @@ const { projects } = Astro.props;
     ))}
   </div>
 ) : (
-  <div class="no-projects">
-    <p>No projects to display yet. Check back soon!</p>
+  <div class="no-projets">
+    <p>No projets to display yet. Check back soon!</p>
   </div>
 )}
 
@@ -41,14 +41,14 @@ const { projects } = Astro.props;
     }
   }
 
-  .no-projects {
+  .no-projets {
     text-align: center;
     padding: var(--space-12);
     background: var(--bg-secondary);
     border-radius: var(--radius-xl);
   }
 
-  .no-projects p {
+  .no-projets p {
     color: var(--text-secondary);
     margin-bottom: 0;
   }

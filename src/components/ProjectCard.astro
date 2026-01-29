@@ -30,7 +30,7 @@ const repoName = isGitHub ? project.slug.replace('github-', '') : '';
       )}
     </div>
   )}
-  <a href={`/projects/${project.slug}`} class="project-image-link">
+  <a href={`/projets/${project.slug}`} class="project-image-link">
     <div class="project-image">
       {isGitHub ? (
         <GeneratedImage title={title} language={language} repoName={repoName} tags={tags} />
@@ -51,7 +51,7 @@ const repoName = isGitHub ? project.slug.replace('github-', '') : '';
 
   <div class="project-content">
     <h3 class="project-title">
-      <a href={`/projects/${project.slug}`}>{title}</a>
+      <a href={`/projets/${project.slug}`}>{title}</a>
     </h3>
     <p class="project-description">{description}</p>
 

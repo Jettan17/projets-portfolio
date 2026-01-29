@@ -22,11 +22,11 @@ import personal from '../data/personal.json';
       <p class="hero-bio animate-fade-in animate-delay-3">{personal.bio}</p>
 
       <div class="hero-actions animate-fade-in animate-delay-4">
-        <Button href="/projects" variant="primary" size="lg">
+        <Button href="/projets" variant="primary" size="lg">
           View My Work
         </Button>
-        <Button href="/contact" variant="outline" size="lg">
-          Get in Touch
+        <Button href={personal.social.github} variant="outline" size="lg" external>
+          GitHub
         </Button>
       </div>
 

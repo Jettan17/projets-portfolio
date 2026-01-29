@@ -1,36 +1,85 @@
 ---
 /**
- * Generated image placeholder for GitHub projects
- * Displays a dark background with glowing language-colored blob
+ * Generated image placeholder for projects
+ * Supports 6 visual styles with deterministic assignment per project
  */
 
 import {
-  getStackGradient,
-  getStackColors,
   getFontForRepo,
+  getUniqueProjectColors,
+  getProjectStyle,
+  type ImageStyle,
 } from '../lib/github/image-generator';
 
 interface Props {
   title: string;
-  language?: string | null;
   repoName?: string;
+  language?: string | null;
   tags?: string[];
 }
 
-const { title, language = null, repoName = title, tags = [] } = Astro.props;
+const { title, repoName = title, language = null, tags = [] } = Astro.props;
 
-const stackGradient = getStackGradient(tags, language);
-const stackColors = getStackColors(tags, language);
-const primaryColor = stackColors[0] || '#6e7681';
+// Get unique colors and style for this project
+const colors = getUniqueProjectColors(repoName);
+const style = getProjectStyle(repoName);
 const fontFamily = getFontForRepo(repoName);
+
+// CSS custom properties for this project
+const cssVars = `
+  --primary: ${colors.primary};
+  --secondary: ${colors.secondary};
+  --accent: ${colors.accent};
+  --hue: ${colors.hue};
+  --display-font: '${fontFamily}', system-ui, sans-serif;
+`;
 ---
 
 <div
-  class="generated-image-wrapper"
-  style={`--stack-gradient: ${stackGradient}; --primary-color: ${primaryColor}; --display-font: '${fontFamily}', system-ui, sans-serif;`}
+  class={`generated-image-wrapper style-${style}`}
+  style={cssVars}
+  data-style={style}
 >
   <div class="generated-image">
-    <div class="glow-blob"></div>
+    <!-- Style 1: Orb - refined gradient ellipse -->
+    {style === 'orb' && (
+      <div class="gradient-orb"></div>
+    )}
+
+    <!-- Style 2: Waves - bold 3-layer SVG waves -->
+    {style === 'waves' && (
+      <div class="waves-container">
+        <svg class="waves-svg" viewBox="0 0 1200 600" preserveAspectRatio="none">
+          <path class="wave wave-1" d="M0,150 Q300,50 600,150 T1200,150 L1200,600 L0,600 Z" />
+          <path class="wave wave-2" d="M0,250 Q300,150 600,250 T1200,250 L1200,600 L0,600 Z" />
+          <path class="wave wave-3" d="M0,350 Q300,250 600,350 T1200,350 L1200,600 L0,600 Z" />
+        </svg>
+      </div>
+    )}
+
+    <!-- Style 3: Corners - dual corners with glow -->
+    {style === 'corners' && (
+      <>
+        <div class="corner-accent corner-top-left"></div>
+        <div class="corner-accent corner-bottom-right"></div>
+      </>
+    )}
+
+    <!-- Style 4: Grain - noise texture overlay -->
+    {style === 'grain' && (
+      <div class="grain-overlay"></div>
+    )}
+
+    <!-- Style 5: Diagonal - bold accent line -->
+    {style === 'diagonal' && (
+      <div class="diagonal-line"></div>
+    )}
+
+    <!-- Style 6: Duotone - two-tone vertical split -->
+    {style === 'duotone' && (
+      <div class="duotone-bg"></div>
+    )}
+
     <span class="generated-title">{title}</span>
   </div>
 </div>
@@ -58,40 +107,9 @@ const fontFamily = getFontForRepo(repoName);
     background: #1a1f26;
   }
 
-  /* Centered glowing blob with multi-color gradient */
-  .glow-blob {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 120%;
-    height: 120%;
-    background: var(--stack-gradient);
-    border-radius: 50%;
-    filter: blur(40px);
-    opacity: 0.7;
-    transition: opacity 0.3s ease, filter 0.3s ease, transform 0.3s ease;
-  }
-
-  /* Light mode: more visible glow */
-  :global(:not([data-theme="dark"])) .glow-blob {
-    opacity: 0.8;
-  }
-
-  /* Intensify glow on hover */
-  :global(.project-card:hover) .glow-blob {
-    opacity: 0.9;
-    filter: blur(35px);
-    transform: translate(-50%, -50%) scale(1.05);
-  }
-
-  :global([data-theme="dark"] .project-card:hover) .glow-blob {
-    opacity: 0.8;
-  }
-
   .generated-title {
     position: relative;
-    z-index: 2;
+    z-index: 10;
     font-family: var(--display-font);
     font-size: clamp(1.5rem, 5vw, 2.5rem);
     font-weight: 600;
@@ -101,5 +119,218 @@ const fontFamily = getFontForRepo(repoName);
     padding: var(--space-4);
     max-width: 90%;
     line-height: 1.2;
+  }
+
+  /* ==========================================================================
+     STYLE 1: ORB - Refined gradient ellipse (less blurry, more defined)
+     ========================================================================== */
+  .style-orb .gradient-orb {
+    position: absolute;
+    top: 55%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    height: 90%;
+    background: radial-gradient(
+      ellipse at center,
+      var(--primary) 0%,
+      var(--secondary) 50%,
+      transparent 80%
+    );
+    border-radius: 50%;
+    filter: blur(25px);
+    opacity: 0.8;
+    transition: opacity 0.3s ease, filter 0.3s ease, transform 0.3s ease;
+  }
+
+  :global(:not([data-theme="dark"])) .style-orb .gradient-orb {
+    opacity: 0.85;
+  }
+
+  :global(.project-card:hover) .style-orb .gradient-orb {
+    opacity: 0.95;
+    filter: blur(20px);
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+
+  /* ==========================================================================
+     STYLE 2: WAVES - Bold 3-layer waves covering 80% of card
+     ========================================================================== */
+  .style-waves .waves-container {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 0%, var(--primary) 100%);
+    opacity: 0.3;
+  }
+
+  .style-waves .waves-svg {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80%;
+  }
+
+  .style-waves .wave {
+    transition: opacity 0.3s ease;
+  }
+
+  .style-waves .wave-1 {
+    fill: var(--primary);
+    opacity: 0.8;
+  }
+
+  .style-waves .wave-2 {
+    fill: var(--secondary);
+    opacity: 0.6;
+  }
+
+  .style-waves .wave-3 {
+    fill: var(--accent);
+    opacity: 0.4;
+  }
+
+  :global(.project-card:hover) .style-waves .wave-1 {
+    opacity: 0.9;
+  }
+
+  :global(.project-card:hover) .style-waves .wave-2 {
+    opacity: 0.7;
+  }
+
+  :global(.project-card:hover) .style-waves .wave-3 {
+    opacity: 0.5;
+  }
+
+  /* ==========================================================================
+     STYLE 3: CORNERS - Dual corners with glow effect
+     ========================================================================== */
+  .style-corners .corner-accent {
+    position: absolute;
+    width: 35%;
+    height: 35%;
+    opacity: 0.8;
+    filter: drop-shadow(0 0 30px var(--primary));
+    transition: opacity 0.3s ease, transform 0.3s ease, filter 0.3s ease;
+  }
+
+  .style-corners .corner-top-left {
+    top: 0;
+    left: 0;
+    background: linear-gradient(135deg, var(--primary), var(--secondary) 70%, transparent);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+    transform-origin: top left;
+  }
+
+  .style-corners .corner-bottom-right {
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(315deg, var(--secondary), var(--primary) 70%, transparent);
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    transform-origin: bottom right;
+  }
+
+  :global(.project-card:hover) .style-corners .corner-accent {
+    opacity: 0.95;
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 40px var(--primary));
+  }
+
+  /* ==========================================================================
+     STYLE 4: GRAIN - Pronounced noise texture overlay
+     ========================================================================== */
+  .style-grain .grain-overlay {
+    position: absolute;
+    inset: 0;
+  }
+
+  .style-grain .grain-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    opacity: 0.45;
+    transition: opacity 0.3s ease;
+  }
+
+  .style-grain .grain-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    mix-blend-mode: overlay;
+  }
+
+  :global(.project-card:hover) .style-grain .grain-overlay::before {
+    opacity: 0.55;
+  }
+
+  /* ==========================================================================
+     STYLE 5: DIAGONAL - Single bold diagonal accent line
+     ========================================================================== */
+  .style-diagonal .diagonal-line {
+    position: absolute;
+    width: 200%;
+    height: 6px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      var(--primary) 20%,
+      var(--secondary) 50%,
+      var(--primary) 80%,
+      transparent 100%
+    );
+    transform: rotate(-35deg);
+    top: 40%;
+    left: -50%;
+    filter: blur(1px);
+    box-shadow:
+      0 0 20px var(--primary),
+      0 0 40px var(--secondary);
+    opacity: 0.9;
+    transition: opacity 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .style-diagonal::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 60% 40%, var(--primary) 0%, transparent 50%);
+    opacity: 0.15;
+  }
+
+  :global(.project-card:hover) .style-diagonal .diagonal-line {
+    opacity: 1;
+    box-shadow:
+      0 0 30px var(--primary),
+      0 0 60px var(--secondary);
+  }
+
+  /* ==========================================================================
+     STYLE 6: DUOTONE - Two-tone vertical split with smooth blend
+     ========================================================================== */
+  .style-duotone .duotone-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,
+      var(--primary) 0%,
+      var(--primary) 25%,
+      var(--secondary) 75%,
+      var(--secondary) 100%
+    );
+    opacity: 0.4;
+    transition: opacity 0.3s ease;
+  }
+
+  .style-duotone::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.2) 100%);
+    z-index: 1;
+  }
+
+  :global(.project-card:hover) .style-duotone .duotone-bg {
+    opacity: 0.5;
   }
 </style>

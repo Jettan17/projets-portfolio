@@ -74,13 +74,24 @@ export function searchProjects(projects: ProjectEntry[], query: string): Project
 }
 
 /**
- * Fetch GitHub projects from the configured list
- * @returns Array of project entries from GitHub
+ * Result of fetching GitHub projects, including any errors that occurred
  */
-export async function getGitHubProjects(): Promise<ProjectEntry[]> {
+export interface GitHubProjectsResult {
+  projects: ProjectEntry[];
+  errors: string[];
+  hasErrors: boolean;
+}
+
+/**
+ * Fetch GitHub projects from the configured list
+ * @returns Object containing project entries and any error messages
+ */
+export async function getGitHubProjectsWithStatus(): Promise<GitHubProjectsResult> {
+  const errors: string[] = [];
+
   // Return empty if no projects configured
   if (!githubProjects || githubProjects.length === 0) {
-    return [];
+    return { projects: [], errors: [], hasErrors: false };
   }
 
   const projects = await Promise.all(
@@ -93,7 +104,9 @@ export async function getGitHubProjects(): Promise<ProjectEntry[]> {
         ]);
 
         if (!repo) {
-          console.warn(`Repository not found: ${githubUsername}/${config.repo}`);
+          const errorMsg = `Repository not found: ${githubUsername}/${config.repo}`;
+          console.warn(errorMsg);
+          errors.push(errorMsg);
           return null;
         }
 
@@ -136,13 +149,30 @@ export async function getGitHubProjects(): Promise<ProjectEntry[]> {
           },
         } satisfies ProjectEntry;
       } catch (error) {
-        console.error(`Failed to fetch ${config.repo}:`, error);
+        const errorMsg = `Failed to fetch ${config.repo}: ${error instanceof Error ? error.message : 'Unknown error'}`;
+        console.error(errorMsg);
+        errors.push(errorMsg);
         return null;
       }
     })
   );
 
-  return projects.filter((p): p is ProjectEntry => p !== null);
+  const validProjects = projects.filter((p): p is ProjectEntry => p !== null);
+
+  return {
+    projects: validProjects,
+    errors,
+    hasErrors: errors.length > 0,
+  };
+}
+
+/**
+ * Fetch GitHub projects from the configured list (legacy simple version)
+ * @returns Array of project entries from GitHub
+ */
+export async function getGitHubProjects(): Promise<ProjectEntry[]> {
+  const result = await getGitHubProjectsWithStatus();
+  return result.projects;
 }
 
 /**

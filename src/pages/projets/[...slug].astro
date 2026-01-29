@@ -7,11 +7,11 @@ import { getCollection } from 'astro:content';
 import { getGitHubProjects } from '../../utils/projects';
 
 export async function getStaticPaths() {
-  // Get markdown projects
-  const markdownProjects = await getCollection('projects');
-  const markdownPaths = markdownProjects.map(project => ({
-    params: { slug: project.slug },
-    props: { project, projectType: 'markdown' as const },
+  // Get markdown projets
+  const markdownProjets = await getCollection('projets');
+  const markdownPaths = markdownProjets.map(projet => ({
+    params: { slug: projet.slug },
+    props: { project: projet, projectType: 'markdown' as const },
   }));
 
   // Get GitHub projects
@@ -49,12 +49,12 @@ const formattedDate = new Intl.DateTimeFormat('en-US', {
     <div class="container">
       <!-- Header -->
       <header class="project-header">
-        <a href="/projects" class="back-link">
+        <a href="/projets" class="back-link">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
             <line x1="19" y1="12" x2="5" y2="12"></line>
             <polyline points="12 19 5 12 12 5"></polyline>
           </svg>
-          Back to Projects
+          Back to Projets
         </a>
 
         <h1 class="project-title">{title}</h1>
@@ -148,12 +148,12 @@ const formattedDate = new Intl.DateTimeFormat('en-US', {
 
       <!-- Footer -->
       <footer class="project-footer">
-        <Button href="/projects" variant="ghost">
+        <Button href="/projets" variant="ghost">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
             <line x1="19" y1="12" x2="5" y2="12"></line>
             <polyline points="12 19 5 12 12 5"></polyline>
           </svg>
-          Back to All Projects
+          Back to All Projets
         </Button>
       </footer>
     </div>
@@ -190,12 +190,12 @@ const formattedDate = new Intl.DateTimeFormat('en-US', {
   }
 
   .project-title {
-    font-size: clamp(2rem, 5vw, 3rem);
+    font-size: clamp(2.5rem, 6vw, 4rem);
     margin-bottom: var(--space-4);
   }
 
   .project-description {
-    font-size: var(--text-xl);
+    font-size: var(--text-2xl);
     color: var(--text-secondary);
     line-height: var(--leading-relaxed);
     margin-bottom: var(--space-6);
@@ -269,20 +269,21 @@ const formattedDate = new Intl.DateTimeFormat('en-US', {
 
   /* Prose styles for markdown content */
   .prose :global(h2) {
-    font-size: var(--text-2xl);
+    font-size: var(--text-3xl);
     margin-top: var(--space-10);
     margin-bottom: var(--space-4);
     color: var(--text-primary);
   }
 
   .prose :global(h3) {
-    font-size: var(--text-xl);
+    font-size: var(--text-2xl);
     margin-top: var(--space-8);
     margin-bottom: var(--space-3);
     color: var(--text-primary);
   }
 
   .prose :global(p) {
+    font-size: var(--text-lg);
     margin-bottom: var(--space-4);
     line-height: var(--leading-relaxed);
     color: var(--text-secondary);

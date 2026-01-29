@@ -1,25 +1,124 @@
 # Data Codemap
 
-> **Freshness**: 2026-01-27T19:20:00Z
-> **Version**: 1.0.0
+> **Freshness**: 2026-01-29T16:00:00Z
+> **Version**: 2.1.0
 
 ## Overview
 
-Content management via Astro Content Collections and static JSON data.
+Dual data source architecture: Astro Content Collections (Markdown) + GitHub API for dynamic projet loading.
 
-## Current State
+## Data Sources
 
-**No data structures implemented yet.**
+| Source | Type | Location |
+|--------|------|----------|
+| Content Collections | Markdown | `src/content/projets/` |
+| GitHub API | REST API | `src/lib/github/` |
+| Static Data | JSON | `src/data/personal.json` |
+| Configuration | TypeScript | `src/config/github-projects.ts` |
+| Image Generator | TypeScript | `src/lib/github/image-generator.ts` |
 
-## Planned Data Models
+## GitHub Integration
 
-### Project Collection Schema
+### Configuration
+
+```typescript
+// src/config/github-projects.ts
+export const githubUsername = 'Jettan17';
+
+export const githubProjects: GitHubProjectConfig[] = [
+  {
+    repo: 'learnex-course-tutor',
+    title: 'Learnex',
+    featured: true,
+    tags: ['TypeScript', 'AI'],
+  },
+  // ...
+];
+```
+
+### API Client
+
+| File | Purpose |
+|------|---------|
+| `src/lib/github/client.ts` | GitHub API fetch functions |
+| `src/lib/github/transformer.ts` | Transform API data to ProjectEntry |
+| `src/lib/github/types.ts` | TypeScript interfaces |
+| `src/lib/github/image-generator.ts` | Project image style and color generation |
+
+### Rate Limiting
+
+- Unauthenticated: 60 requests/hour
+- Authenticated (GITHUB_TOKEN): 5,000 requests/hour
+- Token configured via `.env` file
+
+## Image Generator Module
+
+Located at `src/lib/github/image-generator.ts`
+
+### Purpose
+
+Generates unique visual styles and colors for project placeholder images. Uses deterministic algorithms so the same project always gets the same appearance.
+
+### Types
+
+```typescript
+type ImageStyle = 'orb' | 'waves' | 'corners' | 'grain' | 'diagonal' | 'duotone';
+
+interface ProjectColors {
+  primary: string;    // HSL color string
+  secondary: string;  // HSL color string
+  accent: string;     // HSL color string
+  hue: number;        // Base hue value (0-360)
+}
+```
+
+### Functions
+
+| Function | Input | Output | Description |
+|----------|-------|--------|-------------|
+| `getUniqueProjectColors(repoName)` | string | ProjectColors | Generate unique colors using golden angle distribution |
+| `getProjectStyle(repoName)` | string | ImageStyle | Assign one of 6 visual styles |
+| `getFontForRepo(repoName)` | string | string | Select display font from 5-font rotation |
+| `getUniqueProjectHue(repoName)` | string | number | Get base hue (0-360) |
+
+### Visual Styles
+
+| Style | Effect |
+|-------|--------|
+| `orb` | Gradient ellipse with blur |
+| `waves` | 3-layer SVG wave pattern |
+| `corners` | Dual corner accents with glow |
+| `grain` | Noise texture overlay (opacity 0.4, baseFrequency 0.65) |
+| `diagonal` | Bold diagonal accent line |
+| `duotone` | Two-tone vertical split with smooth blend |
+
+### Color Algorithm
+
+Uses golden angle (137.508 degrees) for hue distribution:
+```typescript
+hue = (hash * 137.508) % 360;
+primary = hsl(hue, 80%, 60%);
+secondary = hsl((hue + 40) % 360, 75%, 50%);
+accent = hsl((hue + 180) % 360, 85%, 55%);
+```
+
+### Legacy Functions (Tech Stack Based)
+
+| Function | Purpose |
+|----------|---------|
+| `getLanguageGradient(language)` | Get language-specific gradient colors |
+| `getLanguageColor(language)` | Get primary color for a language |
+| `getStackColors(tags, language)` | Get up to 4 colors from tech stack |
+| `getStackGradient(tags, language)` | Generate radial gradient CSS |
+| `generatePlaceholderDataUrl(...)` | Generate inline SVG data URL |
+
+## Content Collections
+
+### Projets Collection Schema
 
 ```typescript
 // src/content/config.ts
-import { defineCollection, z } from 'astro:content';
-
-const projectsCollection = defineCollection({
+const projetsCollection = defineCollection({
   type: 'content',
   schema: z.object({
     title: z.string(),
@@ -34,17 +133,17 @@ const projectsCollection = defineCollection({
 });
 
 export const collections = {
-  projects: projectsCollection,
+  projets: projetsCollection,
 };
 ```
 
-### Project Frontmatter
+### Projet Frontmatter
 
 ```yaml
 ---
-title: "Project Name"
+title: "Projet Name"
 description: "Brief description"
-image: "/images/projects/screenshot.png"
+image: "/images/projets/screenshot.png"
 tags: ["Astro", "TypeScript", "CSS"]
 liveUrl: "https://example.com"
 repoUrl: "https://github.com/user/repo"
@@ -53,7 +152,31 @@ publishDate: 2024-01-15
 ---
 ```
 
-### Personal Data Schema
+## Project Entry Type
+
+```typescript
+// src/utils/types.ts
+interface ProjectData {
+  title: string;
+  description: string;
+  image: string;
+  tags: string[];
+  liveUrl?: string;
+  repoUrl?: string;
+  featured: boolean;
+  publishDate: Date;
+  source?: 'markdown' | 'github';
+  stars?: number;
+  language?: string | null;
+}
+
+interface ProjectEntry {
+  slug: string;
+  data: ProjectData;
+}
+```
+
+## Personal Data Schema
 
 ```typescript
 // src/data/personal.json
@@ -67,85 +190,101 @@ interface PersonalData {
     github: string;
     linkedin: string;
     twitter?: string;
+    email: string;
   };
   skills: string[];
 }
 ```
 
-### Example personal.json
-
-```json
-{
-  "name": "Your Name",
-  "title": "Web Developer",
-  "bio": "I build creative digital experiences.",
-  "email": "hello@example.com",
-  "location": "City, Country",
-  "social": {
-    "github": "https://github.com/username",
-    "linkedin": "https://linkedin.com/in/username"
-  },
-  "skills": [
-    "JavaScript",
-    "TypeScript",
-    "Astro",
-    "React",
-    "CSS"
-  ]
-}
-```
-
-## Content Collections Structure
-
-```
-src/content/
-├── config.ts           # Schema definitions
-└── projects/
-    ├── project-1.md
-    ├── project-2.md
-    └── project-3.md
-```
-
 ## Data Flow
 
 ```
-Content Collections (Markdown)
-        ↓
-    Astro Build
-        ↓
-    Static HTML
-        ↓
-    Browser
++-------------------------------------------------------------+
+|                      BUILD TIME                              |
++-------------------------------------------------------------+
+|                                                              |
+|  Content Collection          GitHub API                     |
+|  (src/content/projets/)      (api.github.com)               |
+|         |                          |                         |
+|         v                          v                         |
+|  getCollection('projets')    getGitHubProjects()            |
+|         |                          |                         |
+|         +----------+---------------+                         |
+|                    v                                         |
+|              mergeProjects()                                 |
+|                    |                                         |
+|                    v                                         |
+|              sortByDate()                                    |
+|                    |                                         |
+|                    v                                         |
+|           getFeaturedProjects()                              |
+|                    |                                         |
+|                    v                                         |
+|           ProjectCard.astro                                  |
+|                    |                                         |
+|                    v                                         |
+|           GeneratedImage.astro                               |
+|                    |                                         |
+|                    v                                         |
+|           image-generator.ts                                 |
+|           (getProjectStyle, getUniqueProjectColors)          |
+|                    |                                         |
+|                    v                                         |
+|              Static HTML                                     |
+|                                                              |
++-------------------------------------------------------------+
 ```
+
+## Utility Functions
+
+| Function | File | Purpose |
+|----------|------|---------|
+| `getGitHubProjects()` | `utils/projects.ts` | Fetch projets from GitHub |
+| `getGitHubProjectsWithStatus()` | `utils/projects.ts` | Fetch with error tracking |
+| `mergeProjects()` | `utils/projects.ts` | Combine markdown + GitHub |
+| `sortByDate()` | `utils/projects.ts` | Sort by publishDate desc |
+| `getFeaturedProjects()` | `utils/projects.ts` | Filter featured only |
+| `filterByTag()` | `utils/projects.ts` | Filter by tag |
+| `searchProjects()` | `utils/projects.ts` | Search title/description |
 
 ## Querying Content
 
 ```astro
 ---
 import { getCollection } from 'astro:content';
+import { getGitHubProjectsWithStatus, mergeProjects } from '../utils/projects';
 
-// Get all projects
-const projects = await getCollection('projects');
+// Get markdown projets
+const markdownProjets = await getCollection('projets');
 
-// Get featured projects
-const featured = await getCollection('projects',
-  ({ data }) => data.featured === true
+// Get GitHub projets with error handling
+const githubResult = await getGitHubProjectsWithStatus();
+
+// Merge all projets
+const allProjets = mergeProjects(
+  markdownProjets.map(p => ({
+    slug: p.slug,
+    data: { ...p.data, source: 'markdown' as const },
+  })),
+  githubResult.projects
 );
 
-// Sort by date
-const sorted = projects.sort((a, b) =>
-  b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
-);
+// Check for errors
+const hasErrors = githubResult.hasErrors;
 ---
 ```
 
-## Static Data Import
+## Error Handling
 
-```astro
----
-import personal from '../data/personal.json';
----
-
-<h1>{personal.name}</h1>
-<p>{personal.bio}</p>
+```typescript
+interface GitHubProjectsResult {
+  projects: ProjectEntry[];
+  errors: string[];
+  hasErrors: boolean;
+}
 ```
+
+When GitHub API fails:
+- Errors are logged to console
+- `hasErrors` flag is set
+- UI displays error banner if all projets fail to load

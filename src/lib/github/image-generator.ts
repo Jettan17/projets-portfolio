@@ -311,3 +311,60 @@ export function generatePlaceholderDataUrl(
 export function getGitHubOgImageUrl(username: string, repoName: string): string {
   return `https://opengraph.githubassets.com/1/${username}/${repoName}`;
 }
+
+// =============================================================================
+// UNIQUE PROJECT COLORS & STYLES (not based on tech stack)
+// =============================================================================
+
+/**
+ * Image style variants for project cards
+ */
+export const imageStyles = ['orb', 'waves', 'corners', 'grain', 'diagonal', 'duotone'] as const;
+export type ImageStyle = (typeof imageStyles)[number];
+
+/**
+ * Get unique hue for a project using golden angle distribution
+ * This ensures well-separated colors even for projects with similar names
+ */
+export function getUniqueProjectHue(repoName: string): number {
+  const hash = hashString(repoName);
+  // Golden angle (137.508°) creates visually pleasing, well-distributed hues
+  return Math.round((hash * 137.508) % 360);
+}
+
+/**
+ * Get unique color palette for a project based on its name
+ * Returns primary, secondary, and accent colors in HSL format
+ */
+export function getUniqueProjectColors(repoName: string): {
+  primary: string;
+  secondary: string;
+  accent: string;
+  hue: number;
+} {
+  const hue = getUniqueProjectHue(repoName);
+  return {
+    primary: `hsl(${hue}, 80%, 60%)`,              // Higher saturation, brighter
+    secondary: `hsl(${(hue + 40) % 360}, 75%, 50%)`, // More color separation
+    accent: `hsl(${(hue + 180) % 360}, 85%, 55%)`,   // Punchy complementary
+    hue,
+  };
+}
+
+/**
+ * Deterministically assign an image style to a project based on its name
+ * Same project will always get the same style across rebuilds
+ */
+export function getProjectStyle(repoName: string): ImageStyle {
+  const hash = hashString(repoName);
+  const index = hash % imageStyles.length;
+  return imageStyles[index];
+}
+
+/**
+ * Get CSS gradient for unique project colors (replaces stack-based gradient)
+ */
+export function getUniqueProjectGradient(repoName: string): string {
+  const colors = getUniqueProjectColors(repoName);
+  return `radial-gradient(circle at center, ${colors.primary} 0%, ${colors.secondary} 60%, transparent 85%)`;
+}

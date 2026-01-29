@@ -3,9 +3,8 @@ import ThemeToggle from './ThemeToggle.astro';
 
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/projects', label: 'Projects' },
+  { href: '/projets', label: 'Projets' },
   { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' },
 ];
 
 const currentPath = Astro.url.pathname;
@@ -14,7 +13,7 @@ const currentPath = Astro.url.pathname;
 <header class="header">
   <nav class="nav container">
     <a href="/" class="logo">
-      <span class="logo-text">Portfolio</span>
+      <span class="logo-text">projets</span>
     </a>
 
     <button

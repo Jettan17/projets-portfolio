@@ -36,4 +36,10 @@ npm-output.txt
 
 # Claude Code
 .claude/plans/
+.claude.backup*/
 .reports/
+
+# Build artifacts
+build-output.txt
+test-output.txt
+test-output.json

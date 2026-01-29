@@ -5,27 +5,30 @@ import ProjectGrid from '../components/ProjectGrid.astro';
 import SkillBadge from '../components/SkillBadge.astro';
 import Button from '../components/Button.astro';
 import { getCollection } from 'astro:content';
-import { getGitHubProjects, mergeProjects, getFeaturedProjects, sortByDate } from '../utils/projects';
+import { getGitHubProjectsWithStatus, mergeProjects, getFeaturedProjects, sortByDate } from '../utils/projects';
 import personal from '../data/personal.json';
 
-// Fetch both markdown and GitHub projects
-const markdownProjects = await getCollection('projects');
-const githubProjectsList = await getGitHubProjects();
+// Fetch both markdown and GitHub projets
+const markdownProjets = await getCollection('projets');
+const githubResult = await getGitHubProjectsWithStatus();
 
-// Merge all projects
-const allProjects = mergeProjects(
-  markdownProjects.map(p => ({
+// Merge all projets
+const allProjets = mergeProjects(
+  markdownProjets.map(p => ({
     slug: p.slug,
     data: { ...p.data, source: 'markdown' as const },
   })),
-  githubProjectsList
+  githubResult.projects
 );
 
-// Get featured projects, or fall back to most recent if none are featured
-const featured = getFeaturedProjects(allProjects);
-const sortedProjects = featured.length > 0
+// Get featured projets, or fall back to most recent if none are featured
+const featured = getFeaturedProjects(allProjets);
+const sortedProjets = featured.length > 0
   ? sortByDate(featured).slice(0, 3)
-  : sortByDate(allProjects).slice(0, 3);
+  : sortByDate(allProjets).slice(0, 3);
+
+// Track if we had any GitHub fetch errors
+const hasGitHubErrors = githubResult.hasErrors;
 
 const skillVariants = ['primary', 'secondary', 'accent', 'default'] as const;
 ---
@@ -33,23 +36,29 @@ const skillVariants = ['primary', 'secondary', 'accent', 'default'] as const;
 <BaseLayout title="Home" description="Personal portfolio showcasing creative web development projects">
   <Hero />
 
-  <!-- Featured Projects Section -->
-  <section class="section featured-projects">
+  <!-- Featured Projets Section -->
+  <section class="section featured-projets">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">
-          Featured <span class="gradient-text">Projects</span>
+          Featured <span class="gradient-text">Projets</span>
         </h2>
         <p class="section-description">
-          A selection of my recent work. Each project represents a unique challenge and creative solution.
+          A selection of my recent work. Each projet represents a unique challenge and creative solution.
         </p>
       </div>
 
-      <ProjectGrid projects={sortedProjects} />
+      {hasGitHubErrors && sortedProjets.length === 0 && (
+        <div class="error-banner">
+          <p>Unable to load projets from GitHub. Please try refreshing the page.</p>
+        </div>
+      )}
+
+      <ProjectGrid projects={sortedProjets} />
 
       <div class="section-cta">
-        <Button href="/projects" variant="outline">
-          View All Projects
+        <Button href="/projets" variant="outline">
+          View All Projets
         </Button>
       </div>
     </div>
@@ -87,8 +96,8 @@ const skillVariants = ['primary', 'secondary', 'accent', 'default'] as const;
           Have a project in mind? I'd love to hear about it. Let's create something amazing together.
         </p>
         <div class="cta-actions">
-          <Button href="/contact" variant="primary" size="lg">
-            Get in Touch
+          <Button href={personal.social.github} variant="primary" size="lg" external>
+            View My GitHub
           </Button>
           <Button href="/about" variant="ghost" size="lg">
             Learn More About Me
@@ -124,8 +133,8 @@ const skillVariants = ['primary', 'secondary', 'accent', 'default'] as const;
     margin-top: var(--space-12);
   }
 
-  /* Featured Projects */
-  .featured-projects {
+  /* Featured Projets */
+  .featured-projets {
     background: var(--bg-secondary);
   }
 
@@ -213,5 +222,19 @@ const skillVariants = ['primary', 'secondary', 'accent', 'default'] as const;
 
   .cta-actions :global(.button--ghost:hover) {
     background: rgba(255, 255, 255, 0.1);
+  }
+
+  .error-banner {
+    background: rgba(255, 107, 107, 0.1);
+    border: 1px solid var(--color-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    margin-bottom: var(--space-8);
+    text-align: center;
+  }
+
+  .error-banner p {
+    color: var(--color-primary);
+    margin: 0;
   }
 </style>
