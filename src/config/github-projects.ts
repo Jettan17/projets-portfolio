@@ -67,4 +67,12 @@ export const githubProjects: GitHubProjectConfig[] = [
     tags: ['TypeScript', 'Next.js', 'React', 'Tailwind CSS'],
     liveUrl: 'https://prizm-photo-album.vercel.app',
   },
+  {
+    repo: 'jetflux-cc-sdk',
+    title: 'JetFlux CC SDK',
+    description:
+      'A comprehensive Claude Code SDK with specialized agents, slash commands, and MCP integrations for structured AI-assisted development workflows.',
+    featured: true,
+    tags: ['Claude Code', 'TypeScript', 'AI Agents', 'Developer Tools', 'CLI'],
+  },
 ];

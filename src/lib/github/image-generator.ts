@@ -114,6 +114,12 @@ export const techColors: Record<string, string> = {
   OpenAI: '#412991',
   LangChain: '#1C3C3C',
   Hugging: '#FFD21E',
+  'Claude Code': '#D97706',
+  Claude: '#D97706',
+  Anthropic: '#D97706',
+  'AI Agents': '#8B5CF6',
+  'Developer Tools': '#10B981',
+  CLI: '#22D3EE',
 
   // Mobile
   'React Native': '#61DAFB',
