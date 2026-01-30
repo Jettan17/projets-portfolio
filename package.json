@@ -10,12 +10,18 @@
     "astro": "astro",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:report": "playwright show-report"
   },
   "dependencies": {
-    "astro": "^5.2.5"
+    "astro": "^5.2.5",
+    "gsap": "^3.12.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.50.0",
     "vitest": "^3.0.0",
     "@vitest/coverage-v8": "^3.0.0",
     "happy-dom": "^16.0.0"

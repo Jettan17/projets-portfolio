@@ -2,6 +2,7 @@
 /**
  * Generated image placeholder for projects
  * Supports 6 visual styles with deterministic assignment per project
+ * Optionally displays project logo on top of styled background
  */
 
 import {
@@ -16,9 +17,10 @@ interface Props {
   repoName?: string;
   language?: string | null;
   tags?: string[];
+  logoUrl?: string | null;
 }
 
-const { title, repoName = title, language = null, tags = [] } = Astro.props;
+const { title, repoName = title, language = null, tags = [], logoUrl = null } = Astro.props;
 
 // Get unique colors and style for this project
 const colors = getUniqueProjectColors(repoName);
@@ -33,10 +35,12 @@ const cssVars = `
   --hue: ${colors.hue};
   --display-font: '${fontFamily}', system-ui, sans-serif;
 `;
+
+const hasLogo = !!logoUrl;
 ---
 
 <div
-  class={`generated-image-wrapper style-${style}`}
+  class={`generated-image-wrapper style-${style} ${hasLogo ? 'has-logo' : ''}`}
   style={cssVars}
   data-style={style}
 >
@@ -83,7 +87,17 @@ const cssVars = `
       </>
     )}
 
-    <span class="generated-title">{title}</span>
+    <!-- Logo display (if available) -->
+    {hasLogo && (
+      <div class="logo-container">
+        <img src={logoUrl} alt={`${title} logo`} class="project-logo" />
+      </div>
+    )}
+
+    <!-- Title (only shown when no logo) -->
+    {!hasLogo && (
+      <span class="generated-title">{title}</span>
+    )}
   </div>
 </div>
 
@@ -100,14 +114,40 @@ const cssVars = `
     height: 100%;
     background: #0d1117;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    gap: var(--space-2);
   }
 
   /* Light mode: slightly lighter dark background */
   :global(:not([data-theme="dark"])) .generated-image {
     background: #1a1f26;
+  }
+
+  /* Logo container - sized for horizontal logos with text */
+  .logo-container {
+    position: relative;
+    z-index: 10;
+    width: 80%;
+    height: 45%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.5));
+    transition: transform 0.3s ease, filter 0.3s ease;
+  }
+
+  :global(.project-card:hover) .logo-container {
+    transform: scale(1.05);
+    filter: drop-shadow(0 6px 24px rgba(0, 0, 0, 0.6));
+  }
+
+  .project-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 
   .generated-title {
@@ -146,14 +186,27 @@ const cssVars = `
     transition: opacity 0.3s ease, filter 0.3s ease, transform 0.3s ease;
   }
 
+  /* Reduce orb opacity when logo is present */
+  .style-orb.has-logo .gradient-orb {
+    opacity: 0.5;
+  }
+
   :global(:not([data-theme="dark"])) .style-orb .gradient-orb {
     opacity: 0.85;
+  }
+
+  :global(:not([data-theme="dark"])) .style-orb.has-logo .gradient-orb {
+    opacity: 0.55;
   }
 
   :global(.project-card:hover) .style-orb .gradient-orb {
     opacity: 0.95;
     filter: blur(20px);
     transform: translate(-50%, -50%) scale(1.05);
+  }
+
+  :global(.project-card:hover) .style-orb.has-logo .gradient-orb {
+    opacity: 0.65;
   }
 
   /* ==========================================================================
@@ -164,6 +217,10 @@ const cssVars = `
     inset: 0;
     background: linear-gradient(180deg, transparent 0%, var(--primary) 100%);
     opacity: 0.3;
+  }
+
+  .style-waves.has-logo .waves-container {
+    opacity: 0.2;
   }
 
   .style-waves .waves-svg {
@@ -193,6 +250,10 @@ const cssVars = `
     opacity: 0.4;
   }
 
+  .style-waves.has-logo .wave-1 { opacity: 0.5; }
+  .style-waves.has-logo .wave-2 { opacity: 0.4; }
+  .style-waves.has-logo .wave-3 { opacity: 0.3; }
+
   :global(.project-card:hover) .style-waves .wave-1 {
     opacity: 0.9;
   }
@@ -217,6 +278,10 @@ const cssVars = `
     transition: opacity 0.3s ease, transform 0.3s ease, filter 0.3s ease;
   }
 
+  .style-corners.has-logo .corner-accent {
+    opacity: 0.5;
+  }
+
   .style-corners .corner-top-left {
     top: 0;
     left: 0;
@@ -239,6 +304,10 @@ const cssVars = `
     filter: drop-shadow(0 0 40px var(--primary));
   }
 
+  :global(.project-card:hover) .style-corners.has-logo .corner-accent {
+    opacity: 0.7;
+  }
+
   /* ==========================================================================
      STYLE 4: GRAIN - Pronounced noise texture overlay
      ========================================================================== */
@@ -256,6 +325,10 @@ const cssVars = `
     transition: opacity 0.3s ease;
   }
 
+  .style-grain.has-logo .grain-overlay::before {
+    opacity: 0.3;
+  }
+
   .style-grain .grain-overlay::after {
     content: '';
     position: absolute;
@@ -267,6 +340,10 @@ const cssVars = `
 
   :global(.project-card:hover) .style-grain .grain-overlay::before {
     opacity: 0.55;
+  }
+
+  :global(.project-card:hover) .style-grain.has-logo .grain-overlay::before {
+    opacity: 0.4;
   }
 
   /* ==========================================================================
@@ -294,6 +371,10 @@ const cssVars = `
     transition: opacity 0.3s ease, box-shadow 0.3s ease;
   }
 
+  .style-diagonal.has-logo .diagonal-line {
+    opacity: 0.6;
+  }
+
   .style-diagonal::before {
     content: '';
     position: absolute;
@@ -302,11 +383,19 @@ const cssVars = `
     opacity: 0.15;
   }
 
+  .style-diagonal.has-logo::before {
+    opacity: 0.1;
+  }
+
   :global(.project-card:hover) .style-diagonal .diagonal-line {
     opacity: 1;
     box-shadow:
       0 0 30px var(--primary),
       0 0 60px var(--secondary);
+  }
+
+  :global(.project-card:hover) .style-diagonal.has-logo .diagonal-line {
+    opacity: 0.75;
   }
 
   /* ==========================================================================
@@ -323,6 +412,10 @@ const cssVars = `
     );
     opacity: 0.4;
     transition: opacity 0.3s ease;
+  }
+
+  .style-duotone-grain.has-logo .duotone-bg {
+    opacity: 0.25;
   }
 
   .style-duotone-grain .duotone-grain-overlay {
@@ -343,5 +436,9 @@ const cssVars = `
 
   :global(.project-card:hover) .style-duotone-grain .duotone-bg {
     opacity: 0.5;
+  }
+
+  :global(.project-card:hover) .style-duotone-grain.has-logo .duotone-bg {
+    opacity: 0.35;
   }
 </style>

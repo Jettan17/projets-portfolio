@@ -1,6 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import LogoSplash from '../components/LogoSplash.astro';
+import IntroSplash from '../components/IntroSplash.astro';
+import WhatIDo from '../components/WhatIDo.astro';
+import MyApproach from '../components/MyApproach.astro';
 import Hero from '../components/Hero.astro';
+import ScrollTransition from '../components/ScrollTransition.astro';
 import ProjectGrid from '../components/ProjectGrid.astro';
 import SkillBadge from '../components/SkillBadge.astro';
 import Button from '../components/Button.astro';
@@ -34,81 +39,121 @@ const skillVariants = ['primary', 'secondary', 'accent', 'default'] as const;
 ---
 
 <BaseLayout title="Home" description="Personal portfolio showcasing creative web development projects">
-  <Hero />
+  <!-- Scrolljack sections (GSAP controlled) -->
+  <div class="scrolljack-container">
+    <LogoSplash />
+    <IntroSplash />
+    <WhatIDo />
+    <MyApproach />
+    <Hero />
+    <ScrollTransition />
+  </div>
 
-  <!-- Featured Projets Section -->
-  <section class="section featured-projets">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">
-          Featured <span class="gradient-text">Projets</span>
-        </h2>
-        <p class="section-description">
-          A selection of my recent work. Each projet represents a unique challenge and creative solution.
-        </p>
-      </div>
-
-      {hasGitHubErrors && sortedProjets.length === 0 && (
-        <div class="error-banner">
-          <p>Unable to load projets from GitHub. Please try refreshing the page.</p>
+  <!-- Normal scrolling content -->
+  <div class="normal-content">
+    <!-- Featured Projets Section -->
+    <section class="section featured-projets">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">
+            Featured <span class="gradient-text">Projets</span>
+          </h2>
+          <p class="section-description">
+            A selection of my recent work. Each projet represents a unique challenge and creative solution.
+          </p>
         </div>
-      )}
 
-      <ProjectGrid projects={sortedProjets} />
+        {hasGitHubErrors && sortedProjets.length === 0 && (
+          <div class="error-banner">
+            <p>Unable to load projets from GitHub. Please try refreshing the page.</p>
+          </div>
+        )}
 
-      <div class="section-cta">
-        <Button href="/projets" variant="outline">
-          View All Projets
-        </Button>
-      </div>
-    </div>
-  </section>
+        <ProjectGrid projects={sortedProjets} />
 
-  <!-- Skills Section -->
-  <section class="section skills-section">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">
-          Skills & <span class="gradient-text-secondary">Technologies</span>
-        </h2>
-        <p class="section-description">
-          The tools and technologies I use to bring ideas to life.
-        </p>
-      </div>
-
-      <div class="skills-grid">
-        {personal.skills.map((skill: string, index: number) => (
-          <SkillBadge
-            skill={skill}
-            variant={skillVariants[index % skillVariants.length]}
-          />
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA Section -->
-  <section class="section cta-section">
-    <div class="container">
-      <div class="cta-content">
-        <h2 class="cta-title">Let's Work Together</h2>
-        <p class="cta-description">
-          Have a project in mind? I'd love to hear about it. Let's create something amazing together.
-        </p>
-        <div class="cta-actions">
-          <Button href={personal.social.github} variant="primary" size="lg" external>
-            View My GitHub
-          </Button>
-          <Button href="/about" variant="ghost" size="lg">
-            Learn More About Me
+        <div class="section-cta">
+          <Button href="/projets" variant="outline">
+            View All Projets
           </Button>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="section skills-section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">
+            Skills & <span class="gradient-text-secondary">Technologies</span>
+          </h2>
+          <p class="section-description">
+            The tools and technologies I use to bring ideas to life.
+          </p>
+        </div>
+
+        <div class="skills-grid">
+          {personal.skills.map((skill: string, index: number) => (
+            <SkillBadge
+              skill={skill}
+              variant={skillVariants[index % skillVariants.length]}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section cta-section">
+      <div class="container">
+        <div class="cta-content">
+          <h2 class="cta-title">Let's Work Together</h2>
+          <p class="cta-description">
+            Have a project in mind? I'd love to hear about it. Let's create something amazing together.
+          </p>
+          <div class="cta-actions">
+            <Button href={personal.social.github} variant="primary" size="lg" external>
+              View My GitHub
+            </Button>
+            <Button href="/about" variant="ghost" size="lg">
+              Learn More About Me
+            </Button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
 </BaseLayout>
 
+<!-- GSAP ScrollTrigger initialization -->
+<script>
+  import { initScrollJack } from '../scripts/scrolljack';
+
+  // Initialize on page load
+  document.addEventListener('astro:page-load', () => {
+    initScrollJack();
+  });
+
+  // Also init immediately for first load
+  initScrollJack();
+</script>
+
 <style>
+  /* Scrolljack container - sections flow naturally, GSAP handles pinning */
+  .scrolljack-container {
+    /* No special styling needed - GSAP handles everything */
+  }
+
+  .scrolljack-container :global(.panel) {
+    /* Panels need overflow hidden to prevent bleed */
+    overflow: hidden;
+  }
+
+  /* Normal content - standard scroll */
+  .normal-content {
+    position: relative;
+    z-index: 1;
+  }
+
   .section-header {
     text-align: center;
     margin-bottom: var(--space-12);

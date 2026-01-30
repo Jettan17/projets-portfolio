@@ -55,10 +55,10 @@ When initializing a new project:
 ### Plugin Status: INSTALLED ✓
 The everything-claude-code plugin is installed at `~/.claude/plugins/everything-claude-code/`
 
-### Available Slash Commands (15 total)
+### Available Slash Commands (17 total)
 | Command | Description |
 |---------|-------------|
-| `/sdk` | Initialize new project or update SDK files |
+| `/sdk` | Initialize new project, update SDK files, configure package manager |
 | `/design` | Create implementation plan (saves to file, does NOT implement) |
 | `/run` | Execute plan with smart TDD (reads plan, implements code) |
 | `/tdd` | Test utilities only (run tests, coverage, E2E - no implementation) |
@@ -67,9 +67,11 @@ The everything-claude-code plugin is installed at `~/.claude/plugins/everything-
 | `/verify` | Verification loop execution |
 | `/checkpoint` | Verification state saving |
 | `/deploy` | Deploy to Docker, K8s, Vercel, Railway, Fly.io |
-| `/setup-pm` | Package manager configuration |
+| `/release` | Version release with proper versioning and documentation updates |
 | `/update-docs` | Sync all documentation (README, codemaps, API) |
 | `/learn` | Pattern extraction with auto-detection |
+| `/instinct` | Manage instincts (status, export, import) |
+| `/evolve` | Cluster instincts into commands/skills/agents |
 | `/ai-eval` | AI feature evaluation harness |
 | `/orchestrate` | Multi-agent orchestration |
 | `/create-command` | Create new custom commands interactively |
@@ -259,7 +261,7 @@ All commands are in `.claude/commands/`:
 
 | Command | Category | Description |
 |---------|----------|-------------|
-| `/sdk` | Operations | Initialize project or update SDK |
+| `/sdk` | Operations | Initialize project, update SDK, configure package manager |
 | `/design` | Core | Create implementation plan (saves to file) |
 | `/run` | Core | Execute plan with smart TDD integration |
 | `/tdd` | Core | Test utilities (run tests, coverage, E2E) |
@@ -268,9 +270,11 @@ All commands are in `.claude/commands/`:
 | `/verify` | Quality | Verification loop |
 | `/checkpoint` | Quality | Save verification state |
 | `/deploy` | Operations | Deploy to Docker, K8s, Vercel, Railway, etc. |
-| `/setup-pm` | Operations | Package manager setup |
+| `/release` | Operations | Version release with documentation updates |
 | `/update-docs` | Documentation | Sync all docs (README, codemaps, API) |
-| `/learn` | Documentation | Pattern extraction (auto-detect) |
+| `/learn` | Learning | Pattern extraction (auto-detect) |
+| `/instinct` | Learning | Manage instincts (status, export, import) |
+| `/evolve` | Learning | Cluster instincts into commands/skills/agents |
 | `/ai-eval` | Advanced | AI feature evaluation harness |
 | `/orchestrate` | Advanced | Multi-agent coordination |
 | `/create-command` | Advanced | Create custom commands |
@@ -320,16 +324,23 @@ When starting a new project, configure these in `project-settings.md`:
 /deploy           # Auto-detect best platform
 /deploy vercel    # Deploy to Vercel
 /deploy railway   # Deploy to Railway
-/setup-pm         # Configure package manager
+/sdk --pm pnpm    # Configure package manager
 
 # Maintenance
 /build-fix        # Fix build errors
 /update-docs      # Sync all documentation
 /orchestrate      # Multi-agent orchestration
 
-# Learning & AI
-/learn            # Extract patterns from session
-/ai-eval          # AI feature evaluation
+# Learning Pipeline: /learn → /instinct → /evolve
+/learn              # Extract patterns from session
+/instinct           # Show instinct status (default)
+/instinct status    # Show all learned instincts
+/instinct export    # Export instincts for sharing
+/instinct import    # Import instincts from teammates
+/evolve             # Cluster instincts into commands/skills/agents
+
+# AI Evaluation
+/ai-eval            # AI feature evaluation harness
 ```
 
 ---

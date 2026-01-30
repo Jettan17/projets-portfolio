@@ -1,0 +1,130 @@
+---
+/**
+ * IntroSplash - Fullscreen intro section with GSAP scroll-driven animations
+ * Text flies in from different directions as you scroll
+ */
+import personal from '../data/personal.json';
+---
+
+<section class="intro-splash panel">
+  <div class="intro-bg" aria-hidden="true">
+    <div class="intro-blob intro-blob-1"></div>
+    <div class="intro-blob intro-blob-2"></div>
+  </div>
+
+  <div class="intro-content">
+    <p class="intro-greeting">Welcome to my world</p>
+    <h1 class="intro-title">
+      <span class="line line-1">I'm <span class="gradient-text">{personal.name}</span></span>
+      <span class="line line-2">I build things</span>
+      <span class="line line-3">for the web</span>
+    </h1>
+  </div>
+
+  <div class="scroll-indicator" aria-hidden="true">
+    <span class="scroll-text">Scroll</span>
+    <div class="scroll-arrow">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<style>
+  .intro-splash {
+    position: relative;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-primary);
+    overflow: hidden;
+  }
+
+  /* Background blobs */
+  .intro-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .intro-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+  }
+
+  .intro-blob-1 {
+    top: 20%;
+    right: 15%;
+    width: 350px;
+    height: 350px;
+    background: var(--color-primary);
+  }
+
+  .intro-blob-2 {
+    bottom: 25%;
+    left: 10%;
+    width: 280px;
+    height: 280px;
+    background: var(--color-secondary);
+  }
+
+  /* Content */
+  .intro-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: var(--space-4);
+  }
+
+  .intro-greeting {
+    font-size: var(--text-lg);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-4);
+  }
+
+  .intro-title {
+    font-size: clamp(2.5rem, 10vw, 5rem);
+    font-weight: var(--font-extrabold);
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .line {
+    display: block;
+  }
+
+  /* Scroll indicator - use left/right: 0 for true centering */
+  .scroll-indicator {
+    position: absolute;
+    bottom: var(--space-8);
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--text-tertiary);
+  }
+
+  .scroll-text {
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .scroll-arrow {
+    animation: bounce 2s ease-in-out infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+  }
+</style>

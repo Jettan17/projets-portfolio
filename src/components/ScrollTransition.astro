@@ -1,0 +1,65 @@
+---
+/**
+ * ScrollTransition - Visual bridge between scrolljack sections and normal scroll
+ * Provides smooth handoff to regular content
+ */
+---
+
+<section class="scroll-transition panel">
+  <div class="transition-content">
+    <p class="transition-text">Explore my work</p>
+    <div class="transition-arrow">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="gradient-fade" aria-hidden="true"></div>
+</section>
+
+<style>
+  .scroll-transition {
+    position: relative;
+    height: 50vh;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-primary);
+    overflow: hidden;
+  }
+
+  .transition-content {
+    text-align: center;
+    z-index: 1;
+  }
+
+  .transition-text {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-semibold);
+    color: var(--text-secondary);
+    margin: 0 0 var(--space-4);
+  }
+
+  .transition-arrow {
+    color: var(--color-primary);
+    animation: float 2s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(10px); }
+  }
+
+  /* Gradient fade at bottom to signal content below */
+  .gradient-fade {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background: linear-gradient(to bottom, transparent, var(--bg-secondary));
+    pointer-events: none;
+  }
+</style>

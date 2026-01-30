@@ -397,3 +397,97 @@ a:hover {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-secondary-dark);
 }
+
+/* -----------------------------------------------------------------------------
+   GSAP ScrollJack Animation States
+   Elements are visible by default. When JS runs and adds 'js-animate' class,
+   these elements get hidden initially so GSAP can animate them in.
+   If JS fails, elements remain visible (graceful degradation).
+   ----------------------------------------------------------------------------- */
+
+/* IntroSplash section - initial hidden states for animation */
+body.js-animate .intro-greeting {
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+body.js-animate .line-1 {
+  opacity: 0;
+  transform: translateY(60px);
+}
+
+body.js-animate .line-2 {
+  opacity: 0;
+  transform: translateY(70px);
+}
+
+body.js-animate .line-3 {
+  opacity: 0;
+  transform: translateY(80px);
+}
+
+body.js-animate .intro-splash .scroll-indicator {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+/* LogoSplash - starts visible, animates OUT (no hidden state needed) */
+
+/* WhatIDo section */
+body.js-animate .what-title {
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+body.js-animate .focus-card {
+  opacity: 0;
+  transform: translateY(80px);
+  will-change: opacity, transform;
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+/* MyApproach section - rises from below with zoom */
+body.js-animate .quote-block {
+  opacity: 0;
+  transform: translateY(150px) scale(0.7);
+}
+
+body.js-animate .approach-description {
+  opacity: 0;
+  transform: translateY(60px);
+}
+
+/* Hero section */
+body.js-animate .hero-content {
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+/* ScrollTransition section */
+body.js-animate .transition-content {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+/* Normal content sections */
+body.js-animate .section-header {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+body.js-animate .project-card {
+  opacity: 0;
+  transform: translateY(50px);
+  will-change: opacity, transform;
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+body.js-animate .skill-badge {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+body.js-animate .cta-content {
+  opacity: 0;
+  transform: translateY(40px);
+}

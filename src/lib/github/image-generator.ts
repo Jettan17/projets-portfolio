@@ -144,13 +144,14 @@ export const techColors: Record<string, string> = {
 
 /**
  * Display fonts for title overlay (rotated based on repo name)
+ * Each font represents a distinct typographic category for visual variety
  */
 export const displayFonts = [
-  'Playfair Display',
-  'Poppins',
-  'Space Grotesk',
-  'Outfit',
-  'DM Sans',
+  'Playfair Display',   // Serif - elegant, editorial
+  'Space Grotesk',      // Geometric Sans - tech, modern
+  'JetBrains Mono',     // Monospace - developer, code
+  'Roboto Slab',        // Slab Serif - bold, authoritative
+  'Inter',              // Neo-grotesque Sans - clean, professional
 ];
 
 /**
@@ -331,9 +332,17 @@ export type ImageStyle = (typeof imageStyles)[number];
 /**
  * Custom color overrides for specific projects
  * Hue values: 0=red, 30=orange, 60=yellow, 120=green, 180=cyan, 240=blue, 300=magenta
+ * Each project gets a UNIQUE, well-separated hue for visual variety
  */
 const customProjectHues: Record<string, number> = {
-  'jetflux-cc-sdk': 30, // Warm orange/amber instead of purple
+  // Stratos: Blue logo → Warm coral/orange (complementary to blue per color theory)
+  'stratos-investment-assistant': 25,
+  // Learnex: Purple/Yellow logo → Teal/cyan (contrasts purple, complements yellow)
+  'learnex-course-tutor': 175,
+  // Prizm: Rainbow prism logo → Deep violet (complements spectrum colors)
+  'prizm-photo-album': 280,
+  // JetFlux: SDK branding → Warm amber/gold
+  'jetflux-cc-sdk': 45,
 };
 
 /**
@@ -362,9 +371,10 @@ export function getUniqueProjectColors(repoName: string): {
 } {
   const hue = getUniqueProjectHue(repoName);
   return {
-    primary: `hsl(${hue}, 80%, 60%)`,              // Higher saturation, brighter
-    secondary: `hsl(${(hue + 40) % 360}, 75%, 50%)`, // More color separation
-    accent: `hsl(${(hue + 180) % 360}, 85%, 55%)`,   // Punchy complementary
+    // Muted, darker backgrounds for better logo contrast
+    primary: `hsl(${hue}, 55%, 40%)`,              // Lower saturation, darker
+    secondary: `hsl(${(hue + 35) % 360}, 50%, 35%)`, // Subtle color shift
+    accent: `hsl(${(hue + 180) % 360}, 60%, 45%)`,   // Complementary accent
     hue,
   };
 }

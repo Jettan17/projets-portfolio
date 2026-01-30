@@ -1,0 +1,165 @@
+---
+/**
+ * WhatIDo - Horizontal scroll section with GSAP
+ * Cards slide horizontally as you scroll vertically
+ */
+
+const focusAreas = [
+  {
+    icon: 'code',
+    title: 'Development',
+    description: 'Clean, performant code that scales',
+    gradient: 'primary',
+  },
+  {
+    icon: 'design',
+    title: 'Design',
+    description: 'Beautiful interfaces that delight',
+    gradient: 'secondary',
+  },
+  {
+    icon: 'rocket',
+    title: 'Experience',
+    description: 'Seamless interactions that engage',
+    gradient: 'accent',
+  },
+];
+---
+
+<section class="what-i-do panel">
+  <div class="what-content">
+    <h2 class="what-title">What I Do</h2>
+
+    <div class="focus-cards-wrapper">
+      <div class="focus-cards-track">
+        {focusAreas.map((area) => (
+          <div class="focus-card">
+            <div class={`focus-icon focus-icon--${area.gradient}`}>
+              {area.icon === 'code' && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M8 6l-6 6 6 6M16 6l6 6-6 6"/>
+                </svg>
+              )}
+              {area.icon === 'design' && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                </svg>
+              )}
+              {area.icon === 'rocket' && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z"/>
+                  <path d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z"/>
+                  <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+                </svg>
+              )}
+            </div>
+            <h3 class="focus-title">{area.title}</h3>
+            <p class="focus-description">{area.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .what-i-do {
+    position: relative;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    align-items: center;
+    background: var(--bg-secondary);
+    overflow: hidden;
+  }
+
+  .what-content {
+    width: 100%;
+    padding: var(--space-4);
+  }
+
+  .what-title {
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    font-weight: var(--font-bold);
+    margin-bottom: var(--space-12);
+    text-align: center;
+    color: var(--text-primary);
+  }
+
+  .focus-cards-wrapper {
+    width: 100%;
+    overflow: visible;
+  }
+
+  .focus-cards-track {
+    display: flex;
+    gap: var(--space-8);
+    padding: 0 calc(50vw - 175px); /* Center first card */
+    will-change: transform;
+  }
+
+  .focus-card {
+    flex-shrink: 0;
+    width: 350px;
+    padding: var(--space-8);
+    background: var(--bg-primary);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+  }
+
+  .focus-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto var(--space-4);
+    padding: var(--space-3);
+    border-radius: var(--radius-lg);
+    color: white;
+  }
+
+  .focus-icon--primary {
+    background: var(--gradient-primary);
+  }
+
+  .focus-icon--secondary {
+    background: var(--gradient-secondary);
+  }
+
+  .focus-icon--accent {
+    background: var(--gradient-accent);
+  }
+
+  .focus-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .focus-title {
+    font-size: var(--text-xl);
+    font-weight: var(--font-semibold);
+    margin-bottom: var(--space-2);
+    color: var(--text-primary);
+  }
+
+  .focus-description {
+    font-size: var(--text-base);
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  /* Mobile: Stack vertically */
+  @media (max-width: 768px) {
+    .focus-cards-track {
+      flex-direction: column;
+      align-items: center;
+      padding: 0 var(--space-4);
+      gap: var(--space-4);
+    }
+
+    .focus-card {
+      width: 100%;
+      max-width: 350px;
+    }
+  }
+</style>

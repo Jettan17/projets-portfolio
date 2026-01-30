@@ -1,0 +1,111 @@
+---
+/**
+ * MyApproach - Zoom/depth effect section with GSAP
+ * Quote text zooms from far away into screen as you scroll
+ */
+---
+
+<section class="my-approach panel">
+  <div class="approach-bg" aria-hidden="true">
+    <div class="grain-overlay"></div>
+  </div>
+
+  <div class="approach-content">
+    <div class="quote-block">
+      <span class="quote-mark">"</span>
+      <p class="quote-text">
+        <span class="quote-line">Clean code.</span>
+        <span class="quote-line">Bold design.</span>
+        <span class="quote-line accent">Real results.</span>
+      </p>
+    </div>
+
+    <p class="approach-description">
+      I believe great software should not only function flawlessly<br/>
+      but also delight users with its design and attention to detail.
+    </p>
+  </div>
+</section>
+
+<style>
+  .my-approach {
+    position: relative;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-dark);
+    color: var(--text-light);
+    overflow: hidden;
+    perspective: 1000px; /* Enable 3D depth */
+  }
+
+  /* Grain texture overlay */
+  .approach-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .grain-overlay {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.08;
+    mix-blend-mode: overlay;
+  }
+
+  .approach-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: var(--space-4);
+    max-width: 800px;
+  }
+
+  .quote-block {
+    margin-bottom: var(--space-8);
+    will-change: transform, opacity, filter;
+  }
+
+  .quote-mark {
+    display: block;
+    font-size: 6rem;
+    line-height: 0.5;
+    color: var(--color-primary);
+    opacity: 0.5;
+    font-family: Georgia, serif;
+  }
+
+  .quote-text {
+    font-size: clamp(2rem, 8vw, 4rem);
+    font-weight: var(--font-bold);
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .quote-line {
+    display: block;
+  }
+
+  .quote-line.accent {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .approach-description {
+    font-size: var(--text-lg);
+    color: var(--text-tertiary);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .approach-description br {
+      display: none;
+    }
+  }
+</style>
