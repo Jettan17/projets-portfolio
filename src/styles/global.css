@@ -390,7 +390,7 @@ a:hover {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-secondary);
+  background: var(--color-secondary-dark);
   border-radius: var(--radius-full);
 }
 

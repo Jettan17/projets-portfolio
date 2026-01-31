@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 100" width="340" height="100" fill="none">
+  <defs>
+    <linearGradient id="logo-large-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6B6B"/>
+      <stop offset="50%" style="stop-color:#4ECDC4"/>
+      <stop offset="100%" style="stop-color:#7B68EE"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Stylized "P" icon - large version -->
+  <g transform="translate(0, 14)">
+    <rect x="8" y="4" width="10" height="64" rx="4" fill="url(#logo-large-gradient)"/>
+    <rect x="8" y="4" width="40" height="10" rx="4" fill="url(#logo-large-gradient)"/>
+    <rect x="38" y="4" width="10" height="32" rx="4" fill="url(#logo-large-gradient)"/>
+    <rect x="8" y="26" width="40" height="10" rx="4" fill="url(#logo-large-gradient)"/>
+  </g>
+
+  <!-- Text: projets -->
+  <text x="72" y="70" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="56" font-weight="600" letter-spacing="-1" fill="currentColor">
+    projets
+  </text>
+</svg>

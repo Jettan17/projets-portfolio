@@ -134,19 +134,19 @@ export function initScrollJack() {
     });
 
     if (isMobile) {
-      // MOBILE: Simple staggered fade-in, no horizontal scroll
-      cards.forEach((card, i) => {
-        gsap.to(card as Element, {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          delay: i * 0.1,
-          scrollTrigger: {
-            trigger: card as Element,
-            start: 'top 85%',
-            toggleActions: 'play none none none',
-          }
-        });
+      // MOBILE: Trigger all cards together when section enters viewport
+      // Use the section as trigger, not individual cards, to prevent off-screen issues
+      gsap.to('.focus-card', {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        stagger: 0.15,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: '.what-i-do',
+          start: 'top 95%', // Trigger earlier
+          toggleActions: 'play none none none',
+        }
       });
     } else if (cards.length > 0 && track) {
       // DESKTOP: Horizontal scroll with pinning

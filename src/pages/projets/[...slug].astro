@@ -5,6 +5,7 @@ import SkillBadge from '../../components/SkillBadge.astro';
 import GeneratedImage from '../../components/GeneratedImage.astro';
 import { getCollection } from 'astro:content';
 import { getGitHubProjects } from '../../utils/projects';
+import { getLogoUrl } from '../../utils/logos';
 
 export async function getStaticPaths() {
   // Get markdown projets
@@ -36,6 +37,7 @@ if (projectType === 'markdown' && 'render' in project) {
 
 const isGitHub = projectType === 'github';
 const repoName = isGitHub ? project.slug.replace('github-', '') : '';
+const logoUrl = isGitHub ? getLogoUrl(repoName) : null;
 
 const formattedDate = new Intl.DateTimeFormat('en-US', {
   year: 'numeric',
@@ -97,7 +99,7 @@ const formattedDate = new Intl.DateTimeFormat('en-US', {
       <div class="project-image-container">
         <div class="project-image">
           {isGitHub ? (
-            <GeneratedImage title={title} language={language} repoName={repoName} />
+            <GeneratedImage title={title} language={language} repoName={repoName} logoUrl={logoUrl} />
           ) : (
             <div class="project-image-placeholder">
               <span class="project-icon">

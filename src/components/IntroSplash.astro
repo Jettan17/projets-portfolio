@@ -16,8 +16,8 @@ import personal from '../data/personal.json';
     <p class="intro-greeting">Welcome to my world</p>
     <h1 class="intro-title">
       <span class="line line-1">I'm <span class="gradient-text">{personal.name}</span></span>
-      <span class="line line-2">I build things</span>
-      <span class="line line-3">for the web</span>
+      <span class="line line-2">I build things for</span>
+      <span class="line line-3"><span class="platform-text">the web</span></span>
     </h1>
   </div>
 
@@ -72,7 +72,7 @@ import personal from '../data/personal.json';
     left: 10%;
     width: 280px;
     height: 280px;
-    background: var(--color-secondary);
+    background: var(--color-secondary-dark);
   }
 
   /* Content */
@@ -98,6 +98,20 @@ import personal from '../data/personal.json';
 
   .line {
     display: block;
+  }
+
+  .platform-text {
+    display: inline-block;
+    min-width: 3ch;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transition: opacity 0.3s ease;
+  }
+
+  .platform-text.fade-out {
+    opacity: 0;
   }
 
   /* Scroll indicator - use left/right: 0 for true centering */
@@ -128,3 +142,31 @@ import personal from '../data/personal.json';
     50% { transform: translateY(8px); }
   }
 </style>
+
+<script>
+  // Platform cycling animation
+  const platforms = ['the web', 'mobile', 'startups', 'the future'];
+  let currentIndex = 0;
+
+  function cyclePlatform() {
+    const element = document.querySelector('.platform-text');
+    if (!element) return;
+
+    // Fade out
+    element.classList.add('fade-out');
+
+    setTimeout(() => {
+      // Update text
+      currentIndex = (currentIndex + 1) % platforms.length;
+      element.textContent = platforms[currentIndex];
+
+      // Fade in
+      element.classList.remove('fade-out');
+    }, 300); // Match CSS transition duration
+  }
+
+  // Start cycling after initial delay
+  setTimeout(() => {
+    setInterval(cyclePlatform, 2000);
+  }, 1500);
+</script>

@@ -121,9 +121,16 @@ const hasLogo = !!logoUrl;
     gap: var(--space-2);
   }
 
-  /* Light mode: slightly lighter dark background */
-  :global(:not([data-theme="dark"])) .generated-image {
-    background: #1a1f26;
+  /* Dark mode: explicit reset to ensure filter is removed */
+  :global([data-theme="dark"]) .generated-image {
+    background: #0d1117;
+    filter: none;
+  }
+
+  /* Light mode: lighter background + brightness/saturation boost */
+  :global(html:not([data-theme="dark"])) .generated-image {
+    background: #2d333b;
+    filter: brightness(1.25) saturate(1.2);
   }
 
   /* Logo container - sized for horizontal logos with text */
@@ -192,11 +199,12 @@ const hasLogo = !!logoUrl;
   }
 
   :global(:not([data-theme="dark"])) .style-orb .gradient-orb {
-    opacity: 0.85;
+    opacity: 1;
+    filter: blur(18px);
   }
 
   :global(:not([data-theme="dark"])) .style-orb.has-logo .gradient-orb {
-    opacity: 0.55;
+    opacity: 0.75;
   }
 
   :global(.project-card:hover) .style-orb .gradient-orb {
@@ -334,7 +342,7 @@ const hasLogo = !!logoUrl;
     position: absolute;
     inset: 0;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity: 0.4;
+    opacity: 0.2;
     mix-blend-mode: overlay;
   }
 
@@ -422,7 +430,7 @@ const hasLogo = !!logoUrl;
     position: absolute;
     inset: 0;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity: 0.35;
+    opacity: 0.15;
     mix-blend-mode: overlay;
   }
 
@@ -440,5 +448,54 @@ const hasLogo = !!logoUrl;
 
   :global(.project-card:hover) .style-duotone-grain.has-logo .duotone-bg {
     opacity: 0.35;
+  }
+
+  /* ==========================================================================
+     LIGHT MODE BRIGHTNESS BOOST
+     Increase opacity/vibrancy for all styles in light mode
+     ========================================================================== */
+
+  /* Waves - brighter in light mode */
+  :global(:not([data-theme="dark"])) .style-waves .wave-1 {
+    opacity: 1;
+  }
+  :global(:not([data-theme="dark"])) .style-waves .wave-2 {
+    opacity: 0.85;
+  }
+  :global(:not([data-theme="dark"])) .style-waves .wave-3 {
+    opacity: 0.65;
+  }
+  :global(:not([data-theme="dark"])) .style-waves .waves-container {
+    opacity: 0.6;
+  }
+
+  /* Corners - brighter in light mode */
+  :global(:not([data-theme="dark"])) .style-corners .corner-accent {
+    opacity: 1;
+    filter: drop-shadow(0 0 60px var(--primary));
+  }
+
+  /* Grain - brighter gradient overlay in light mode */
+  :global(:not([data-theme="dark"])) .style-grain .grain-overlay::before {
+    opacity: 0.8;
+  }
+
+  /* Diagonal - stronger glow in light mode */
+  :global(:not([data-theme="dark"])) .style-diagonal .diagonal-line {
+    opacity: 1;
+    box-shadow:
+      0 0 50px var(--primary),
+      0 0 100px var(--secondary);
+  }
+  :global(:not([data-theme="dark"])) .style-diagonal::before {
+    opacity: 0.3;
+  }
+
+  /* Duotone-grain - brighter split in light mode */
+  :global(:not([data-theme="dark"])) .style-duotone-grain .duotone-bg {
+    opacity: 0.75;
+  }
+  :global(:not([data-theme="dark"])) .style-duotone-grain .duotone-grain-overlay {
+    opacity: 0.25;
   }
 </style>
