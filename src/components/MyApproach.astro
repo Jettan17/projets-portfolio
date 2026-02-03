@@ -2,7 +2,89 @@
 /**
  * MyApproach - Zoom/depth effect section with GSAP
  * Quote text zooms from far away into screen as you scroll
+ * Hidden skills are revealed by the cursor spotlight (hover-based)
  */
+
+// Expanded skills wordlist - randomized positions on each build
+const skills = [
+  'React', 'TypeScript', 'JavaScript', 'HTML', 'CSS',
+  'Next.js', 'Node.js', 'Python', 'Express', 'MongoDB',
+  'Redis', 'REST APIs', 'Git', 'Docker', 'AWS', 'Vercel', 'CI/CD', 'Webpack', 'Vite'
+];
+
+// Generate random positions avoiding the center (where text is)
+// Uses 8 zones for better distribution: 4 corners + 4 edges
+function getRandomPosition(index: number): { top?: string; bottom?: string; left?: string; right?: string } {
+  // Use index as seed for consistent but varied positions
+  const seed = (index * 7919 + 104729) % 100;
+  const seed2 = (index * 6151 + 88813) % 100;
+  const seed3 = (index * 3571 + 71993) % 100;
+
+  // 8 zones for even distribution
+  const zone = index % 8;
+
+  const positions: { top?: string; bottom?: string; left?: string; right?: string } = {};
+
+  switch (zone) {
+    case 0: // Top-left corner
+      positions.top = `${5 + (seed % 15)}%`;
+      positions.left = `${3 + (seed2 % 18)}%`;
+      break;
+    case 1: // Top-right corner
+      positions.top = `${5 + (seed % 15)}%`;
+      positions.right = `${3 + (seed2 % 18)}%`;
+      break;
+    case 2: // Bottom-left corner
+      positions.bottom = `${5 + (seed % 15)}%`;
+      positions.left = `${3 + (seed2 % 18)}%`;
+      break;
+    case 3: // Bottom-right corner
+      positions.bottom = `${5 + (seed % 15)}%`;
+      positions.right = `${3 + (seed2 % 18)}%`;
+      break;
+    case 4: // Top edge (middle area, avoiding center)
+      positions.top = `${3 + (seed % 12)}%`;
+      // Place in left-center or right-center of top edge
+      if (seed3 < 50) {
+        positions.left = `${22 + (seed2 % 10)}%`;
+      } else {
+        positions.right = `${22 + (seed2 % 10)}%`;
+      }
+      break;
+    case 5: // Bottom edge (middle area, avoiding center)
+      positions.bottom = `${3 + (seed % 12)}%`;
+      if (seed3 < 50) {
+        positions.left = `${22 + (seed2 % 10)}%`;
+      } else {
+        positions.right = `${22 + (seed2 % 10)}%`;
+      }
+      break;
+    case 6: // Left edge (middle vertical)
+      positions.left = `${2 + (seed % 12)}%`;
+      // Place in upper-middle or lower-middle of left edge
+      if (seed3 < 50) {
+        positions.top = `${35 + (seed2 % 15)}%`;
+      } else {
+        positions.bottom = `${35 + (seed2 % 15)}%`;
+      }
+      break;
+    case 7: // Right edge (middle vertical)
+      positions.right = `${2 + (seed % 12)}%`;
+      if (seed3 < 50) {
+        positions.top = `${35 + (seed2 % 15)}%`;
+      } else {
+        positions.bottom = `${35 + (seed2 % 15)}%`;
+      }
+      break;
+  }
+
+  return positions;
+}
+
+// Shuffle and take a random subset (8-12 skills)
+const shuffledSkills = [...skills]
+  .sort(() => Math.random() - 0.5)
+  .slice(0, 8 + Math.floor(Math.random() * 5));
 ---
 
 <section class="my-approach panel">
@@ -10,19 +92,44 @@
     <div class="grain-overlay"></div>
   </div>
 
+  <!-- Hidden floating skills - revealed by cursor spotlight -->
+  <div class="hidden-skills" id="hidden-skills" aria-hidden="true">
+    {shuffledSkills.map((skill: string, index: number) => {
+      const pos = getRandomPosition(index);
+      const floatX = ((index % 2 === 0 ? 1 : -1) * (3 + (index % 5) * 2));
+      const floatY = ((index % 3 === 0 ? -1 : 1) * (2 + (index % 4)));
+      return (
+        <span
+          class="hidden-skill"
+          style={`
+            ${pos.top ? `top: ${pos.top};` : ''}
+            ${pos.bottom ? `bottom: ${pos.bottom};` : ''}
+            ${pos.left ? `left: ${pos.left};` : ''}
+            ${pos.right ? `right: ${pos.right};` : ''}
+            --delay: ${(index * 0.3) % 6}s;
+            --float-x: ${floatX}px;
+            --float-y: ${floatY}px;
+          `}
+        >
+          {skill}
+        </span>
+      );
+    })}
+  </div>
+
   <div class="approach-content">
     <div class="quote-block">
-      <span class="quote-mark">"</span>
       <p class="quote-text">
-        <span class="quote-line">Clean code.</span>
-        <span class="quote-line">Bold design.</span>
-        <span class="quote-line accent">Real results.</span>
+        <span class="quote-line">There is</span>
+        <span class="quote-line">hidden text</span>
+        <span class="quote-line accent">Hover to reveal</span>
       </p>
     </div>
 
     <p class="approach-description">
-      I believe great software should not only function flawlessly<br/>
-      but also delight users with its design and attention to detail.
+      <span class="desktop-text">Move your cursor around the page</span>
+      <span class="mobile-text">Move your finger around the page</span>
+      <br/>to illuminate what's hidden in plain sight.
     </p>
   </div>
 </section>
@@ -38,7 +145,7 @@
     background: var(--bg-dark);
     color: var(--text-light);
     overflow: hidden;
-    perspective: 1000px; /* Enable 3D depth */
+    perspective: 1000px;
   }
 
   /* Grain texture overlay */
@@ -56,6 +163,43 @@
     mix-blend-mode: overlay;
   }
 
+  /* Hidden skills container */
+  .hidden-skills {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* Individual hidden skill words */
+  .hidden-skill {
+    position: absolute;
+    font-size: clamp(0.85rem, 2.5vw, 1.25rem);
+    font-weight: var(--font-bold);
+    color: rgba(34, 197, 94, 0.9);
+    text-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    animation: float 6s ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+    white-space: nowrap;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translate(0, 0);
+    }
+    25% {
+      transform: translate(var(--float-x, 5px), var(--float-y, -3px));
+    }
+    50% {
+      transform: translate(calc(var(--float-x, 5px) * -0.5), calc(var(--float-y, -3px) * -1));
+    }
+    75% {
+      transform: translate(calc(var(--float-x, 5px) * -1), var(--float-y, -3px));
+    }
+  }
+
   .approach-content {
     position: relative;
     z-index: 1;
@@ -67,15 +211,6 @@
   .quote-block {
     margin-bottom: var(--space-8);
     will-change: transform, opacity, filter;
-  }
-
-  .quote-mark {
-    display: block;
-    font-size: 6rem;
-    line-height: 0.5;
-    color: var(--color-primary);
-    opacity: 0.5;
-    font-family: Georgia, serif;
   }
 
   .quote-text {
@@ -103,9 +238,131 @@
     margin: 0;
   }
 
+  /* Desktop/mobile text switching */
+  .mobile-text {
+    display: none;
+  }
+
   @media (max-width: 768px) {
+    .desktop-text {
+      display: none;
+    }
+
+    .mobile-text {
+      display: inline;
+    }
+
     .approach-description br {
       display: none;
     }
+
+    .hidden-skill {
+      font-size: clamp(0.7rem, 2vw, 1rem);
+    }
   }
 </style>
+
+<script is:inline>
+  // Reveal skills when cursor spotlight is near them (hover-based)
+  (function() {
+    // Use window to store state across hot reloads
+    if (!window._hiddenSkillsState) {
+      window._hiddenSkillsState = {
+        listenersAdded: false,
+        rafId: null,
+        skillPositions: []
+      };
+    }
+    var state = window._hiddenSkillsState;
+    var revealRadius = 100;
+    var revealRadiusSquared = revealRadius * revealRadius;
+    var outerRadiusSquared = (revealRadius * 1.5) * (revealRadius * 1.5);
+
+    function getSkills() {
+      return document.querySelectorAll('.hidden-skill, .hidden-word');
+    }
+
+    function getSpotlight() {
+      return document.getElementById('cursor-spotlight');
+    }
+
+    function cacheSkillPositions() {
+      var skills = getSkills();
+      if (!skills.length) return;
+      state.skillPositions = [];
+      skills.forEach(function(skill) {
+        var rect = skill.getBoundingClientRect();
+        state.skillPositions.push({
+          el: skill,
+          centerX: rect.left + rect.width / 2,
+          centerY: rect.top + rect.height / 2
+        });
+      });
+    }
+
+    function checkSkillsVisibility() {
+      var cursorSpotlight = getSpotlight();
+      var skills = getSkills();
+      if (!cursorSpotlight || !skills.length) return;
+
+      var isSpotlightActive = cursorSpotlight.classList.contains('active');
+
+      if (!isSpotlightActive) {
+        skills.forEach(function(skill) {
+          skill.style.opacity = '0';
+        });
+        return;
+      }
+
+      var spotlightX = parseFloat(cursorSpotlight.style.left) || 0;
+      var spotlightY = parseFloat(cursorSpotlight.style.top) || 0;
+
+      // Re-cache positions if needed
+      if (state.skillPositions.length !== skills.length) {
+        cacheSkillPositions();
+      }
+
+      state.skillPositions.forEach(function(pos) {
+        var dx = spotlightX - pos.centerX;
+        var dy = spotlightY - pos.centerY;
+        var distanceSquared = dx * dx + dy * dy;
+
+        if (distanceSquared < revealRadiusSquared) {
+          var distance = Math.sqrt(distanceSquared);
+          var opacity = 1 - (distance / revealRadius) * 0.3;
+          pos.el.style.opacity = Math.max(0.7, opacity).toString();
+        } else if (distanceSquared < outerRadiusSquared) {
+          var distance = Math.sqrt(distanceSquared);
+          var fadeOpacity = 1 - ((distance - revealRadius) / (revealRadius * 0.5));
+          pos.el.style.opacity = Math.max(0, fadeOpacity * 0.5).toString();
+        } else {
+          pos.el.style.opacity = '0';
+        }
+      });
+    }
+
+    function handleMove(e) {
+      if (state.rafId) return;
+      state.rafId = requestAnimationFrame(function() {
+        state.rafId = null;
+        checkSkillsVisibility();
+      });
+    }
+
+    function handleScrollResize() {
+      cacheSkillPositions();
+    }
+
+    // Only add listeners once
+    if (!state.listenersAdded) {
+      state.listenersAdded = true;
+      document.addEventListener('mousemove', handleMove);
+      document.addEventListener('touchmove', handleMove);
+      window.addEventListener('scroll', handleScrollResize, { passive: true });
+      window.addEventListener('resize', handleScrollResize);
+    }
+
+    // Initialize positions
+    cacheSkillPositions();
+  })();
+</script>

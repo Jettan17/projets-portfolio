@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PuzzleSplash from '../components/PuzzleSplash.astro';
 import LogoSplash from '../components/LogoSplash.astro';
 import IntroSplash from '../components/IntroSplash.astro';
 import WhatIDo from '../components/WhatIDo.astro';
@@ -7,7 +8,6 @@ import MyApproach from '../components/MyApproach.astro';
 import Hero from '../components/Hero.astro';
 import ScrollTransition from '../components/ScrollTransition.astro';
 import ProjectGrid from '../components/ProjectGrid.astro';
-import SkillBadge from '../components/SkillBadge.astro';
 import Button from '../components/Button.astro';
 import { getCollection } from 'astro:content';
 import { getGitHubProjectsWithStatus, mergeProjects, getFeaturedProjects, sortByDate } from '../utils/projects';
@@ -35,7 +35,6 @@ const sortedProjets = featured.length > 0
 // Track if we had any GitHub fetch errors
 const hasGitHubErrors = githubResult.hasErrors;
 
-const skillVariants = ['primary', 'secondary', 'accent', 'default'] as const;
 ---
 
 <BaseLayout title="Home" description="Personal portfolio showcasing creative web development projects">
@@ -58,9 +57,6 @@ const skillVariants = ['primary', 'secondary', 'accent', 'default'] as const;
           <h2 class="section-title">
             Featured <span class="gradient-text">Projets</span>
           </h2>
-          <p class="section-description">
-            A selection of my recent work. Each projet represents a unique challenge and creative solution.
-          </p>
         </div>
 
         {hasGitHubErrors && sortedProjets.length === 0 && (
@@ -69,35 +65,14 @@ const skillVariants = ['primary', 'secondary', 'accent', 'default'] as const;
           </div>
         )}
 
-        <ProjectGrid projects={sortedProjets} />
+        <div id="featured-grid">
+          <ProjectGrid projects={sortedProjets} />
+        </div>
 
         <div class="section-cta">
           <Button href="/projets" variant="outline">
             View All Projets
           </Button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Skills Section -->
-    <section class="section skills-section">
-      <div class="container">
-        <div class="section-header">
-          <h2 class="section-title">
-            Skills & <span class="gradient-text-secondary">Technologies</span>
-          </h2>
-          <p class="section-description">
-            The tools and technologies I use to bring ideas to life.
-          </p>
-        </div>
-
-        <div class="skills-grid">
-          {personal.skills.map((skill: string, index: number) => (
-            <SkillBadge
-              skill={skill}
-              variant={skillVariants[index % skillVariants.length]}
-            />
-          ))}
         </div>
       </div>
     </section>
@@ -110,14 +85,14 @@ const skillVariants = ['primary', 'secondary', 'accent', 'default'] as const;
             <Button href={personal.social.github} variant="primary" size="lg" external>
               View My GitHub
             </Button>
-            <Button href="/about" variant="ghost" size="lg">
-              Learn More About Me
-            </Button>
           </div>
         </div>
       </div>
     </section>
   </div>
+
+  <!-- Puzzle overlay - fixed position, on top of everything -->
+  <PuzzleSplash />
 </BaseLayout>
 
 <!-- GSAP ScrollTrigger initialization -->
@@ -160,13 +135,6 @@ const skillVariants = ['primary', 'secondary', 'accent', 'default'] as const;
     margin-bottom: var(--space-4);
   }
 
-  .section-description {
-    font-size: var(--text-lg);
-    color: var(--text-secondary);
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-  }
 
   .section-cta {
     display: flex;
@@ -177,26 +145,8 @@ const skillVariants = ['primary', 'secondary', 'accent', 'default'] as const;
   /* Featured Projets */
   .featured-projets {
     background: var(--bg-secondary);
-  }
-
-  /* Skills Section */
-  .skills-section {
-    background: var(--bg-primary);
-  }
-
-  .skills-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--space-3);
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .skills-grid :global(.skill-badge) {
-    font-size: var(--text-base);
-    padding: var(--space-2) var(--space-4);
+    position: relative;
+    overflow: hidden;
   }
 
   /* CTA Section */

@@ -1,8 +1,11 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProjectGrid from '../../components/ProjectGrid.astro';
+import HiddenWords from '../../components/HiddenWords.astro';
 import { getCollection } from 'astro:content';
 import { getGitHubProjectsWithStatus, mergeProjects } from '../../utils/projects';
+
+const projectWords = ['Production', 'Open Source', 'MIT', 'npm', 'GitHub'];
 
 // Fetch both markdown and GitHub projets
 const markdownProjets = await getCollection('projets');
@@ -26,6 +29,7 @@ const hasGitHubErrors = githubResult.hasErrors;
   description="Browse my portfolio of web development projets showcasing creativity and technical skill."
 >
   <section class="section projets-page">
+    <HiddenWords words={projectWords} count={6} />
     <div class="container">
       <div class="page-header">
         <h1 class="page-title">
@@ -51,6 +55,8 @@ const hasGitHubErrors = githubResult.hasErrors;
 <style>
   .projets-page {
     min-height: calc(100vh - var(--header-height));
+    position: relative;
+    overflow: hidden;
   }
 
   .page-header {

@@ -90,11 +90,17 @@ const logoUrl = isGitHub ? getLogoUrl(repoName) : null;
 <style>
   .project-card {
     position: relative;
-    background: var(--bg-primary);
+    background: #DFE6ED;
+    border: 1px solid rgba(0, 0, 0, 0.12);
     border-radius: var(--radius-xl);
     overflow: hidden;
     box-shadow: var(--shadow-md);
     transition: all var(--transition-base);
+  }
+
+  :global([data-theme="dark"]) .project-card {
+    background: var(--bg-tertiary);
+    border-color: rgba(255, 255, 255, 0.08);
   }
 
   .project-card:hover {

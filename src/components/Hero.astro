@@ -1,10 +1,14 @@
 ---
 import Button from './Button.astro';
 import SocialLinks from './SocialLinks.astro';
+import HiddenWords from './HiddenWords.astro';
 import personal from '../data/personal.json';
+
+const heroWords = ['Merge', 'Push', 'Commit', 'Refactor', 'Debug', 'Deploy'];
 ---
 
 <section class="hero">
+  <HiddenWords words={heroWords} count={6} />
   <!-- Decorative background shapes -->
   <div class="hero-bg" aria-hidden="true">
     <div class="blob blob-1"></div>
@@ -18,10 +22,8 @@ import personal from '../data/personal.json';
       <h1 class="hero-name animate-fade-in animate-delay-1">
         <span class="gradient-text">{personal.name}</span>
       </h1>
-      <p class="hero-title animate-fade-in animate-delay-2">{personal.title}</p>
-      <p class="hero-bio animate-fade-in animate-delay-3">{personal.bio}</p>
 
-      <div class="hero-actions animate-fade-in animate-delay-4">
+      <div class="hero-actions animate-fade-in animate-delay-2">
         <Button href="/projets" variant="primary" size="lg">
           View My Work
         </Button>
@@ -30,7 +32,7 @@ import personal from '../data/personal.json';
         </Button>
       </div>
 
-      <div class="hero-social animate-fade-in animate-delay-4">
+      <div class="hero-social animate-fade-in animate-delay-2">
         <SocialLinks size="md" />
       </div>
     </div>
@@ -53,6 +55,10 @@ import personal from '../data/personal.json';
     align-items: center;
     padding: var(--space-16) 0;
     overflow: hidden;
+  }
+
+  .hero :global(.hidden-words-container) {
+    z-index: 1;
   }
 
   /* Background decorations */
@@ -99,6 +105,35 @@ import personal from '../data/personal.json';
     animation-delay: 4s;
   }
 
+  /* Mobile: Smaller blobs, lower opacity, vertically spaced */
+  @media (max-width: 768px) {
+    .blob {
+      opacity: 0.4;
+    }
+
+    .blob-1 {
+      top: 5%;
+      right: -10%;
+      width: 200px;
+      height: 200px;
+    }
+
+    .blob-2 {
+      bottom: 5%;
+      left: -10%;
+      width: 180px;
+      height: 180px;
+    }
+
+    .blob-3 {
+      top: 50%;
+      left: auto;
+      right: -5%;
+      width: 150px;
+      height: 150px;
+    }
+  }
+
   .hero-content {
     position: relative;
     z-index: 10; /* Above particles (5) */
@@ -135,27 +170,6 @@ import personal from '../data/personal.json';
     font-weight: var(--font-extrabold);
     line-height: 1.1;
     margin-bottom: var(--space-4);
-  }
-
-  .hero-title {
-    font-size: var(--text-2xl);
-    font-weight: var(--font-semibold);
-    color: var(--text-secondary);
-    margin-bottom: var(--space-4);
-  }
-
-  .hero-bio {
-    font-size: var(--text-lg);
-    color: var(--text-secondary);
-    max-width: 500px;
-    margin-bottom: var(--space-8);
-  }
-
-  @media (min-width: 1024px) {
-    .hero-bio {
-      margin-left: 0;
-      margin-right: auto;
-    }
   }
 
   .hero-actions {
@@ -256,6 +270,4 @@ import personal from '../data/personal.json';
 
   .animate-delay-1 { animation-delay: 0.1s; }
   .animate-delay-2 { animation-delay: 0.2s; }
-  .animate-delay-3 { animation-delay: 0.3s; }
-  .animate-delay-4 { animation-delay: 0.4s; }
 </style>

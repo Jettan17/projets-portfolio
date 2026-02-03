@@ -101,16 +101,11 @@ export function initScrollJack() {
         y: 0,
         duration: 0.2,
       }, 0.3)
-      .to('.line-3', {
-        opacity: 1,
-        y: 0,
-        duration: 0.2,
-      }, 0.45)
       .to('.intro-splash .scroll-indicator', {
         opacity: 1,
         y: 0,
         duration: 0.15,
-      }, 0.6);
+      }, 0.45);
   }
 
   // =========================================================================
@@ -133,25 +128,11 @@ export function initScrollJack() {
       }
     });
 
-    if (isMobile) {
-      // MOBILE: Trigger all cards together when section enters viewport
-      // Use the section as trigger, not individual cards, to prevent off-screen issues
-      gsap.to('.focus-card', {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        stagger: 0.15,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: '.what-i-do',
-          start: 'top 95%', // Trigger earlier
-          toggleActions: 'play none none none',
-        }
-      });
-    } else if (cards.length > 0 && track) {
-      // DESKTOP: Horizontal scroll with pinning
-      const cardWidth = 350;
-      const gap = 32; // var(--space-8) = 2rem = 32px
+    if (cards.length > 0 && track) {
+      // BOTH MOBILE & DESKTOP: Horizontal scroll with pinning
+      // Use different card widths based on screen size
+      const cardWidth = isMobile ? 200 : 280;
+      const gap = isMobile ? 16 : 32; // --space-4 on mobile, --space-8 on desktop
       const totalWidth = (cardWidth + gap) * (cards.length - 1);
 
       // Pin section and scroll cards horizontally
@@ -162,7 +143,7 @@ export function initScrollJack() {
           trigger: '.what-i-do',
           pin: true,
           start: 'top top',
-          end: `+=${totalWidth + 200}`,
+          end: `+=${totalWidth + (isMobile ? 100 : 200)}`,
           scrub: 1,
           anticipatePin: 1,
           snap: {
@@ -193,56 +174,32 @@ export function initScrollJack() {
   // =========================================================================
   const approachSection = document.querySelector('.my-approach');
   if (approachSection) {
-    if (isMobile) {
-      // MOBILE: Simple fade-in, no pin
-      gsap.to('.quote-block', {
+    // BOTH MOBILE & DESKTOP: Pinned zoom/rise effect
+    // Using same pinning approach as WhatIDo for consistency
+    const approachTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '.my-approach',
+        pin: true,
+        start: 'top top',
+        end: '+=150%',
+        scrub: 1,
+        anticipatePin: 1,
+        invalidateOnRefresh: true, // Recalculate on resize/refresh
+      }
+    });
+
+    approachTl
+      .to('.quote-block', {
         opacity: 1,
         y: 0,
         scale: 1,
-        duration: 0.8,
-        scrollTrigger: {
-          trigger: '.my-approach',
-          start: 'top 70%',
-          toggleActions: 'play none none none',
-        }
-      });
-
-      gsap.to('.approach-description', {
+        duration: 0.6,
+      }, 0)
+      .to('.approach-description', {
         opacity: 1,
         y: 0,
-        duration: 0.6,
-        scrollTrigger: {
-          trigger: '.approach-description',
-          start: 'top 85%',
-          toggleActions: 'play none none none',
-        }
-      });
-    } else {
-      // DESKTOP: Pinned zoom/rise effect
-      const approachTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: '.my-approach',
-          pin: true,
-          start: 'top top',
-          end: '+=150%',
-          scrub: 1,
-          anticipatePin: 1,
-        }
-      });
-
-      approachTl
-        .to('.quote-block', {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.6,
-        }, 0)
-        .to('.approach-description', {
-          opacity: 1,
-          y: 0,
-          duration: 0.4,
-        }, 0.4);
-    }
+        duration: 0.4,
+      }, 0.4);
   }
 
   // =========================================================================

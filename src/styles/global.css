@@ -7,15 +7,15 @@
    ----------------------------------------------------------------------------- */
 
 :root {
-  /* Primary vibrant colors */
-  --color-primary: #FF6B6B;
-  --color-primary-dark: #E55A5A;
+  /* Primary vibrant colors - teal theme */
+  --color-primary: #2A9D8F;
+  --color-primary-dark: #238577;
   --color-secondary: #4ECDC4;
-  --color-secondary-dark: #3DBDB5;
+  --color-secondary-dark: #FF6B6B;
   --color-accent: #FFE66D;
   --color-accent-dark: #F5D84D;
   --color-highlight: #95E1D3;
-  --color-pop: #F38181;
+  --color-pop: #2A9D8F;
 
   /* Backgrounds */
   --bg-primary: #FFFFFF;
@@ -30,8 +30,8 @@
   --text-light: #FFFFFF;
 
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-pop) 100%);
-  --gradient-secondary: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-highlight) 100%);
+  --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-highlight) 100%);
+  --gradient-secondary: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-pop) 100%);
   --gradient-accent: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
   --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 
@@ -94,8 +94,8 @@
   --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 
   /* Colorful shadows */
-  --shadow-primary: 0 4px 14px 0 rgba(255, 107, 107, 0.39);
-  --shadow-secondary: 0 4px 14px 0 rgba(78, 205, 196, 0.39);
+  --shadow-primary: 0 4px 14px 0 rgba(61, 189, 181, 0.39);
+  --shadow-secondary: 0 4px 14px 0 rgba(255, 107, 107, 0.39);
   --shadow-accent: 0 4px 14px 0 rgba(255, 230, 109, 0.39);
 
   /* Transitions */
@@ -118,15 +118,15 @@
    ----------------------------------------------------------------------------- */
 
 [data-theme="dark"] {
-  /* Night sky primary colors */
-  --color-primary: #7B68EE;
-  --color-primary-dark: #6A5ACD;
+  /* Night sky primary colors - teal theme */
+  --color-primary: #146A6E;
+  --color-primary-dark: #0F5255;
   --color-secondary: #1A8A8F;
-  --color-secondary-dark: #146A6E;
+  --color-secondary-dark: #7B68EE;
   --color-accent: #B8973A;
   --color-accent-dark: #9A7E30;
   --color-highlight: #87CEEB;
-  --color-pop: #DA70D6;
+  --color-pop: #1A8A8F;
 
   /* Dark backgrounds */
   --bg-primary: #0D1117;
@@ -141,9 +141,9 @@
   --text-light: #FFFFFF;
 
   /* Night sky gradients */
-  --gradient-primary: linear-gradient(135deg, #7B68EE 0%, #DA70D6 100%);
-  --gradient-secondary: linear-gradient(135deg, #00CED1 0%, #87CEEB 100%);
-  --gradient-accent: linear-gradient(135deg, #FFD700 0%, #7B68EE 100%);
+  --gradient-primary: linear-gradient(135deg, #146A6E 0%, #1A8A8F 100%);
+  --gradient-secondary: linear-gradient(135deg, #7B68EE 0%, #DA70D6 100%);
+  --gradient-accent: linear-gradient(135deg, #FFD700 0%, #146A6E 100%);
   --gradient-hero: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
 
   /* Darker shadows */
@@ -154,8 +154,8 @@
   --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
 
   /* Glowing shadows for dark mode (muted) */
-  --shadow-primary: 0 4px 14px 0 rgba(123, 104, 238, 0.3);
-  --shadow-secondary: 0 4px 14px 0 rgba(26, 138, 143, 0.3);
+  --shadow-primary: 0 4px 14px 0 rgba(20, 106, 110, 0.3);
+  --shadow-secondary: 0 4px 14px 0 rgba(123, 104, 238, 0.3);
   --shadow-accent: 0 4px 14px 0 rgba(184, 151, 58, 0.3);
 }
 
@@ -180,6 +180,7 @@ html {
   font-size: 16px;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -191,6 +192,7 @@ body {
   background-color: var(--bg-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 /* -----------------------------------------------------------------------------
@@ -419,11 +421,6 @@ body.js-animate .line-1 {
 body.js-animate .line-2 {
   opacity: 0;
   transform: translateY(70px);
-}
-
-body.js-animate .line-3 {
-  opacity: 0;
-  transform: translateY(80px);
 }
 
 body.js-animate .intro-splash .scroll-indicator {

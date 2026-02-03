@@ -139,6 +139,16 @@
     transition: fill 0.3s ease;
   }
 
+  /* Explicit dark mode - white fill */
+  :global([data-theme="dark"]) .mono-shape {
+    fill: #E6EDF3;
+  }
+
+  /* Light mode - dark fill */
+  :global(html:not([data-theme="dark"])) .mono-shape {
+    fill: #1a2634;
+  }
+
   .logo-text-col {
     position: absolute;
     top: 0;
@@ -159,6 +169,18 @@
     line-height: 1;
   }
 
+  /* Explicit dark mode - light text */
+  :global([data-theme="dark"]) .logo-ro,
+  :global([data-theme="dark"]) .logo-ets {
+    color: #E6EDF3;
+  }
+
+  /* Light mode - dark text */
+  :global(html:not([data-theme="dark"])) .logo-ro,
+  :global(html:not([data-theme="dark"])) .logo-ets {
+    color: #1a2634;
+  }
+
   .logo-ro {
     font-size: clamp(1.8rem, 5.5vw, 3.5rem);
     margin-top: 25%;
@@ -174,6 +196,16 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
     margin: 0;
+  }
+
+  /* Explicit dark mode - lighter tagline */
+  :global([data-theme="dark"]) .logo-tagline {
+    color: #8B949E;
+  }
+
+  /* Light mode - darker tagline */
+  :global(html:not([data-theme="dark"])) .logo-tagline {
+    color: #4a5568;
   }
 
   /* Scroll indicator - use left/right: 0 for true centering */
