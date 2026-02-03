@@ -1,0 +1,119 @@
+---
+/**
+ * HiddenWords - Floating words revealed by cursor spotlight
+ * Reusable across all sections with context-specific word lists
+ */
+interface Props {
+  words: string[];
+  count?: number; // How many words to show (default: 6-10)
+}
+
+const { words, count } = Astro.props;
+
+// Determine how many words to display
+const minCount = count ? Math.max(1, count - 2) : 6;
+const maxCount = count ? count : 10;
+const displayCount = minCount + Math.floor(Math.random() * (maxCount - minCount + 1));
+
+// Shuffle and take subset
+const shuffledWords = [...words]
+  .sort(() => Math.random() - 0.5)
+  .slice(0, Math.min(displayCount, words.length));
+
+// Generate random positions avoiding center
+function getRandomPosition(index: number): { top?: string; bottom?: string; left?: string; right?: string } {
+  const seed = (index * 7919 + 104729) % 100;
+  const seed2 = (index * 6151 + 88813) % 100;
+  const seed3 = (index * 3571 + 71993) % 100;
+  const zone = index % 8;
+  const positions: { top?: string; bottom?: string; left?: string; right?: string } = {};
+
+  switch (zone) {
+    case 0: positions.top = `${5 + (seed % 15)}%`; positions.left = `${3 + (seed2 % 18)}%`; break;
+    case 1: positions.top = `${5 + (seed % 15)}%`; positions.right = `${3 + (seed2 % 18)}%`; break;
+    case 2: positions.bottom = `${5 + (seed % 15)}%`; positions.left = `${3 + (seed2 % 18)}%`; break;
+    case 3: positions.bottom = `${5 + (seed % 15)}%`; positions.right = `${3 + (seed2 % 18)}%`; break;
+    case 4:
+      positions.top = `${3 + (seed % 12)}%`;
+      if (seed3 < 50) positions.left = `${22 + (seed2 % 10)}%`;
+      else positions.right = `${22 + (seed2 % 10)}%`;
+      break;
+    case 5:
+      positions.bottom = `${3 + (seed % 12)}%`;
+      if (seed3 < 50) positions.left = `${22 + (seed2 % 10)}%`;
+      else positions.right = `${22 + (seed2 % 10)}%`;
+      break;
+    case 6:
+      positions.left = `${2 + (seed % 12)}%`;
+      if (seed3 < 50) positions.top = `${35 + (seed2 % 15)}%`;
+      else positions.bottom = `${35 + (seed2 % 15)}%`;
+      break;
+    case 7:
+      positions.right = `${2 + (seed % 12)}%`;
+      if (seed3 < 50) positions.top = `${35 + (seed2 % 15)}%`;
+      else positions.bottom = `${35 + (seed2 % 15)}%`;
+      break;
+  }
+  return positions;
+}
+---
+
+<div class="hidden-words-container" aria-hidden="true">
+  {shuffledWords.map((word: string, index: number) => {
+    const pos = getRandomPosition(index);
+    const floatX = ((index % 2 === 0 ? 1 : -1) * (3 + (index % 5) * 2));
+    const floatY = ((index % 3 === 0 ? -1 : 1) * (2 + (index % 4)));
+    return (
+      <span
+        class="hidden-word"
+        style={`
+          ${pos.top ? `top: ${pos.top};` : ''}
+          ${pos.bottom ? `bottom: ${pos.bottom};` : ''}
+          ${pos.left ? `left: ${pos.left};` : ''}
+          ${pos.right ? `right: ${pos.right};` : ''}
+          --delay: ${(index * 0.3) % 6}s;
+          --float-x: ${floatX}px;
+          --float-y: ${floatY}px;
+        `}
+      >
+        {word}
+      </span>
+    );
+  })}
+</div>
+
+<style>
+  .hidden-words-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .hidden-word {
+    position: absolute;
+    font-size: clamp(0.75rem, 2vw, 1.1rem);
+    font-weight: var(--font-bold);
+    color: rgba(34, 197, 94, 0.9);
+    text-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    animation: float 6s ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+    white-space: nowrap;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(var(--float-x, 5px), var(--float-y, -3px)); }
+    50% { transform: translate(calc(var(--float-x, 5px) * -0.5), calc(var(--float-y, -3px) * -1)); }
+    75% { transform: translate(calc(var(--float-x, 5px) * -1), var(--float-y, -3px)); }
+  }
+
+  @media (max-width: 768px) {
+    .hidden-word {
+      font-size: clamp(0.65rem, 1.8vw, 0.9rem);
+    }
+  }
+</style>
