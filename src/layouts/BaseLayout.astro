@@ -214,27 +214,60 @@ const fullTitle = title === "Home" ? siteTitle : `${title} | ${siteTitle}`;
       }
     }
 
-    // Touch handlers - show spotlight immediately on touch (no dead zone)
+    // Touch handlers - detect direction before activating spotlight
+    // Prevents spotlight from interfering with vertical scrolling
+    var DIRECTION_THRESHOLD = 10; // px to determine gesture direction
+    var touchStartX = 0;
+    var touchStartY = 0;
+    var touchDecided = false; // whether we've decided scroll vs spotlight
+    var touchIsScroll = false; // true = vertical scroll, skip spotlight
+
     function handleTouchStart(e) {
-      var el = getSpotlight();
-      if (!el || e.touches.length === 0) return;
+      if (!e.touches.length) return;
 
       var puzzleLockActive = document.getElementById('puzzle-section') !== null;
       if (puzzleLockActive) return;
 
       var touch = e.touches[0];
-      updatePosition(el, touch.clientX, touch.clientY);
-      showSpotlight(el);
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+      touchDecided = false;
+      touchIsScroll = false;
+
+      // Position the spotlight but don't show it yet
+      var el = getSpotlight();
+      if (el) {
+        updatePosition(el, touch.clientX, touch.clientY);
+      }
     }
 
     function handleTouchMove(e) {
       var el = getSpotlight();
-      if (!el || e.touches.length === 0) return;
+      if (!el || !e.touches.length) return;
 
       var puzzleLockActive = document.getElementById('puzzle-section') !== null;
       if (puzzleLockActive) return;
 
       var touch = e.touches[0];
+
+      // If already decided this is a scroll, just bail out
+      if (touchDecided && touchIsScroll) return;
+
+      // If not yet decided, check direction
+      if (!touchDecided) {
+        var dx = Math.abs(touch.clientX - touchStartX);
+        var dy = Math.abs(touch.clientY - touchStartY);
+
+        // Wait until we have enough movement to decide
+        if (dx < DIRECTION_THRESHOLD && dy < DIRECTION_THRESHOLD) return;
+
+        touchDecided = true;
+        // If vertical movement dominates, it's a scroll - don't show spotlight
+        touchIsScroll = dy > dx;
+        if (touchIsScroll) return;
+      }
+
+      // Horizontal gesture - activate spotlight
       updatePosition(el, touch.clientX, touch.clientY);
       showSpotlight(el);
     }
@@ -242,6 +275,8 @@ const fullTitle = title === "Home" ? siteTitle : `${title} | ${siteTitle}`;
     function handleTouchEnd() {
       var el = getSpotlight();
       state.isActive = false;
+      touchDecided = false;
+      touchIsScroll = false;
       if (el) {
         el.classList.remove('active');
         el.style.opacity = '0';
