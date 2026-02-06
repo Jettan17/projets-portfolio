@@ -30,31 +30,32 @@
       </svg>
 
       <!-- 5x5 grid of connection points (25 nodes) -->
-      <div class="puzzle-node" data-node="0"></div>
-      <div class="puzzle-node" data-node="1"></div>
-      <div class="puzzle-node" data-node="2"></div>
-      <div class="puzzle-node" data-node="3"></div>
-      <div class="puzzle-node" data-node="4"></div>
-      <div class="puzzle-node" data-node="5"></div>
-      <div class="puzzle-node" data-node="6"></div>
-      <div class="puzzle-node" data-node="7"></div>
-      <div class="puzzle-node start-node" data-node="8"></div>
-      <div class="puzzle-node" data-node="9"></div>
-      <div class="puzzle-node" data-node="10"></div>
-      <div class="puzzle-node" data-node="11"></div>
-      <div class="puzzle-node" data-node="12"></div>
-      <div class="puzzle-node" data-node="13"></div>
-      <div class="puzzle-node" data-node="14"></div>
-      <div class="puzzle-node" data-node="15"></div>
-      <div class="puzzle-node" data-node="16"></div>
-      <div class="puzzle-node" data-node="17"></div>
-      <div class="puzzle-node" data-node="18"></div>
-      <div class="puzzle-node" data-node="19"></div>
-      <div class="puzzle-node" data-node="20"></div>
-      <div class="puzzle-node" data-node="21"></div>
-      <div class="puzzle-node" data-node="22"></div>
-      <div class="puzzle-node" data-node="23"></div>
-      <div class="puzzle-node" data-node="24"></div>
+      <!-- Solution path: 8 → 9 → 4 → 3 → 2 → 7 → 12 → 17 → 22 → 21 → 20 → 15 -->
+      <div class="grid-spacer" data-node="0"></div>
+      <div class="grid-spacer" data-node="1"></div>
+      <div class="puzzle-node path-node" data-node="2"></div>
+      <div class="puzzle-node path-node" data-node="3"></div>
+      <div class="puzzle-node path-node" data-node="4"></div>
+      <div class="grid-spacer" data-node="5"></div>
+      <div class="grid-spacer" data-node="6"></div>
+      <div class="puzzle-node path-node" data-node="7"></div>
+      <div class="puzzle-node path-node start-node" data-node="8"></div>
+      <div class="puzzle-node path-node" data-node="9"></div>
+      <div class="grid-spacer" data-node="10"></div>
+      <div class="grid-spacer" data-node="11"></div>
+      <div class="puzzle-node path-node" data-node="12"></div>
+      <div class="grid-spacer" data-node="13"></div>
+      <div class="grid-spacer" data-node="14"></div>
+      <div class="puzzle-node path-node" data-node="15"></div>
+      <div class="grid-spacer" data-node="16"></div>
+      <div class="puzzle-node path-node" data-node="17"></div>
+      <div class="grid-spacer" data-node="18"></div>
+      <div class="grid-spacer" data-node="19"></div>
+      <div class="puzzle-node path-node" data-node="20"></div>
+      <div class="puzzle-node path-node" data-node="21"></div>
+      <div class="puzzle-node path-node" data-node="22"></div>
+      <div class="grid-spacer" data-node="23"></div>
+      <div class="grid-spacer" data-node="24"></div>
 
       <!-- SVG for drawing connection lines -->
       <svg class="puzzle-lines" id="puzzle-lines">
@@ -218,6 +219,12 @@
     stroke-width: 4;
     stroke-linecap: round;
     filter: url(#glow);
+  }
+
+  /* Grid spacers - invisible, maintain grid layout */
+  .grid-spacer {
+    visibility: hidden;
+    pointer-events: none;
   }
 
   /* Connection nodes */
@@ -432,7 +439,7 @@
       this.grid = document.getElementById('puzzle-grid');
       this.orb = document.getElementById('puzzle-orb');
       this.linesSvg = document.getElementById('puzzle-lines') as SVGElement | null;
-      this.nodes = document.querySelectorAll('.puzzle-node');
+      this.nodes = document.querySelectorAll('.puzzle-node.path-node');
 
       this.init();
     }
@@ -528,10 +535,10 @@
         const centerY = rect.top + rect.height / 2;
         const distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
 
-        // Find the closest node within radius
+        // Find the closest node within radius (use data-node value, not array index)
         if (distance < maxRadius && distance < closestDistance) {
           closestDistance = distance;
-          closestNode = i;
+          closestNode = parseInt(this.nodes[i].getAttribute('data-node') || '0', 10);
         }
       }
       return closestNode;
@@ -556,14 +563,21 @@
       return rowDiff <= 1 && colDiff <= 1;
     }
 
+    private getNodeElement(nodeIndex: number): HTMLElement | null {
+      return this.grid?.querySelector(`[data-node="${nodeIndex}"]`) as HTMLElement | null;
+    }
+
     private activateNode(nodeIndex: number) {
-      this.nodes[nodeIndex].classList.add('active');
+      const el = this.getNodeElement(nodeIndex);
+      if (el) el.classList.add('active');
     }
 
     private snapOrbToNode(nodeIndex: number) {
       if (!this.orb || !this.grid) return;
 
-      const nodeRect = this.nodes[nodeIndex].getBoundingClientRect();
+      const nodeEl = this.getNodeElement(nodeIndex);
+      if (!nodeEl) return;
+      const nodeRect = nodeEl.getBoundingClientRect();
       const gridRect = this.grid.getBoundingClientRect();
 
       // Calculate node center relative to grid
@@ -586,8 +600,11 @@
     private drawLine(fromNode: number, toNode: number) {
       if (!this.linesSvg) return;
 
-      const fromRect = this.nodes[fromNode].getBoundingClientRect();
-      const toRect = this.nodes[toNode].getBoundingClientRect();
+      const fromEl = this.getNodeElement(fromNode);
+      const toEl = this.getNodeElement(toNode);
+      if (!fromEl || !toEl) return;
+      const fromRect = fromEl.getBoundingClientRect();
+      const toRect = toEl.getBoundingClientRect();
       const gridRect = this.linesSvg.getBoundingClientRect();
 
       const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -601,7 +618,7 @@
 
     private resetPuzzle() {
       this.visitedNodes = [];
-      this.nodes.forEach(node => node.classList.remove('active'));
+      this.grid?.querySelectorAll('.puzzle-node.active').forEach(node => node.classList.remove('active'));
       if (this.linesSvg) {
         this.linesSvg.querySelectorAll('line').forEach(line => line.remove());
       }

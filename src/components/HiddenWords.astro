@@ -29,12 +29,12 @@ function getRandomPosition(index: number): { top?: string; bottom?: string; left
   const positions: { top?: string; bottom?: string; left?: string; right?: string } = {};
 
   switch (zone) {
-    case 0: positions.top = `${5 + (seed % 15)}%`; positions.left = `${3 + (seed2 % 18)}%`; break;
-    case 1: positions.top = `${5 + (seed % 15)}%`; positions.right = `${3 + (seed2 % 18)}%`; break;
+    case 0: positions.top = `${15 + (seed % 15)}%`; positions.left = `${3 + (seed2 % 18)}%`; break;
+    case 1: positions.top = `${15 + (seed % 15)}%`; positions.right = `${3 + (seed2 % 18)}%`; break;
     case 2: positions.bottom = `${5 + (seed % 15)}%`; positions.left = `${3 + (seed2 % 18)}%`; break;
     case 3: positions.bottom = `${5 + (seed % 15)}%`; positions.right = `${3 + (seed2 % 18)}%`; break;
     case 4:
-      positions.top = `${3 + (seed % 12)}%`;
+      positions.top = `${15 + (seed % 12)}%`;
       if (seed3 < 50) positions.left = `${22 + (seed2 % 10)}%`;
       else positions.right = `${22 + (seed2 % 10)}%`;
       break;

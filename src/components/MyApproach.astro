@@ -27,11 +27,11 @@ function getRandomPosition(index: number): { top?: string; bottom?: string; left
 
   switch (zone) {
     case 0: // Top-left corner
-      positions.top = `${5 + (seed % 15)}%`;
+      positions.top = `${15 + (seed % 15)}%`;
       positions.left = `${3 + (seed2 % 18)}%`;
       break;
     case 1: // Top-right corner
-      positions.top = `${5 + (seed % 15)}%`;
+      positions.top = `${15 + (seed % 15)}%`;
       positions.right = `${3 + (seed2 % 18)}%`;
       break;
     case 2: // Bottom-left corner
@@ -43,7 +43,7 @@ function getRandomPosition(index: number): { top?: string; bottom?: string; left
       positions.right = `${3 + (seed2 % 18)}%`;
       break;
     case 4: // Top edge (middle area, avoiding center)
-      positions.top = `${3 + (seed % 12)}%`;
+      positions.top = `${15 + (seed % 12)}%`;
       // Place in left-center or right-center of top edge
       if (seed3 < 50) {
         positions.left = `${22 + (seed2 % 10)}%`;
@@ -120,16 +120,14 @@ const shuffledSkills = [...skills]
   <div class="approach-content">
     <div class="quote-block">
       <p class="quote-text">
-        <span class="quote-line">There is</span>
-        <span class="quote-line">hidden text</span>
-        <span class="quote-line accent">Hover to reveal</span>
+        <span class="quote-line desktop-text">Move your cursor</span>
+        <span class="quote-line desktop-text accent">to focus</span>
+        <span class="quote-line mobile-text">Swipe horizontally<br/><span class="accent">to focus</span></span>
       </p>
     </div>
 
     <p class="approach-description">
-      <span class="desktop-text">Move your cursor around the page</span>
-      <span class="mobile-text">Move your finger around the page</span>
-      <br/>to illuminate what's hidden in plain sight.
+      <span class="desktop-text hint">Guide the stars.</span>
     </p>
   </div>
 </section>
@@ -224,7 +222,8 @@ const shuffledSkills = [...skills]
     display: block;
   }
 
-  .quote-line.accent {
+  .quote-line.accent,
+  .quote-line .accent {
     background: var(--gradient-primary);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -238,6 +237,14 @@ const shuffledSkills = [...skills]
     margin: 0;
   }
 
+  .approach-description .hint {
+    display: block;
+    font-size: var(--text-base);
+    opacity: 0.8;
+    margin-top: var(--space-2);
+    font-style: italic;
+  }
+
   /* Desktop/mobile text switching */
   .mobile-text {
     display: none;
@@ -245,15 +252,11 @@ const shuffledSkills = [...skills]
 
   @media (max-width: 768px) {
     .desktop-text {
-      display: none;
+      display: none !important;
     }
 
     .mobile-text {
-      display: inline;
-    }
-
-    .approach-description br {
-      display: none;
+      display: block;
     }
 
     .hidden-skill {
