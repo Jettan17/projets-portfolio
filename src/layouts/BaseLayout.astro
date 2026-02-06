@@ -267,7 +267,8 @@ const fullTitle = title === "Home" ? siteTitle : `${title} | ${siteTitle}`;
         if (touchIsScroll) return;
       }
 
-      // Horizontal gesture - activate spotlight
+      // Horizontal gesture - activate spotlight and block scrolling
+      e.preventDefault();
       updatePosition(el, touch.clientX, touch.clientY);
       showSpotlight(el);
     }
@@ -291,7 +292,7 @@ const fullTitle = title === "Home" ? siteTitle : `${title} | ${siteTitle}`;
       document.addEventListener('mouseleave', handleMouseLeave);
       // Touch events
       document.addEventListener('touchstart', handleTouchStart, { passive: true });
-      document.addEventListener('touchmove', handleTouchMove, { passive: true });
+      document.addEventListener('touchmove', handleTouchMove, { passive: false });
       document.addEventListener('touchend', handleTouchEnd);
     }
   })();
