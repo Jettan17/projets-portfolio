@@ -250,7 +250,7 @@ const shuffledSkills = [...skills]
     display: none;
   }
 
-  @media (max-width: 768px) {
+  @media (pointer: coarse) {
     .desktop-text {
       display: none !important;
     }
@@ -258,7 +258,9 @@ const shuffledSkills = [...skills]
     .mobile-text {
       display: block;
     }
+  }
 
+  @media (max-width: 768px) {
     .hidden-skill {
       font-size: clamp(0.7rem, 2vw, 1rem);
     }
