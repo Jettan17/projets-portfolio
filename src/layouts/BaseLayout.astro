@@ -125,7 +125,10 @@ const fullTitle = title === "Home" ? siteTitle : `${title} | ${siteTitle}`;
         movementDistance: 0,
         lastX: 0,
         lastY: 0,
-        hasInitialPosition: false
+        hasInitialPosition: false,
+        // Mobile scroll lock
+        isTouchGesture: false,
+        scrollLocked: false
       };
     }
     var state = window._cursorSpotlightState;
@@ -153,6 +156,13 @@ const fullTitle = title === "Home" ? siteTitle : `${title} | ${siteTitle}`;
         state.isActive = true;
         el.classList.add('active');
         el.style.opacity = '1';
+      }
+
+      // Lock page scroll on mobile when spotlight activates
+      if (state.isTouchGesture && !state.scrollLocked) {
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+        state.scrollLocked = true;
       }
     }
 
@@ -233,6 +243,7 @@ const fullTitle = title === "Home" ? siteTitle : `${title} | ${siteTitle}`;
       touchStartY = touch.clientY;
       touchDecided = false;
       touchIsScroll = false;
+      state.isTouchGesture = true;
 
       // Position the spotlight but don't show it yet
       var el = getSpotlight();
@@ -278,6 +289,15 @@ const fullTitle = title === "Home" ? siteTitle : `${title} | ${siteTitle}`;
       state.isActive = false;
       touchDecided = false;
       touchIsScroll = false;
+      state.isTouchGesture = false;
+
+      // Unlock page scroll
+      if (state.scrollLocked) {
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
+        state.scrollLocked = false;
+      }
+
       if (el) {
         el.classList.remove('active');
         el.style.opacity = '0';
@@ -294,6 +314,7 @@ const fullTitle = title === "Home" ? siteTitle : `${title} | ${siteTitle}`;
       document.addEventListener('touchstart', handleTouchStart, { passive: true });
       document.addEventListener('touchmove', handleTouchMove, { passive: false });
       document.addEventListener('touchend', handleTouchEnd);
+      document.addEventListener('touchcancel', handleTouchEnd);
     }
   })();
 </script>
