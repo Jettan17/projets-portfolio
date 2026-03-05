@@ -2,13 +2,16 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SkillBadge from '../components/SkillBadge.astro';
 import Button from '../components/Button.astro';
+import HiddenWords from '../components/HiddenWords.astro';
 import personal from '../data/personal.json';
 
 const skillVariants = ['primary', 'secondary', 'accent', 'default'] as const;
+const aboutWords = ['Autodidact', 'Polyglot', 'Nocturnal', 'Caffeinated', 'Obsessive', 'Relentless', '10x', 'Nerd'];
 ---
 
 <BaseLayout title="About" description="Learn more about me, my background, and what drives my passion for web development.">
   <section class="section about-page">
+    <HiddenWords words={aboutWords} count={6} />
     <div class="container">
       <!-- Header -->
       <div class="about-header">
@@ -79,6 +82,8 @@ const skillVariants = ['primary', 'secondary', 'accent', 'default'] as const;
 <style>
   .about-page {
     min-height: calc(100vh - var(--header-height));
+    position: relative;
+    overflow: hidden;
   }
 
   .about-header {

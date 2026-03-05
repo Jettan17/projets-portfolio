@@ -11,6 +11,7 @@ import ProjectGrid from '../components/ProjectGrid.astro';
 import Button from '../components/Button.astro';
 import { getCollection } from 'astro:content';
 import { getGitHubProjectsWithStatus, mergeProjects, getFeaturedProjects, sortByDate } from '../utils/projects';
+import { featuredBlacklist } from '../config/github-projects';
 import personal from '../data/personal.json';
 
 // Fetch both markdown and GitHub projets
@@ -26,11 +27,11 @@ const allProjets = mergeProjects(
   githubResult.projects
 );
 
-// Get featured projets, or fall back to most recent if none are featured
-const featured = getFeaturedProjects(allProjets);
-const sortedProjets = featured.length > 0
-  ? sortByDate(featured).slice(0, 3)
-  : sortByDate(allProjets).slice(0, 3);
+// Get all featured projets excluding blacklisted ones (JS shuffles to pick 3 on load)
+const featuredProjets = getFeaturedProjects(allProjets).filter(
+  p => !featuredBlacklist.includes(p.slug.replace('github-', ''))
+);
+const fallbackProjets = sortByDate(allProjets).slice(0, 3);
 
 // Track if we had any GitHub fetch errors
 const hasGitHubErrors = githubResult.hasErrors;
@@ -59,15 +60,36 @@ const hasGitHubErrors = githubResult.hasErrors;
           </h2>
         </div>
 
-        {hasGitHubErrors && sortedProjets.length === 0 && (
+        {hasGitHubErrors && featuredProjets.length === 0 && (
           <div class="error-banner">
             <p>Unable to load projets from GitHub. Please try refreshing the page.</p>
           </div>
         )}
 
         <div id="featured-grid">
-          <ProjectGrid projects={sortedProjets} />
+          <ProjectGrid projects={featuredProjets.length > 0 ? featuredProjets : fallbackProjets} />
         </div>
+        <script is:inline>
+          (function () {
+            var grid = document.getElementById('featured-grid');
+            if (!grid) return;
+            var cards = Array.from(grid.querySelectorAll('article.project-card'));
+            if (cards.length <= 3) return;
+            for (var i = cards.length - 1; i > 0; i--) {
+              var j = Math.floor(Math.random() * (i + 1));
+              var tmp = cards[i]; cards[i] = cards[j]; cards[j] = tmp;
+            }
+            var container = cards[0].parentNode;
+            cards.slice(0, 3).forEach(function (c) {
+              c.style.display = '';
+              container.appendChild(c);
+            });
+            cards.slice(3).forEach(function (c) {
+              c.style.display = 'none';
+              container.appendChild(c);
+            });
+          })();
+        </script>
 
         <div class="section-cta">
           <Button href="/projets" variant="outline">

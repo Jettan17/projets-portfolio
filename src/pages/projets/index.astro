@@ -47,10 +47,45 @@ const hasGitHubErrors = githubResult.hasErrors;
         </div>
       )}
 
+      <div class="sort-controls">
+        <span class="sort-label">Sort by</span>
+        <button type="button" class="sort-btn active" data-sort="updated">Recently Updated</button>
+        <button type="button" class="sort-btn" data-sort="created">Date Created</button>
+        <button type="button" class="sort-btn" data-sort="az">A → Z</button>
+        <button type="button" class="sort-btn" data-sort="za">Z → A</button>
+      </div>
+
       <ProjectGrid projects={allProjets} />
     </div>
   </section>
 </BaseLayout>
+
+<script is:inline>
+  (function () {
+    function sortCards(type) {
+      var grid = document.querySelector('.project-grid');
+      if (!grid) return;
+      var cards = Array.from(grid.querySelectorAll('article.project-card'));
+      cards.sort(function (a, b) {
+        if (type === 'az') return a.dataset.title.localeCompare(b.dataset.title);
+        if (type === 'za') return b.dataset.title.localeCompare(a.dataset.title);
+        if (type === 'created') return Number(b.dataset.created) - Number(a.dataset.created);
+        return Number(b.dataset.updated) - Number(a.dataset.updated); // default: recently updated
+      });
+      cards.forEach(function (c) { grid.appendChild(c); });
+    }
+
+    document.querySelectorAll('.sort-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.sort-btn').forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        sortCards(btn.dataset.sort);
+      });
+    });
+
+    sortCards('updated');
+  })();
+</script>
 
 <style>
   .projets-page {
@@ -75,6 +110,43 @@ const hasGitHubErrors = githubResult.hasErrors;
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+  }
+
+  .sort-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-8);
+  }
+
+  .sort-label {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    margin-right: var(--space-1);
+  }
+
+  .sort-btn {
+    font-family: inherit;
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full, 9999px);
+    border: 1px solid var(--border-color, rgba(255,255,255,0.15));
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .sort-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--text-primary);
+  }
+
+  .sort-btn.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
   }
 
   .error-banner {

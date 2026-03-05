@@ -60,6 +60,7 @@ export interface GitHubProjectData {
   repoUrl: string;
   featured: boolean;
   publishDate: Date;
+  pushedAt?: Date;
   source: 'github';
   stars: number;
   language: string | null;

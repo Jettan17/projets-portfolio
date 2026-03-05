@@ -45,6 +45,12 @@ export const githubUsername = 'Jettan17';
  * ];
  * ```
  */
+
+/**
+ * Repos excluded from the featured section (still shown on /projets)
+ */
+export const featuredBlacklist: string[] = ['stratos-investment-assistant'];
+
 export const githubProjects: GitHubProjectConfig[] = [
   // Add your repositories here
   // Example: { repo: 'your-repo-name' },
@@ -66,6 +72,24 @@ export const githubProjects: GitHubProjectConfig[] = [
     featured: true,
     tags: ['TypeScript', 'Next.js', 'React', 'Tailwind CSS'],
     liveUrl: 'https://prizm-photo-album.vercel.app',
+  },
+  {
+    repo: 'chromax-codebase-onboarding',
+    title: 'Chromax',
+    description:
+      'Index any GitHub repo and ask natural language questions about it using a multi-agent RAG pipeline.',
+    featured: true,
+    tags: ['Python', 'Multi-Agent', 'RAG', 'ChromaDB', 'LLM'],
+    liveUrl: '',
+  },
+  {
+    repo: 'claude-input-watcher',
+    title: 'Watcher',
+    description:
+      'An IDE extension that pauses your media and brings the editor to the foreground when Claude Code requires input.',
+    featured: false,
+    tags: ['TypeScript', 'VS Code', 'Claude Code', 'Windows', 'Automation'],
+    liveUrl: '',
   },
   {
     repo: 'jetflux-cc-sdk',

@@ -17,7 +17,12 @@ const repoName = isGitHub ? project.slug.replace('github-', '') : '';
 const logoUrl = isGitHub ? getLogoUrl(repoName) : null;
 ---
 
-<article class="project-card">
+<article
+  class="project-card"
+  data-title={title.toLowerCase()}
+  data-created={project.data.publishDate.getTime()}
+  data-updated={(project.data.pushedAt ?? project.data.publishDate).getTime()}
+>
   {isGitHub && (
     <div class="github-badge" title="Synced from GitHub">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
@@ -47,7 +52,7 @@ const logoUrl = isGitHub ? getLogoUrl(repoName) : null;
         </div>
       )}
       <div class="project-overlay">
-        <span class="view-project">View Project</span>
+        <span class="view-project">View Projet</span>
       </div>
     </div>
   </a>

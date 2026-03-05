@@ -1,6 +1,6 @@
 # Claude Code SDK - Master Directives
 
-This project uses the **everything-claude-code (ECC)** plugin for structured development workflows.
+This project provides a structured Claude Code development environment with commands, agents, and workflows.
 
 ---
 
@@ -52,10 +52,7 @@ When initializing a new project:
 
 ## Quick Start
 
-### Plugin Status: INSTALLED ✓
-The everything-claude-code plugin is installed at `~/.claude/plugins/everything-claude-code/`
-
-### Available Slash Commands (17 total)
+### Available Slash Commands (18 total)
 | Command | Description |
 |---------|-------------|
 | `/sdk` | Initialize new project, update SDK files, configure package manager |
@@ -69,6 +66,7 @@ The everything-claude-code plugin is installed at `~/.claude/plugins/everything-
 | `/deploy` | Deploy to Docker, K8s, Vercel, Railway, Fly.io |
 | `/release` | Version release with proper versioning and documentation updates |
 | `/update-docs` | Sync all documentation (README, codemaps, API) |
+| `/wordlist` | Generate domain-specific vocabulary reference card for precise prompting |
 | `/learn` | Pattern extraction with auto-detection |
 | `/instinct` | Manage instincts (status, export, import) |
 | `/evolve` | Cluster instincts into commands/skills/agents |
@@ -80,19 +78,19 @@ The everything-claude-code plugin is installed at `~/.claude/plugins/everything-
 
 ## Specialized Subagents
 
-### Core Agents
-| Agent | Purpose |
-|-------|---------|
-| **Planner** | Feature implementation planning |
-| **Architect** | System design decisions |
-| **TDD Guide** | Test-driven development methodology |
-| **Code Reviewer** | Quality and security assessment |
-| **Build Error Resolver** | Construction failure fixing |
-| **E2E Runner** | Playwright testing automation |
-| **Refactor Cleaner** | Dead code elimination |
-| **Doc Updater** | Documentation synchronization |
+### Core Agents (8) - in `.claude/agents/`
+| Agent | File | Purpose |
+|-------|------|---------|
+| **Planner** | `planner.md` | Feature implementation planning |
+| **Architect** | `architect.md` | System design decisions |
+| **TDD Guide** | `tdd-guide.md` | Test-driven development methodology |
+| **Code Reviewer** | `code-reviewer.md` | Quality and security assessment |
+| **Build Error Resolver** | `build-error-resolver.md` | Build/TypeScript error fixing |
+| **E2E Runner** | `e2e-runner.md` | Playwright testing automation |
+| **Refactor Cleaner** | `refactor-cleaner.md` | Dead code elimination |
+| **Doc Updater** | `doc-updater.md` | Documentation synchronization |
 
-### Enhanced Agents (13 total)
+### Enhanced Agents (13) - in `.claude/agents/`
 | Agent | Purpose | When to Use |
 |-------|---------|-------------|
 | **ultrathink-analyst** | Deep failure analysis | Complex features, systemic issues |
@@ -238,7 +236,7 @@ This applies to all scopes (Small/Medium/Large) and all project types.
 
 ## MCP Integrations
 
-### Base (from everything-claude-code)
+### Base
 - GitHub
 - Supabase
 - Vercel
@@ -272,6 +270,7 @@ All commands are in `.claude/commands/`:
 | `/deploy` | Operations | Deploy to Docker, K8s, Vercel, Railway, etc. |
 | `/release` | Operations | Version release with documentation updates |
 | `/update-docs` | Documentation | Sync all docs (README, codemaps, API) |
+| `/wordlist` | Documentation | Domain vocabulary reference card |
 | `/learn` | Learning | Pattern extraction (auto-detect) |
 | `/instinct` | Learning | Manage instincts (status, export, import) |
 | `/evolve` | Learning | Cluster instincts into commands/skills/agents |
@@ -330,6 +329,11 @@ When starting a new project, configure these in `project-settings.md`:
 /build-fix        # Fix build errors
 /update-docs      # Sync all documentation
 /orchestrate      # Multi-agent orchestration
+
+# Vocabulary & Prompting
+/wordlist             # Auto-detect domain, generate vocab card
+/wordlist nlp         # Specific tech domain
+/wordlist "biology"   # Any domain (tech or non-tech)
 
 # Learning Pipeline: /learn → /instinct → /evolve
 /learn              # Extract patterns from session

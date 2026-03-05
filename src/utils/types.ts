@@ -11,6 +11,8 @@ export interface ProjectData {
   repoUrl?: string;
   featured: boolean;
   publishDate: Date;
+  /** Last push/update date (GitHub projects only) */
+  pushedAt?: Date;
   /** Source of project data: markdown file or GitHub API */
   source?: 'markdown' | 'github';
   /** GitHub stars count (only for GitHub projects) */

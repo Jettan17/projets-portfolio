@@ -143,6 +143,7 @@ export async function getGitHubProjectsWithStatus(): Promise<GitHubProjectsResul
             repoUrl: projectData.repoUrl,
             featured: projectData.featured,
             publishDate: projectData.publishDate,
+            pushedAt: projectData.pushedAt,
             source: 'github' as const,
             stars: projectData.stars,
             language: projectData.language,
