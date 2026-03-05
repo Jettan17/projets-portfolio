@@ -27,8 +27,8 @@ const allProjets = mergeProjects(
   githubResult.projects
 );
 
-// Get all featured projets excluding blacklisted ones (JS shuffles to pick 3 on load)
-const featuredProjets = getFeaturedProjects(allProjets).filter(
+// All projets are featured-eligible unless blacklisted (JS shuffles to pick 3 on load)
+const featuredProjets = allProjets.filter(
   p => !featuredBlacklist.includes(p.slug.replace('github-', ''))
 );
 const fallbackProjets = sortByDate(allProjets).slice(0, 3);
