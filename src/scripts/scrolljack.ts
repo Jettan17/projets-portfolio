@@ -109,68 +109,7 @@ export function initScrollJack() {
   }
 
   // =========================================================================
-  // SECTION 2: WhatIDo - HORIZONTAL SCROLL (desktop) or FADE IN (mobile)
-  // =========================================================================
-  const whatSection = document.querySelector('.what-i-do');
-  if (whatSection) {
-    const cards = gsap.utils.toArray('.focus-card');
-    const track = document.querySelector('.focus-cards-track');
-
-    // Title fades in for both mobile and desktop
-    gsap.to('.what-title', {
-      opacity: 1,
-      y: 0,
-      duration: 0.5,
-      scrollTrigger: {
-        trigger: '.what-i-do',
-        start: 'top 80%',
-        toggleActions: 'play none none none',
-      }
-    });
-
-    if (cards.length > 0 && track) {
-      // BOTH MOBILE & DESKTOP: Horizontal scroll with pinning
-      // Use different card widths based on screen size
-      const cardWidth = isMobile ? 200 : 280;
-      const gap = isMobile ? 16 : 32; // --space-4 on mobile, --space-8 on desktop
-      const totalWidth = (cardWidth + gap) * (cards.length - 1);
-
-      // Pin section and scroll cards horizontally
-      gsap.to('.focus-cards-track', {
-        x: -totalWidth,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: '.what-i-do',
-          pin: true,
-          start: 'top top',
-          end: `+=${totalWidth + (isMobile ? 100 : 200)}`,
-          scrub: 1,
-          anticipatePin: 1,
-          snap: {
-            snapTo: 1 / (cards.length - 1),
-            duration: 0.3,
-            ease: 'power1.inOut',
-          },
-        }
-      });
-
-      // Fade in ALL cards together when section enters viewport
-      gsap.to('.focus-card', {
-        opacity: 1,
-        y: 0,
-        duration: 0.5,
-        stagger: 0.1,
-        scrollTrigger: {
-          trigger: '.what-i-do',
-          start: 'top 80%',
-          toggleActions: 'play none none none',
-        }
-      });
-    }
-  }
-
-  // =========================================================================
-  // SECTION 3: MyApproach - PINNED with zoom/rise from below
+  // SECTION 2: MyApproach - PINNED with zoom/rise from below
   // =========================================================================
   const approachSection = document.querySelector('.my-approach');
   if (approachSection) {

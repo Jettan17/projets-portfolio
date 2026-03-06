@@ -49,7 +49,7 @@ export const githubUsername = 'Jettan17';
 /**
  * Repos excluded from the featured section (still shown on /projets)
  */
-export const featuredBlacklist: string[] = ['stratos-investment-assistant'];
+export const featuredBlacklist: string[] = ['claude-input-watcher'];
 
 export const githubProjects: GitHubProjectConfig[] = [
   // Add your repositories here
@@ -59,12 +59,6 @@ export const githubProjects: GitHubProjectConfig[] = [
     title: 'Learnex',
     featured: true,
     tags: ['TypeScript', 'Next.js', 'React', 'Tailwind'],
-  },
-  {
-    repo: 'stratos-investment-assistant',
-    title: 'Stratos',
-    featured: false,
-    tags: ['TypeScript', 'React', 'FastAPI', 'Python', 'Supabase'],
   },
   {
     repo: 'prizm-photo-album',

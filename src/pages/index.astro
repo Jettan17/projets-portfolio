@@ -3,7 +3,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PuzzleSplash from '../components/PuzzleSplash.astro';
 import LogoSplash from '../components/LogoSplash.astro';
 import IntroSplash from '../components/IntroSplash.astro';
-import WhatIDo from '../components/WhatIDo.astro';
 import MyApproach from '../components/MyApproach.astro';
 import Hero from '../components/Hero.astro';
 import ScrollTransition from '../components/ScrollTransition.astro';
@@ -12,7 +11,6 @@ import Button from '../components/Button.astro';
 import { getCollection } from 'astro:content';
 import { getGitHubProjectsWithStatus, mergeProjects, getFeaturedProjects, sortByDate } from '../utils/projects';
 import { featuredBlacklist } from '../config/github-projects';
-import personal from '../data/personal.json';
 
 // Fetch both markdown and GitHub projets
 const markdownProjets = await getCollection('projets');
@@ -43,7 +41,6 @@ const hasGitHubErrors = githubResult.hasErrors;
   <div class="scrolljack-container">
     <LogoSplash />
     <IntroSplash />
-    <WhatIDo />
     <MyApproach />
     <Hero />
     <ScrollTransition />
@@ -99,18 +96,6 @@ const hasGitHubErrors = githubResult.hasErrors;
       </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="section cta-section">
-      <div class="container">
-        <div class="cta-content">
-          <div class="cta-actions">
-            <Button href={personal.social.github} variant="primary" size="lg" external>
-              View My GitHub
-            </Button>
-          </div>
-        </div>
-      </div>
-    </section>
   </div>
 
   <!-- Puzzle overlay - fixed position, on top of everything -->
@@ -169,60 +154,6 @@ const hasGitHubErrors = githubResult.hasErrors;
     background: var(--bg-secondary);
     position: relative;
     overflow: hidden;
-  }
-
-  /* CTA Section */
-  .cta-section {
-    background: var(--bg-dark);
-    color: var(--text-light);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .cta-section::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -10%;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(255, 107, 107, 0.2) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .cta-section::after {
-    content: '';
-    position: absolute;
-    bottom: -30%;
-    left: -10%;
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(78, 205, 196, 0.15) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .cta-content {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .cta-actions {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--space-4);
-  }
-
-  .cta-actions :global(.button--ghost) {
-    color: var(--text-light);
-  }
-
-  .cta-actions :global(.button--ghost:hover) {
-    background: rgba(255, 255, 255, 0.1);
   }
 
   .error-banner {

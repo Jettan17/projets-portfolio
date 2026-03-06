@@ -430,19 +430,6 @@ body.js-animate .intro-splash .scroll-indicator {
 
 /* LogoSplash - starts visible, animates OUT (no hidden state needed) */
 
-/* WhatIDo section */
-body.js-animate .what-title {
-  opacity: 0;
-  transform: translateY(50px);
-}
-
-body.js-animate .focus-card {
-  opacity: 0;
-  transform: translateY(80px);
-  will-change: opacity, transform;
-  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-}
-
 /* MyApproach section - rises from below with zoom */
 body.js-animate .quote-block {
   opacity: 0;

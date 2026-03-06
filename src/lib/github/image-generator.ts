@@ -335,8 +335,6 @@ export type ImageStyle = (typeof imageStyles)[number];
  * Each project gets a UNIQUE, well-separated hue for visual variety
  */
 const customProjectHues: Record<string, number> = {
-  // Stratos: Blue logo → Warm coral/orange (complementary to blue per color theory)
-  'stratos-investment-assistant': 25,
   // Learnex: Purple/Yellow logo → Teal/cyan (contrasts purple, complements yellow)
   'learnex-course-tutor': 175,
   // Prizm: Rainbow prism logo → Deep violet (complements spectrum colors)

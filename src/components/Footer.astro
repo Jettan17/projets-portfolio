@@ -1,7 +1,5 @@
 ---
 import SocialLinks from './SocialLinks.astro';
-
-const currentYear = new Date().getFullYear();
 ---
 
 <footer class="footer">
@@ -27,20 +25,7 @@ const currentYear = new Date().getFullYear();
         <SocialLinks />
       </div>
     </div>
-
-    <div class="footer-bottom">
-      <p class="copyright">
-        &copy; {currentYear} projets. All rights reserved.
-      </p>
-      <p class="built-with">
-        Built with <span class="heart" aria-label="love">&#10084;</span> using
-        <a href="https://astro.build" target="_blank" rel="noopener noreferrer">Astro</a>
-      </p>
-    </div>
   </div>
-
-  <!-- Decorative gradient blob -->
-  <div class="footer-decoration" aria-hidden="true"></div>
 </footer>
 
 <style>
@@ -48,14 +33,13 @@ const currentYear = new Date().getFullYear();
     position: relative;
     background: var(--bg-dark);
     color: var(--text-light);
-    overflow: hidden;
   }
 
   .footer-content {
     position: relative;
     z-index: 1;
-    padding-top: var(--space-12);
-    padding-bottom: var(--space-8);
+    padding-top: var(--space-20);
+    padding-bottom: var(--space-16);
   }
 
   .footer-main {
@@ -126,70 +110,5 @@ const currentYear = new Date().getFullYear();
 
   .footer-social :global(.social-links) {
     justify-content: flex-start;
-  }
-
-  .footer-bottom {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-    padding-top: var(--space-6);
-    text-align: center;
-  }
-
-  @media (min-width: 768px) {
-    .footer-bottom {
-      flex-direction: row;
-      justify-content: space-between;
-      text-align: left;
-    }
-  }
-
-  .copyright,
-  .built-with {
-    font-size: var(--text-sm);
-    color: var(--text-tertiary);
-    margin-bottom: 0;
-  }
-
-  .built-with a {
-    color: var(--color-secondary);
-    text-decoration: none;
-  }
-
-  .built-with a:hover {
-    text-decoration: underline;
-  }
-
-  .heart {
-    color: var(--color-primary);
-  }
-
-  /* Decorative gradient blob */
-  .footer-decoration {
-    position: absolute;
-    bottom: -50%;
-    left: -10%;
-    width: 40%;
-    height: 100%;
-    background: radial-gradient(
-      circle,
-      rgba(255, 107, 107, 0.15) 0%,
-      transparent 70%
-    );
-    pointer-events: none;
-  }
-
-  .footer-decoration::after {
-    content: '';
-    position: absolute;
-    top: 20%;
-    right: 0;
-    width: 100%;
-    height: 80%;
-    background: radial-gradient(
-      circle at 80% 50%,
-      rgba(78, 205, 196, 0.1) 0%,
-      transparent 70%
-    );
   }
 </style>
