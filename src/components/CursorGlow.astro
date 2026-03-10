@@ -13,10 +13,10 @@
   if (canvas && window.matchMedia('(pointer: fine)').matches) {
     const ctx = canvas.getContext('2d')!;
 
-    // Resize canvas to window
+    // Resize canvas — use clientWidth/Height so zoom changes are reflected correctly
     function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      canvas.width = canvas.clientWidth || window.innerWidth;
+      canvas.height = canvas.clientHeight || window.innerHeight;
     }
     resize();
     window.addEventListener('resize', resize);
@@ -108,7 +108,27 @@
     // Time for twinkle animation
     let time = 0;
 
+    // Track last known canvas dimensions to detect zoom/resize changes
+    let lastW = 0;
+    let lastH = 0;
+
     function animate() {
+      // Sync canvas pixel dimensions to CSS layout dimensions (catches zoom in all browsers)
+      if (canvas.clientWidth > 0 && (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight)) {
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+      }
+
+      // Redistribute particles when dimensions change — skip first frame (lastW === 0)
+      if (lastW > 0 && (canvas.width !== lastW || canvas.height !== lastH)) {
+        particles.forEach(p => {
+          p.x = Math.random() * canvas.width;
+          p.y = Math.random() * canvas.height;
+        });
+      }
+      lastW = canvas.width;
+      lastH = canvas.height;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       time += 0.016; // ~60fps time step
 

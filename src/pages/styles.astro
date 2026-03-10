@@ -4,12 +4,12 @@ import ThemeToggle from '../components/ThemeToggle.astro';
 import GeneratedImage from '../components/GeneratedImage.astro';
 ---
 
-<BaseLayout title="Style Guide" description="Color palette and project image styles reference">
+<BaseLayout title="Style Guide" description="Color palette and projet image styles reference">
   <div class="style-guide">
     <header class="style-header">
       <div class="container">
         <h1>Style Guide</h1>
-        <p class="style-description">Color palette and project image styles reference</p>
+        <p class="style-description">Color palette and projet image styles reference</p>
         <div class="theme-toggle-section">
           <span>Toggle Theme:</span>
           <ThemeToggle />
@@ -132,105 +132,94 @@ import GeneratedImage from '../components/GeneratedImage.astro';
       </div>
     </section>
 
-    <!-- Project Image Styles Section -->
+    <!-- Projet Image Styles Section -->
     <section class="style-section" id="project-images">
       <div class="container">
-        <h2>Project Image Styles</h2>
-        <p class="section-description">6 unique visual styles for project card images, deterministically assigned per project</p>
+        <h2>Projet Image Styles</h2>
+        <p class="section-description">5 unique visual styles for projet card images, deterministically assigned per projet</p>
 
         <div class="image-style-grid">
           <div class="image-style-card">
             <div class="image-style-preview project-card">
-              <GeneratedImage title="Orb Style" repoName="demo-x" />
-            </div>
-            <div class="image-style-info">
-              <h4>Orb</h4>
-              <p>Refined gradient ellipse with smooth blur effect</p>
-              <code>style-orb</code>
-            </div>
-          </div>
-
-          <div class="image-style-card">
-            <div class="image-style-preview project-card">
-              <GeneratedImage title="Waves Style" repoName="test-2" />
-            </div>
-            <div class="image-style-info">
-              <h4>Waves</h4>
-              <p>Bold 3-layer SVG waves with gradient colors</p>
-              <code>style-waves</code>
-            </div>
-          </div>
-
-          <div class="image-style-card">
-            <div class="image-style-preview project-card">
-              <GeneratedImage title="Corners Style" repoName="demo-alpha" />
-            </div>
-            <div class="image-style-info">
-              <h4>Corners</h4>
-              <p>Dual corner accents with glow effects</p>
-              <code>style-corners</code>
-            </div>
-          </div>
-
-          <div class="image-style-card">
-            <div class="image-style-preview project-card">
-              <GeneratedImage title="Grain Style" repoName="demo-3" />
-            </div>
-            <div class="image-style-info">
-              <h4>Grain</h4>
-              <p>Noise texture overlay with gradient background</p>
-              <code>style-grain</code>
-            </div>
-          </div>
-
-          <div class="image-style-card">
-            <div class="image-style-preview project-card">
-              <GeneratedImage title="Diagonal Style" repoName="demo-2" />
+              <GeneratedImage title="Diagonal Style" repoName="demo-diagonal" />
             </div>
             <div class="image-style-info">
               <h4>Diagonal</h4>
-              <p>Single bold diagonal accent line with glow</p>
+              <p>Centered diagonal accent line with glow effect</p>
               <code>style-diagonal</code>
             </div>
           </div>
 
           <div class="image-style-card">
             <div class="image-style-preview project-card">
-              <GeneratedImage title="Duotone Style" repoName="demo-1" />
+              <GeneratedImage title="Corners Style" repoName="demo-corners" />
             </div>
             <div class="image-style-info">
-              <h4>Duotone</h4>
-              <p>Two-tone vertical split with fade</p>
-              <code>style-duotone</code>
+              <h4>Corners</h4>
+              <p>Dual corner accents with enhanced three-layer glow</p>
+              <code>style-corners</code>
+            </div>
+          </div>
+
+          <div class="image-style-card">
+            <div class="image-style-preview project-card">
+              <GeneratedImage title="Dots Style" repoName="demo-dots" />
+            </div>
+            <div class="image-style-info">
+              <h4>Dots</h4>
+              <p>8×5 dot grid with glowing highlight dots scattered off-center</p>
+              <code>style-dots</code>
+            </div>
+          </div>
+
+          <div class="image-style-card">
+            <div class="image-style-preview project-card">
+              <GeneratedImage title="Rings Style" repoName="demo-rings" />
+            </div>
+            <div class="image-style-info">
+              <h4>Rings</h4>
+              <p>Concentric circles with radar/sonar aesthetic and inner glow</p>
+              <code>style-rings</code>
+            </div>
+          </div>
+
+          <div class="image-style-card">
+            <div class="image-style-preview project-card">
+              <GeneratedImage title="Cross Style" repoName="demo-cross" />
+            </div>
+            <div class="image-style-info">
+              <h4>Cross</h4>
+              <p>Hairline crosshair with glowing center dot intersection</p>
+              <code>style-cross</code>
             </div>
           </div>
         </div>
 
         <h3>Color Generation</h3>
-        <p class="section-description">Each project gets unique colors based on golden angle hue distribution</p>
+        <p class="section-description">Each projet gets unique colors based on golden angle hue distribution</p>
         <div class="color-generation-demo">
           <div class="color-demo-row">
             <div class="color-demo-item">
               <div class="image-style-preview project-card" style="height: 120px;">
-                <GeneratedImage title="Project Alpha" repoName="project-alpha" />
+                <GeneratedImage title="Projet Alpha" repoName="project-alpha" />
               </div>
               <code>project-alpha</code>
             </div>
             <div class="color-demo-item">
               <div class="image-style-preview project-card" style="height: 120px;">
-                <GeneratedImage title="Project Beta" repoName="project-beta" />
+                <GeneratedImage title="Projet Beta" repoName="project-beta" />
               </div>
               <code>project-beta</code>
             </div>
             <div class="color-demo-item">
               <div class="image-style-preview project-card" style="height: 120px;">
-                <GeneratedImage title="Project Gamma" repoName="project-gamma" />
+                <GeneratedImage title="Projet Gamma" repoName="project-gamma" />
               </div>
               <code>project-gamma</code>
             </div>
             <div class="color-demo-item">
               <div class="image-style-preview project-card" style="height: 120px;">
-                <GeneratedImage title="Project Delta" repoName="project-delta" />
+                <GeneratedImage title="Projet Delta" repoName="project-delta" />
               </div>
               <code>project-delta</code>
             </div>
@@ -370,12 +359,6 @@ import GeneratedImage from '../components/GeneratedImage.astro';
   .image-style-preview {
     aspect-ratio: 16 / 10;
     overflow: hidden;
-  }
-
-  .image-style-preview.project-card:hover .style-orb .gradient-orb {
-    opacity: 0.95;
-    filter: blur(20px);
-    transform: translate(-50%, -50%) scale(1.05);
   }
 
   .image-style-info {

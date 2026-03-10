@@ -398,7 +398,7 @@ export function transformGitHubToProject(
     repoUrl: repo.html_url,
     featured: config?.featured ?? false,
     publishDate: new Date(repo.created_at),
-    pushedAt: new Date(repo.pushed_at || repo.updated_at),
+    pushedAt: new Date(Math.max(new Date(repo.pushed_at).getTime(), new Date(repo.updated_at).getTime())),
     source: 'github',
     stars: repo.stargazers_count,
     language: repo.language,

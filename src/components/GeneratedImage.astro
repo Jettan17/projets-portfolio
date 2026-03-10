@@ -1,7 +1,7 @@
 ---
 /**
  * Generated image placeholder for projects
- * Supports 6 visual styles with deterministic assignment per project
+ * Supports 5 visual styles with deterministic assignment per project
  * Optionally displays project logo on top of styled background
  */
 
@@ -18,9 +18,10 @@ interface Props {
   language?: string | null;
   tags?: string[];
   logoUrl?: string | null;
+  large?: boolean;
 }
 
-const { title, repoName = title, language = null, tags = [], logoUrl = null } = Astro.props;
+const { title, repoName = title, language = null, tags = [], logoUrl = null, large = false } = Astro.props;
 
 // Get unique colors and style for this project
 const colors = getUniqueProjectColors(repoName);
@@ -40,28 +41,17 @@ const hasLogo = !!logoUrl;
 ---
 
 <div
-  class={`generated-image-wrapper style-${style} ${hasLogo ? 'has-logo' : ''}`}
+  class={`generated-image-wrapper style-${style} ${hasLogo ? 'has-logo' : ''} ${large ? 'large' : ''}`}
   style={cssVars}
   data-style={style}
 >
   <div class="generated-image">
-    <!-- Style 1: Orb - refined gradient ellipse -->
-    {style === 'orb' && (
-      <div class="gradient-orb"></div>
+    <!-- Style 1: Diagonal - bold accent line -->
+    {style === 'diagonal' && (
+      <div class="diagonal-line"></div>
     )}
 
-    <!-- Style 2: Waves - bold 3-layer SVG waves -->
-    {style === 'waves' && (
-      <div class="waves-container">
-        <svg class="waves-svg" viewBox="0 0 1200 600" preserveAspectRatio="none">
-          <path class="wave wave-1" d="M0,150 Q300,50 600,150 T1200,150 L1200,600 L0,600 Z" />
-          <path class="wave wave-2" d="M0,250 Q300,150 600,250 T1200,250 L1200,600 L0,600 Z" />
-          <path class="wave wave-3" d="M0,350 Q300,250 600,350 T1200,350 L1200,600 L0,600 Z" />
-        </svg>
-      </div>
-    )}
-
-    <!-- Style 3: Corners - dual corners with glow -->
+    <!-- Style 2: Corners - dual corners with glow -->
     {style === 'corners' && (
       <>
         <div class="corner-accent corner-top-left"></div>
@@ -69,21 +59,85 @@ const hasLogo = !!logoUrl;
       </>
     )}
 
-    <!-- Style 4: Grain - noise texture overlay -->
-    {style === 'grain' && (
-      <div class="grain-overlay"></div>
+    <!-- Style 3: Dots - glowing dot grid -->
+    {style === 'dots' && (
+      <svg class="dots-svg" viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice">
+        <!-- Row 1: y=25 -->
+        <circle class="dot" cx="25"  cy="25"  r="3" opacity="0.12"/>
+        <circle class="dot" cx="75"  cy="25"  r="3" opacity="0.10"/>
+        <circle class="dot" cx="125" cy="25"  r="3" opacity="0.15"/>
+        <circle class="dot" cx="175" cy="25"  r="3" opacity="0.10"/>
+        <circle class="dot" cx="225" cy="25"  r="3" opacity="0.18"/>
+        <circle class="dot" cx="275" cy="25"  r="3" opacity="0.12"/>
+        <circle class="dot-halo" cx="325" cy="25"  r="9" opacity="0.15"/>
+        <circle class="dot-mid" cx="325" cy="25"  r="3" opacity="0.60"/>
+        <circle class="dot" cx="375" cy="25"  r="3" opacity="0.10"/>
+        <!-- Row 2: y=75 -->
+        <circle class="dot" cx="25"  cy="75"  r="3" opacity="0.10"/>
+        <circle class="dot" cx="75"  cy="75"  r="3" opacity="0.20"/>
+        <circle class="dot" cx="125" cy="75"  r="3" opacity="0.12"/>
+        <circle class="dot-halo" cx="175" cy="75"  r="9" opacity="0.15"/>
+        <circle class="dot-mid" cx="175" cy="75"  r="3" opacity="0.65"/>
+        <circle class="dot-halo" cx="225" cy="75"  r="18" opacity="0.16"/>
+        <circle class="dot-halo" cx="225" cy="75"  r="10" opacity="0.36"/>
+        <circle class="dot-bright" cx="225" cy="75"  r="3" opacity="0.98"/>
+        <circle class="dot-halo" cx="275" cy="75"  r="9" opacity="0.15"/>
+        <circle class="dot-mid" cx="275" cy="75"  r="3" opacity="0.65"/>
+        <circle class="dot" cx="325" cy="75"  r="3" opacity="0.18"/>
+        <circle class="dot" cx="375" cy="75"  r="3" opacity="0.10"/>
+        <!-- Row 3: y=125 -->
+        <circle class="dot" cx="25"  cy="125" r="3" opacity="0.15"/>
+        <circle class="dot" cx="75"  cy="125" r="3" opacity="0.12"/>
+        <circle class="dot-halo" cx="125" cy="125" r="9" opacity="0.15"/>
+        <circle class="dot-mid" cx="125" cy="125" r="3" opacity="0.55"/>
+        <circle class="dot-halo" cx="175" cy="125" r="9" opacity="0.15"/>
+        <circle class="dot-mid" cx="175" cy="125" r="3" opacity="0.70"/>
+        <circle class="dot-halo" cx="225" cy="125" r="14" opacity="0.12"/>
+        <circle class="dot-halo" cx="225" cy="125" r="8"  opacity="0.28"/>
+        <circle class="dot-bright" cx="225" cy="125" r="3" opacity="0.85"/>
+        <circle class="dot-halo" cx="275" cy="125" r="9" opacity="0.15"/>
+        <circle class="dot-mid" cx="275" cy="125" r="3" opacity="0.65"/>
+        <circle class="dot" cx="325" cy="125" r="3" opacity="0.20"/>
+        <circle class="dot" cx="375" cy="125" r="3" opacity="0.12"/>
+        <!-- Row 4: y=175 -->
+        <circle class="dot" cx="25"  cy="175" r="3" opacity="0.10"/>
+        <circle class="dot" cx="75"  cy="175" r="3" opacity="0.15"/>
+        <circle class="dot" cx="125" cy="175" r="3" opacity="0.18"/>
+        <circle class="dot-halo" cx="175" cy="175" r="10" opacity="0.08"/>
+        <circle class="dot-halo" cx="175" cy="175" r="6"  opacity="0.18"/>
+        <circle class="dot-bright" cx="175" cy="175" r="3" opacity="0.65"/>
+        <circle class="dot-halo" cx="225" cy="175" r="9" opacity="0.15"/>
+        <circle class="dot-mid" cx="225" cy="175" r="3" opacity="0.60"/>
+        <circle class="dot" cx="275" cy="175" r="3" opacity="0.20"/>
+        <circle class="dot" cx="325" cy="175" r="3" opacity="0.12"/>
+        <circle class="dot" cx="375" cy="175" r="3" opacity="0.10"/>
+        <!-- Row 5: y=225 -->
+        <circle class="dot" cx="25"  cy="225" r="3" opacity="0.10"/>
+        <circle class="dot" cx="75"  cy="225" r="3" opacity="0.12"/>
+        <circle class="dot" cx="125" cy="225" r="3" opacity="0.15"/>
+        <circle class="dot" cx="175" cy="225" r="3" opacity="0.20"/>
+        <circle class="dot" cx="225" cy="225" r="3" opacity="0.18"/>
+        <circle class="dot-halo" cx="275" cy="225" r="9" opacity="0.15"/>
+        <circle class="dot-mid" cx="275" cy="225" r="3" opacity="0.55"/>
+        <circle class="dot" cx="325" cy="225" r="3" opacity="0.12"/>
+        <circle class="dot" cx="375" cy="225" r="3" opacity="0.10"/>
+      </svg>
     )}
 
-    <!-- Style 5: Diagonal - bold accent line -->
-    {style === 'diagonal' && (
-      <div class="diagonal-line"></div>
+    <!-- Style 4: Rings - concentric circles (radar/sonar) -->
+    {style === 'rings' && (
+      <svg class="rings-svg" viewBox="0 0 400 250" preserveAspectRatio="xMidYMid meet">
+        <circle class="ring ring-outer" cx="200" cy="125" r="110" />
+        <circle class="ring ring-mid"   cx="200" cy="125" r="68"  />
+        <circle class="ring ring-inner" cx="200" cy="125" r="28"  />
+      </svg>
     )}
 
-    <!-- Style 6: Duotone + Grain - two-tone split with noise texture -->
-    {style === 'duotone-grain' && (
+    <!-- Style 5: Cross - hairline crosshair -->
+    {style === 'cross' && (
       <>
-        <div class="duotone-bg"></div>
-        <div class="duotone-grain-overlay"></div>
+        <div class="cross-h"></div>
+        <div class="cross-v"></div>
       </>
     )}
 
@@ -171,191 +225,12 @@ const hasLogo = !!logoUrl;
     line-height: 1.2;
   }
 
-  /* ==========================================================================
-     STYLE 1: ORB - Refined gradient ellipse (less blurry, more defined)
-     ========================================================================== */
-  .style-orb .gradient-orb {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 70%;
-    height: 90%;
-    background: radial-gradient(
-      ellipse at center,
-      var(--primary) 0%,
-      var(--secondary) 50%,
-      transparent 80%
-    );
-    border-radius: 50%;
-    filter: blur(25px);
-    opacity: 0.8;
-    transition: opacity 0.3s ease, filter 0.3s ease, transform 0.3s ease;
-  }
-
-  /* Reduce orb opacity when logo is present */
-  .style-orb.has-logo .gradient-orb {
-    opacity: 0.5;
-  }
-
-  :global(:not([data-theme="dark"])) .style-orb .gradient-orb {
-    opacity: 1;
-    filter: blur(18px);
-  }
-
-  :global(:not([data-theme="dark"])) .style-orb.has-logo .gradient-orb {
-    opacity: 0.75;
-  }
-
-  :global(.project-card:hover) .style-orb .gradient-orb {
-    opacity: 0.95;
-    filter: blur(20px);
-    transform: translate(-50%, -50%) scale(1.05);
-  }
-
-  :global(.project-card:hover) .style-orb.has-logo .gradient-orb {
-    opacity: 0.65;
+  .large .generated-title {
+    font-size: clamp(2.5rem, 8vw, 4rem);
   }
 
   /* ==========================================================================
-     STYLE 2: WAVES - Bold 3-layer waves covering 80% of card
-     ========================================================================== */
-  .style-waves .waves-container {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, transparent 0%, var(--primary) 100%);
-    opacity: 0.3;
-  }
-
-  .style-waves.has-logo .waves-container {
-    opacity: 0.2;
-  }
-
-  .style-waves .waves-svg {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 80%;
-  }
-
-  .style-waves .wave {
-    transition: opacity 0.3s ease;
-  }
-
-  .style-waves .wave-1 {
-    fill: var(--primary);
-    opacity: 0.8;
-  }
-
-  .style-waves .wave-2 {
-    fill: var(--secondary);
-    opacity: 0.6;
-  }
-
-  .style-waves .wave-3 {
-    fill: var(--accent);
-    opacity: 0.4;
-  }
-
-  .style-waves.has-logo .wave-1 { opacity: 0.5; }
-  .style-waves.has-logo .wave-2 { opacity: 0.4; }
-  .style-waves.has-logo .wave-3 { opacity: 0.3; }
-
-  :global(.project-card:hover) .style-waves .wave-1 {
-    opacity: 0.9;
-  }
-
-  :global(.project-card:hover) .style-waves .wave-2 {
-    opacity: 0.7;
-  }
-
-  :global(.project-card:hover) .style-waves .wave-3 {
-    opacity: 0.5;
-  }
-
-  /* ==========================================================================
-     STYLE 3: CORNERS - Dual corners with glow effect
-     ========================================================================== */
-  .style-corners .corner-accent {
-    position: absolute;
-    width: 35%;
-    height: 35%;
-    opacity: 0.8;
-    filter: drop-shadow(0 0 30px var(--primary));
-    transition: opacity 0.3s ease, transform 0.3s ease, filter 0.3s ease;
-  }
-
-  .style-corners.has-logo .corner-accent {
-    opacity: 0.5;
-  }
-
-  .style-corners .corner-top-left {
-    top: 0;
-    left: 0;
-    background: linear-gradient(135deg, var(--primary), var(--secondary) 70%, transparent);
-    clip-path: polygon(0 0, 100% 0, 0 100%);
-    transform-origin: top left;
-  }
-
-  .style-corners .corner-bottom-right {
-    bottom: 0;
-    right: 0;
-    background: linear-gradient(315deg, var(--secondary), var(--primary) 70%, transparent);
-    clip-path: polygon(100% 0, 100% 100%, 0 100%);
-    transform-origin: bottom right;
-  }
-
-  :global(.project-card:hover) .style-corners .corner-accent {
-    opacity: 0.95;
-    transform: scale(1.1);
-    filter: drop-shadow(0 0 40px var(--primary));
-  }
-
-  :global(.project-card:hover) .style-corners.has-logo .corner-accent {
-    opacity: 0.7;
-  }
-
-  /* ==========================================================================
-     STYLE 4: GRAIN - Pronounced noise texture overlay
-     ========================================================================== */
-  .style-grain .grain-overlay {
-    position: absolute;
-    inset: 0;
-  }
-
-  .style-grain .grain-overlay::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-    opacity: 0.45;
-    transition: opacity 0.3s ease;
-  }
-
-  .style-grain.has-logo .grain-overlay::before {
-    opacity: 0.3;
-  }
-
-  .style-grain .grain-overlay::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity: 0.2;
-    mix-blend-mode: overlay;
-  }
-
-  :global(.project-card:hover) .style-grain .grain-overlay::before {
-    opacity: 0.55;
-  }
-
-  :global(.project-card:hover) .style-grain.has-logo .grain-overlay::before {
-    opacity: 0.4;
-  }
-
-  /* ==========================================================================
-     STYLE 5: DIAGONAL - Single bold diagonal accent line
+     STYLE 1: DIAGONAL - Single bold diagonal accent line
      ========================================================================== */
   .style-diagonal .diagonal-line {
     position: absolute;
@@ -368,9 +243,9 @@ const hasLogo = !!logoUrl;
       var(--primary) 80%,
       transparent 100%
     );
-    transform: rotate(-35deg);
-    top: 40%;
+    top: 50%;
     left: -50%;
+    transform: rotate(-35deg) translateY(-50%);
     filter: blur(1px);
     box-shadow:
       0 0 20px var(--primary),
@@ -407,78 +282,187 @@ const hasLogo = !!logoUrl;
   }
 
   /* ==========================================================================
-     STYLE 6: DUOTONE + GRAIN - Two-tone split with noise texture overlay
+     STYLE 2: CORNERS - Dual corners with enhanced glow effect
      ========================================================================== */
-  .style-duotone-grain .duotone-bg {
+  .style-corners .corner-accent {
     position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg,
-      var(--primary) 0%,
-      var(--primary) 25%,
-      var(--secondary) 75%,
-      var(--secondary) 100%
-    );
-    opacity: 0.4;
-    transition: opacity 0.3s ease;
+    width: 35%;
+    height: 35%;
+    opacity: 0.8;
+    filter: drop-shadow(0 0 15px var(--primary)) drop-shadow(0 0 40px var(--secondary));
+    transition: opacity 0.3s ease, transform 0.3s ease, filter 0.3s ease;
   }
 
-  .style-duotone-grain.has-logo .duotone-bg {
-    opacity: 0.25;
-  }
-
-  .style-duotone-grain .duotone-grain-overlay {
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity: 0.15;
-    mix-blend-mode: overlay;
-  }
-
-  .style-duotone-grain::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.2) 100%);
-    z-index: 1;
-  }
-
-  :global(.project-card:hover) .style-duotone-grain .duotone-bg {
+  .style-corners.has-logo .corner-accent {
     opacity: 0.5;
   }
 
-  :global(.project-card:hover) .style-duotone-grain.has-logo .duotone-bg {
+  .style-corners .corner-top-left {
+    top: 0;
+    left: 0;
+    background: linear-gradient(135deg, var(--primary), var(--secondary) 70%, transparent);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+    transform-origin: top left;
+    box-shadow:
+      0 0 15px var(--primary),
+      0 0 40px var(--primary),
+      0 0 80px var(--secondary);
+  }
+
+  .style-corners .corner-bottom-right {
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(315deg, var(--secondary), var(--primary) 70%, transparent);
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    transform-origin: bottom right;
+    box-shadow:
+      0 0 15px var(--primary),
+      0 0 40px var(--primary),
+      0 0 80px var(--secondary);
+  }
+
+  :global(.project-card:hover) .style-corners .corner-accent {
+    opacity: 0.95;
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 25px var(--primary)) drop-shadow(0 0 60px var(--secondary));
+  }
+
+  :global(.project-card:hover) .style-corners.has-logo .corner-accent {
+    opacity: 0.7;
+  }
+
+  /* ==========================================================================
+     STYLE 3: DOTS - Glowing dot grid
+     ========================================================================== */
+  .style-dots .dots-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .style-dots .dot {
+    fill: var(--primary);
+    transition: opacity 0.3s ease;
+  }
+
+  .style-dots .dot-mid {
+    fill: hsl(var(--hue), 80%, 72%);
+  }
+
+  .style-dots .dot-halo {
+    fill: hsl(var(--hue), 80%, 70%);
+    filter: blur(5px);
+  }
+
+  .style-dots .dot-bright {
+    fill: hsl(var(--hue), 80%, 70%);
+    opacity: 0.95;
+  }
+
+  .style-dots.has-logo .dot {
+    opacity: 0.5 !important;
+  }
+
+  .style-dots.has-logo .dot-mid {
+    opacity: 0.25 !important;
+  }
+
+  .style-dots.has-logo .dot-halo {
+    opacity: 0.08 !important;
+  }
+
+  .style-dots.has-logo .dot-bright {
+    opacity: 0.7;
+  }
+
+  /* ==========================================================================
+     STYLE 4: RINGS - Concentric circles (radar/sonar aesthetic)
+     ========================================================================== */
+  .style-rings .rings-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .ring {
+    fill: none;
+    stroke: var(--primary);
+    transition: opacity 0.3s ease;
+  }
+
+  .ring-outer {
+    stroke-width: 1.5;
+    opacity: 0.12;
+  }
+
+  .ring-mid {
+    stroke-width: 2.5;
     opacity: 0.35;
+  }
+
+  .ring-inner {
+    stroke-width: 3.5;
+    opacity: 0.7;
+    filter: drop-shadow(0 0 8px var(--primary)) drop-shadow(0 0 20px var(--secondary));
+  }
+
+  .style-rings.has-logo .ring-outer { opacity: 0.08; }
+  .style-rings.has-logo .ring-mid   { opacity: 0.20; }
+  .style-rings.has-logo .ring-inner { opacity: 0.45; }
+
+  :global(.project-card:hover) .ring-outer { opacity: 0.20; }
+  :global(.project-card:hover) .ring-mid   { opacity: 0.50; }
+  :global(.project-card:hover) .ring-inner {
+    opacity: 0.9;
+    filter: drop-shadow(0 0 12px var(--primary)) drop-shadow(0 0 30px var(--secondary));
+  }
+
+  /* ==========================================================================
+     STYLE 5: CROSS - Hairline crosshair with glowing center dot
+     ========================================================================== */
+  .cross-h,
+  .cross-v {
+    position: absolute;
+    background: var(--primary);
+    opacity: 0.35;
+    transition: opacity 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .cross-h {
+    width: 100%;
+    height: 2px;
+    min-height: 2px;
+    top: 50%;
+    box-shadow: 0 0 8px var(--primary), 0 0 20px var(--secondary);
+  }
+
+  .cross-v {
+    height: 100%;
+    width: 2px;
+    min-width: 2px;
+    left: 50%;
+    box-shadow: 0 0 8px var(--primary), 0 0 20px var(--secondary);
+  }
+
+  .style-cross.has-logo .cross-h,
+  .style-cross.has-logo .cross-v {
+    opacity: 0.20;
+  }
+
+  :global(.project-card:hover) .cross-h,
+  :global(.project-card:hover) .cross-v {
+    opacity: 0.55;
+    box-shadow: 0 0 14px var(--primary), 0 0 35px var(--secondary);
   }
 
   /* ==========================================================================
      LIGHT MODE BRIGHTNESS BOOST
      Increase opacity/vibrancy for all styles in light mode
      ========================================================================== */
-
-  /* Waves - brighter in light mode */
-  :global(:not([data-theme="dark"])) .style-waves .wave-1 {
-    opacity: 1;
-  }
-  :global(:not([data-theme="dark"])) .style-waves .wave-2 {
-    opacity: 0.85;
-  }
-  :global(:not([data-theme="dark"])) .style-waves .wave-3 {
-    opacity: 0.65;
-  }
-  :global(:not([data-theme="dark"])) .style-waves .waves-container {
-    opacity: 0.6;
-  }
-
-  /* Corners - brighter in light mode */
-  :global(:not([data-theme="dark"])) .style-corners .corner-accent {
-    opacity: 1;
-    filter: drop-shadow(0 0 60px var(--primary));
-  }
-
-  /* Grain - brighter gradient overlay in light mode */
-  :global(:not([data-theme="dark"])) .style-grain .grain-overlay::before {
-    opacity: 0.8;
-  }
 
   /* Diagonal - stronger glow in light mode */
   :global(:not([data-theme="dark"])) .style-diagonal .diagonal-line {
@@ -491,11 +475,26 @@ const hasLogo = !!logoUrl;
     opacity: 0.3;
   }
 
-  /* Duotone-grain - brighter split in light mode */
-  :global(:not([data-theme="dark"])) .style-duotone-grain .duotone-bg {
-    opacity: 0.75;
+  /* Corners - brighter in light mode */
+  :global(:not([data-theme="dark"])) .style-corners .corner-accent {
+    opacity: 1;
+    filter: drop-shadow(0 0 20px var(--primary)) drop-shadow(0 0 60px var(--secondary));
   }
-  :global(:not([data-theme="dark"])) .style-duotone-grain .duotone-grain-overlay {
-    opacity: 0.25;
+
+  /* Dots - light mode: halos already vivid, no extra boost needed */
+
+  /* Rings - stronger glow in light mode */
+  :global(:not([data-theme="dark"])) .ring-inner {
+    opacity: 0.85;
+    filter: drop-shadow(0 0 12px var(--primary)) drop-shadow(0 0 30px var(--secondary));
+  }
+  :global(:not([data-theme="dark"])) .ring-mid   { opacity: 0.50; }
+  :global(:not([data-theme="dark"])) .ring-outer  { opacity: 0.20; }
+
+  /* Cross - stronger glow in light mode */
+  :global(:not([data-theme="dark"])) .cross-h,
+  :global(:not([data-theme="dark"])) .cross-v {
+    opacity: 0.55;
+    box-shadow: 0 0 14px var(--primary), 0 0 35px var(--secondary);
   }
 </style>

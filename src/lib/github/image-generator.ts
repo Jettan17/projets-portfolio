@@ -326,7 +326,7 @@ export function getGitHubOgImageUrl(username: string, repoName: string): string 
 /**
  * Image style variants for project cards
  */
-export const imageStyles = ['orb', 'waves', 'corners', 'grain', 'diagonal', 'duotone-grain'] as const;
+export const imageStyles = ['diagonal', 'corners', 'dots', 'rings', 'cross'] as const;
 export type ImageStyle = (typeof imageStyles)[number];
 
 /**
@@ -378,13 +378,26 @@ export function getUniqueProjectColors(repoName: string): {
 }
 
 /**
+ * Temporary style overrides — bypasses hash-based assignment.
+ * Add entries here to preview a specific style; remove when done.
+ */
+const customProjectStyles: Partial<Record<string, ImageStyle>> = {
+  // /styles page demo cards
+  'demo-diagonal': 'diagonal',
+  'demo-corners': 'corners',
+  'demo-dots': 'dots',
+  'demo-rings': 'rings',
+  'demo-cross': 'cross',
+};
+
+/**
  * Deterministically assign an image style to a project based on its name
  * Same project will always get the same style across rebuilds
  */
 export function getProjectStyle(repoName: string): ImageStyle {
+  if (customProjectStyles[repoName]) return customProjectStyles[repoName] as ImageStyle;
   const hash = hashString(repoName);
-  const index = hash % imageStyles.length;
-  return imageStyles[index];
+  return imageStyles[hash % imageStyles.length];
 }
 
 /**

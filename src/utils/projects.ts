@@ -20,6 +20,20 @@ export function sortByDate(projects: ProjectEntry[]): ProjectEntry[] {
 }
 
 /**
+ * Sort projects by last updated date (newest first).
+ * Uses pushedAt if available, falling back to publishDate.
+ * @param projects - Array of project entries
+ * @returns Sorted array of projects
+ */
+export function sortByUpdated(projects: ProjectEntry[]): ProjectEntry[] {
+  return [...projects].sort((a, b) => {
+    const aDate = (a.data.pushedAt ?? a.data.publishDate).valueOf();
+    const bDate = (b.data.pushedAt ?? b.data.publishDate).valueOf();
+    return bDate - aDate;
+  });
+}
+
+/**
  * Filter projects by featured status
  * @param projects - Array of project entries
  * @returns Array of featured projects
@@ -192,6 +206,6 @@ export function mergeProjects(
     data: { ...p.data, source: 'markdown' as const },
   }));
 
-  // Combine and sort by date
-  return sortByDate([...enrichedMarkdown, ...githubProjectsList]);
+  // Combine and sort by last updated (matches client-side default sort)
+  return sortByUpdated([...enrichedMarkdown, ...githubProjectsList]);
 }

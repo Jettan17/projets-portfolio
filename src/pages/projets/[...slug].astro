@@ -99,7 +99,7 @@ const formattedDate = new Intl.DateTimeFormat('en-US', {
       <div class="project-image-container">
         <div class="project-image">
           {isGitHub ? (
-            <GeneratedImage title={title} language={language} repoName={repoName} logoUrl={logoUrl} />
+            <GeneratedImage title={title} language={language} repoName={repoName} logoUrl={logoUrl} large />
           ) : (
             <div class="project-image-placeholder">
               <span class="project-icon">
