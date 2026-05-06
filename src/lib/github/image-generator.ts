@@ -341,6 +341,8 @@ const customProjectHues: Record<string, number> = {
   'prizm-photo-album': 280,
   // JetFlux: SDK branding → Warm amber/gold
   'jetflux-cc-sdk': 45,
+  // Accrux: Celestial / star-system theme → Deep indigo (matches dark cosmic vibe)
+  'accrux-hobby-tracker': 240,
 };
 
 /**
@@ -358,6 +360,18 @@ export function getUniqueProjectHue(repoName: string): number {
 }
 
 /**
+ * Per-project lightness override.
+ * Some hues (notably blue ~220–250) have low perceived luminance at the
+ * default lightness, making the card backdrop look transparent next to
+ * warmer-hue cards. Add an entry here to compensate.
+ */
+const customProjectLightness: Record<string, number> = {
+  // Indigo at L=40 reads dim against the dark page background — bump it
+  // so the card has comparable visual weight to JetFlux/Watcher.
+  'accrux-hobby-tracker': 52,
+};
+
+/**
  * Get unique color palette for a project based on its name
  * Returns primary, secondary, and accent colors in HSL format
  */
@@ -368,11 +382,13 @@ export function getUniqueProjectColors(repoName: string): {
   hue: number;
 } {
   const hue = getUniqueProjectHue(repoName);
+  const primaryLight = customProjectLightness[repoName] ?? 40;
+  const secondaryLight = primaryLight - 5;
   return {
     // Muted, darker backgrounds for better logo contrast
-    primary: `hsl(${hue}, 55%, 40%)`,              // Lower saturation, darker
-    secondary: `hsl(${(hue + 35) % 360}, 50%, 35%)`, // Subtle color shift
-    accent: `hsl(${(hue + 180) % 360}, 60%, 45%)`,   // Complementary accent
+    primary: `hsl(${hue}, 55%, ${primaryLight}%)`,              // Lower saturation, darker
+    secondary: `hsl(${(hue + 35) % 360}, 50%, ${secondaryLight}%)`, // Subtle color shift
+    accent: `hsl(${(hue + 180) % 360}, 60%, 45%)`,                  // Complementary accent
     hue,
   };
 }

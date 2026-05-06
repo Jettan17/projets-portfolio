@@ -189,7 +189,6 @@ interface PersonalData {
   social: {
     github: string;
     linkedin: string;
-    twitter?: string;
     email: string;
   };
   skills: string[];

@@ -93,4 +93,13 @@ export const githubProjects: GitHubProjectConfig[] = [
     featured: true,
     tags: ['Claude Code', 'TypeScript', 'AI Agents', 'Developer Tools', 'CLI'],
   },
+  {
+    repo: 'accrux-hobby-tracker',
+    title: 'Accrux',
+    description:
+      'A celestial-themed hobby gamification app — hobbies become star systems with skill trees, hierarchical task lists, and achievements.',
+    featured: true,
+    tags: ['TypeScript', 'Next.js', 'React', 'Supabase', 'Zustand'],
+    liveUrl: 'https://accrux-hobby-tracker.vercel.app/',
+  },
 ];

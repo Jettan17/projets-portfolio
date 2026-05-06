@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 50" fill="none">
+  <!-- Dark rounded-square chip — mirrors the actual app favicon backing -->
+  <rect x="6" y="7" width="36" height="36" rx="7" fill="#0a0a0a"/>
+
+  <!-- Icon centered inside the chip (chip center = (24, 25)) -->
+  <g transform="translate(24, 25)">
+    <!-- Orbital ring -->
+    <ellipse cx="0" cy="0" rx="14" ry="4" fill="none" stroke="#ffffff" stroke-width="0.8" opacity="0.45" transform="rotate(-20)"/>
+
+    <!-- Small accent stars -->
+    <circle cx="-11" cy="-8" r="0.95" fill="#f97316"/>
+    <circle cx="12"  cy="-6" r="0.75" fill="#a855f7"/>
+    <circle cx="-9"  cy="10" r="0.85" fill="#22c55e"/>
+    <circle cx="11"  cy="9"  r="0.6"  fill="#f59e0b"/>
+
+    <!-- Main star (10-point, scaled from the favicon's 0,-120/110/etc.) -->
+    <polygon
+      points="0,-11 2.59,-3.49 10.08,-3.49 4.04,1.28 6.24,8.81 0,4.04 -6.24,8.81 -4.04,1.28 -10.08,-3.49 -2.59,-3.49"
+      fill="#ffffff"
+    />
+  </g>
+
+  <!-- Wordmark — placed so (chip + text) midpoint sits at viewBox center (60) -->
+  <text x="48" y="33" font-family="'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="700" letter-spacing="-0.5" fill="#ffffff">
+    Accrux
+  </text>
+</svg>
