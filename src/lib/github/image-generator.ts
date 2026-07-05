@@ -343,6 +343,8 @@ const customProjectHues: Record<string, number> = {
   'jetflux-cc-sdk': 45,
   // Accrux: Celestial / star-system theme → Deep indigo (matches dark cosmic vibe)
   'accrux-hobby-tracker': 240,
+  // KubeSeer: Kubernetes observability theme -> clear infrastructure blue
+  'kubeseer-observability-gui': 210,
 };
 
 /**

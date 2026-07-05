@@ -102,4 +102,13 @@ export const githubProjects: GitHubProjectConfig[] = [
     tags: ['TypeScript', 'Next.js', 'React', 'Supabase', 'Zustand'],
     liveUrl: 'https://accrux-hobby-tracker.vercel.app/',
   },
+  {
+    repo: 'kubeseer-observability-gui',
+    title: 'KubeSeer',
+    description:
+      'A high-performance Kubernetes observability GUI that unifies topology, logs, metrics, traces, and troubleshooting in one local app.',
+    featured: true,
+    tags: ['TypeScript', 'Rust', 'React', 'Kubernetes', 'Observability'],
+    liveUrl: '',
+  },
 ];
