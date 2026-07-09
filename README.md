@@ -43,7 +43,7 @@ A personal portfolio website showcasing creative web development projects.
 
 ```bash
 # Clone the repository
-git clone https://github.com/Jettan17/projets-portfolio.git
+git clone https://github.com/jephoton/projets-portfolio.git
 cd projets-portfolio
 
 # Install dependencies

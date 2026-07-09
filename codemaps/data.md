@@ -23,7 +23,7 @@ Dual data source architecture: Astro Content Collections (Markdown) + GitHub API
 
 ```typescript
 // src/config/github-projects.ts
-export const githubUsername = 'Jettan17';
+export const githubUsername = 'jephoton';
 
 export const githubProjects: GitHubProjectConfig[] = [
   {

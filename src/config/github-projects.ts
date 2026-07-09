@@ -12,7 +12,7 @@ import type { GitHubProjectConfig } from '../lib/github/types';
 /**
  * Your GitHub username
  */
-export const githubUsername = 'Jettan17';
+export const githubUsername = 'jephoton';
 
 /**
  * List of repositories to display
